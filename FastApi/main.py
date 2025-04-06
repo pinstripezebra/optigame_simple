@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Depends, HTTPException
-from Data.models import User, Game, Role, GameModel, UserModel
+from FastApi.models import User, Game, Role, GameModel, UserModel
 from typing import List
 from uuid import uuid4, UUID
 import os
