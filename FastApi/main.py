@@ -10,15 +10,6 @@ from sqlalchemy.orm import sessionmaker, Session
 from dotenv import load_dotenv
 
 
-
-# database connection string
-user_db: List[User] = [
-    User(id=UUID("835a05cf-3e31-4b75-977b-6196442d5158"), username="admin", password="admin", role=Role.admin),
-    User(id=UUID("e06f8d98-40fe-4447-9983-668d8db5ca6e"), username="user", password="user", role=Role.user)
-]
-# Load environment variables from .env2 file
-load_dotenv(dotenv_path=".env2")
-
 # Load the database connection string from the environment variable
 DATABASE_URL = os.environ.get("POST_DB_LINK")
 USER_TABLE = os.environ.get("USER_TABLE")
@@ -46,18 +37,20 @@ app = FastAPI(title="Game Store API", version="1.0.0")
 async def root():
     return {"message": "Hello World"}
 
-
-@app.get("/api/v1/users")
-async def fetch_users():
-    return user_db
-
 @app.get("/api/v1/products")
 async def fetch_products(db: Session = Depends(get_db)):
-    # Query the database using the SQLAlchemy Game model
-    products = db.query(Game).all()
-    # Serialize the results using the Pydantic GameModel
-    return [GameModel.from_orm(product) for product in products]
+    # Query the database using the SQLAlchemy User model
+    products = db.query(User).all()
+    # Serialize the results using the Pydantic UserModel
+    return [UserModel.from_orm(user) for user in products]
 
+
+@app.get("/api/v1/users")
+async def fetch_products(db: Session = Depends(get_db)):
+    # Query the database using the SQLAlchemy Game model
+    users = db.query(Game).all()
+    # Serialize the results using the Pydantic GameModel
+    return [GameModel.from_orm(user) for user in users]
 
 @app.post("/api/v1/users")
 async def create_user(user: UserModel, db: Session = Depends(get_db)):
