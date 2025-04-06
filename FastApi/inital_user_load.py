@@ -25,3 +25,6 @@ engine.create_table("""CREATE TABLE IF NOT EXISTS optigame_users (
         )
     """)
 
+engine.populate_users_table(initial_users)
+engine.close()
+
