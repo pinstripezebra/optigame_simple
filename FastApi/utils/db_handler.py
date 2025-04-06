@@ -67,17 +67,27 @@ class DatabaseHandler:
 
         """ Connect to the PostgreSQL database and retrieves all data from a user specified table"""
 
-        # Create a cursor object
-        cursor = self.conn.cursor()
-        # Execute a query to retrieve data from the table
-        cursor.execute("SELECT * FROM {table_name}".format(table_name=table_name))
+        try:
+            # Create a cursor object
+            cursor = self.conn.cursor()
 
-        # Fetch all rows from the result of the query
-        rows = cursor.fetchall()
-    
-        # Create a DataFrame from the rows
-        df = pd.DataFrame(rows, columns=['id','asin','title','price','rating','sales_volume','reviews_count','description'])
-        return df
+            # Fetch column names dynamically
+            cursor.execute(f"SELECT column_name FROM information_schema.columns WHERE table_name = '{table_name}'")
+            columns = [row[0] for row in cursor.fetchall()]
+
+            # Execute a query to retrieve data from the table
+            cursor.execute("SELECT * FROM {table_name}".format(table_name=table_name))
+
+            # Fetch all rows from the result of the query
+            rows = cursor.fetchall()
+        
+            # Create a DataFrame from the rows
+            df = pd.DataFrame(rows, columns=columns)
+            return df
+        
+        except Exception as e:
+            print("Error retrieving data from table: ", e)
+            return None
 
     def delete_table(self,table_name:str):
 
@@ -88,3 +98,26 @@ class DatabaseHandler:
         # Execute a query to delete the table
         cursor.execute("DROP TABLE IF EXISTS {table_name}".format(table_name=table_name))
         self.conn.commit()
+
+    def populate_users_table(self,df):
+
+        """ Connect to the PostgreSQL database and populates user table with provided dataframe."""
+
+        # Create a cursor object
+        cursor = self.conn.cursor()
+
+        # Iterate over the rows of the DataFrame and insert each row into the table
+        for index, row in df.iterrows():
+            cursor.execute(
+                """INSERT INTO optigame_products (id, username, password, role)
+                VALUES (%s, %s, %s, %s)""",
+                (
+                    str(row['id']),  # Convert UUID to string
+                    row['username'],
+                    row['password'],
+                    row['role'],
+                )
+            )
+        self.conn.commit()
+        # Close the cursor and connection
+        cursor.close()
