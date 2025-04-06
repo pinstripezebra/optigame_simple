@@ -8,6 +8,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 from dotenv import load_dotenv
+from fastapi.middleware.cors import CORSMiddleware
 
 
 # Load the database connection string from the environment variable
@@ -32,6 +33,10 @@ def get_db():
 
 # Initialize the FastAPI app
 app = FastAPI(title="Game Store API", version="1.0.0")
+origins = ["http://localhost:3000"]
+app.add_middleware(CORSMiddleware,
+    allow_origins=origins)
+                  
 
 @app.get("/")
 async def root():
