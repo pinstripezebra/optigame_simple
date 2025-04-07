@@ -42,22 +42,22 @@ app.add_middleware(CORSMiddleware,
 async def root():
     return {"message": "Hello World"}
 
-@app.get("/api/v1/products")
+@app.get("/api/v1/games/")
 async def fetch_products(db: Session = Depends(get_db)):
     # Query the database using the SQLAlchemy User model
-    products = db.query(User).all()
+    products = db.query(Game).all()
     # Serialize the results using the Pydantic UserModel
-    return [UserModel.from_orm(user) for user in products]
+    return [GameModel.from_orm(product) for product in products]
 
 
-@app.get("/api/v1/users")
-async def fetch_products(db: Session = Depends(get_db)):
+@app.get("/api/v1/users/")
+async def fetch_users(db: Session = Depends(get_db)):
     # Query the database using the SQLAlchemy Game model
-    users = db.query(Game).all()
+    users = db.query(User).all()
     # Serialize the results using the Pydantic GameModel
-    return [GameModel.from_orm(user) for user in users]
+    return [UserModel.from_orm(user) for user in users]
 
-@app.post("/api/v1/users")
+@app.post("/api/v1/users/")
 async def create_user(user: UserModel, db: Session = Depends(get_db)):
     """
     Create a new user and insert it into the user table.

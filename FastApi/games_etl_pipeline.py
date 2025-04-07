@@ -36,6 +36,14 @@ combined_df = parse_results(response_json)
 
 # adding descriptions and saving csv
 combined_df = add_descriptions(combined_df, username, password)
+
+# Ensuring no nan values in the dataframe
+combined_df['title'] = combined_df['title'].fillna("")
+combined_df['price'] = combined_df['price'].fillna(0.0)
+combined_df['rating'] = combined_df['rating'].fillna(0.0)
+combined_df['sales_volume'] = combined_df['sales_volume'].fillna("0")
+combined_df['description'] = combined_df['description'].fillna("")
+combined_df['reviews_count'] = combined_df['reviews_count'].fillna(0)
 combined_df.to_csv("Data/raw_data/results_with_description.csv", index=False)
 
 #-------------------------------#
@@ -62,7 +70,7 @@ my_db_handler.create_table(table_creation_query)
 my_db_handler.populate_games_table(combined_df)
 # returning data from the database
 df = my_db_handler.retrieve_all_from_table(table_name)
-print(df)
+
 print("Data loaded successfully into the database.")
 
 # writing backup dataset

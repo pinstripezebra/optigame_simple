@@ -58,17 +58,17 @@ class User(Base):
 
     id = Column(pg.UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True, nullable=False)
     username = Column(String, nullable=False)
-    password = Column(String, nullable=True)
+    password = Column(String, nullable=False)
     email = Column(String, nullable=False)
-    role = Column(Role, nullable=True)
+    role = Column(String, nullable=False)
 
 
 class UserModel(BaseModel):
     id: Optional[UUID]
     username: str
     password: str
-    emai: str
-    role: Role
+    email: str
+    role: str
 
     class Config:
         orm_mode = True  # Enable ORM mode to work with SQLAlchemy objects
