@@ -14,7 +14,7 @@ const App = () => {
   });
 
   const fetchGames = async () => {
-    const response = await api.get('/games');
+    const response = await api.get('/api/v1/games/');
     setGames(response.data);
   };
 
@@ -33,7 +33,7 @@ const App = () => {
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    await api.post('/games/', FormData);
+    await api.post('/api/v1/games/', FormData);
     fetchGames();
     setFormData({
       name: '',
@@ -56,6 +56,19 @@ const App = () => {
           </div>
 
         </nav>
+        <div className="container">
+          <form onSubmit={handleFormSubmit}>
+            <div className="mb-3">
+              <label htmlFor="name" className="form-label"> 
+                Name
+                
+              </label>
+              
+            </div>
+          </form>
+
+
+        </div>
 
 
     </div>
