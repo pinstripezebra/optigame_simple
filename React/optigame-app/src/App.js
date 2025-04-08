@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from './api';
+import Message from './message'; // Import the Message component
 
 const App = () => {
   const [games, setGames] = useState([]);
@@ -54,6 +55,9 @@ const App = () => {
           <a className="navbar-brand" href="#">
             OptiGame
           </a>
+          <div>
+            <Message> Message </Message>
+          </div>
         </div>
       </nav>
       <div className="container">
