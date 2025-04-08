@@ -5,16 +5,18 @@ const App = () => {
   const [games, setGames] = useState([]);
 
   const [FormData, setFormData] = useState({
-    name: '',
-    description: '',
-    image: '',
+    id: '',
+    asin: '',
+    title: '',
     price: 0,
-    stock: 0,
-    isActive: false,
+    rating: 0,
+    sales_volume: 0,
+    reviews_count: 0,
+    description: ''  
   });
 
   const fetchGames = async () => {
-    const response = await api.get('/api/v1/games/');
+    const response = await api.get('/v1/games/');
     setGames(response.data);
   };
 
@@ -33,15 +35,17 @@ const App = () => {
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    await api.post('/api/v1/games/', FormData);
+    await api.post('/v1/games/', FormData);
     fetchGames();
     setFormData({
-      name: '',
-      description: '',
-      image: '',
-      price: 0,
-      stock: 0,
-      isActive: false,
+      id: '',
+    asin: '',
+    title: '',
+    price: 0,
+    rating: 0,
+    sales_volume: 0,
+    reviews_count: 0,
+    description: ''  
     });
   };
 
@@ -58,13 +62,25 @@ const App = () => {
         </nav>
         <div className="container">
           <form onSubmit={handleFormSubmit}>
-            <div className="mb-3">
-              <label htmlFor="name" className="form-label"> 
-                Name
+            <div className="mb-3 mt-3">
+              <label htmlFor="id" className="form-label"> 
+                id
                 
               </label>
-              
+                <input type="text"className="form-control" id="id" name="id" value={FormData.name}onChange={handleInputChange}>
+                </input>          
             </div>
+
+            <div className="mb-3">
+              <label htmlFor="description" className="form-label"> 
+                description
+                
+              </label>
+              <input type="text" className="form-control" id="description" name="description" value={FormData.description} onChange={handleInputChange}>
+                </input>          
+            </div>
+
+            <button type="submit" className="btn btn-primary">Submit</button>
           </form>
 
 
