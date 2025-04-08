@@ -33,9 +33,12 @@ def get_db():
 
 # Initialize the FastAPI app
 app = FastAPI(title="Game Store API", version="1.0.0")
-origins = ["http://localhost:8000"]
+origins = ["http://localhost:3000", "http://localhost:8000"]
 app.add_middleware(CORSMiddleware,
-    allow_origins=origins)
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],)
                   
 
 @app.get("/")

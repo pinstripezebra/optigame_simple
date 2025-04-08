@@ -83,6 +83,37 @@ const App = () => {
             <button type="submit" className="btn btn-primary">Submit</button>
           </form>
 
+          <table className="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">id</th>
+                <th scope="col">description</th>
+                <th scope="col">asin</th>
+                <th scope="col">title</th>
+                <th scope="col">price</th>
+                <th scope="col">rating</th>
+                <th scope="col">sales_volume</th>
+                <th scope="col">reviews_count</th>
+
+              </tr>
+            </thead>
+            <tbody>
+              {games.map((game) => (
+                <tr key={game.id}>
+                  <td>{game.id}</td>
+                  <td>{game.description}</td>
+                  <td>{game.asin}</td>
+                  <td>{game.title}</td>
+                  <td>{game.price}</td>
+                  <td>{game.rating}</td>
+                  <td>{game.sales_volume}</td>
+                  <td>{game.reviews_count}</td>
+
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
 
         </div>
 
