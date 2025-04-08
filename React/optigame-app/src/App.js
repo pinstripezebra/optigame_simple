@@ -56,7 +56,7 @@ const App = () => {
             OptiGame
           </a>
           <div>
-            <Message> Message </Message>
+            <Message></Message>
           </div>
         </div>
       </nav>
