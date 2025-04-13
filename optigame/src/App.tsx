@@ -16,10 +16,10 @@ const App = () => {
     reviews_count: number;
   }
 
+  //declaring constants
+  let items = ["monopoly", "chess", "poker", "uno", "scrabble"];
   const [games, setGames] = useState<Game[]>([]);
-
   const [filteredGames, setFilteredGames] = useState<Game[]>([]); // State for filtered data
-
   const [FormData, setFormData] = useState({
     id: '',
     description: '',
@@ -75,7 +75,7 @@ const App = () => {
             OptiGame
           </a>
           <div>
-            <ListGroup />
+            <ListGroup items = {items} heading = "Games"/>
           </div>
         </div>
       </nav>
