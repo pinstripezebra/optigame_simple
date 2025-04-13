@@ -1,6 +1,6 @@
 import { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import api from './api';
-import Message from './Message'; // Import the Message component
+import ListGroup from './components/ListGroup';
 
 // Define the type for a game object
 
@@ -75,7 +75,7 @@ const App = () => {
             OptiGame
           </a>
           <div>
-            <Message />
+            <ListGroup />
           </div>
         </div>
       </nav>
