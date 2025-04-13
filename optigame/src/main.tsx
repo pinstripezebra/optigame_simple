@@ -2,7 +2,7 @@ import React from "react"
 import ReactDOM from "react-dom/client"
 import { Provider } from "./components/ui/provider"
 import 'bootstrap/dist/css/bootstrap.css'
-import App from './App.tsx'
+import App from './App2.tsx'
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

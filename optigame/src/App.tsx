@@ -1,7 +1,9 @@
 import { useState, useEffect, ChangeEvent, FormEvent } from 'react';
+import { Button, ButtonGroup } from "@chakra-ui/react"
 import api from './api';
 import ListGroup from './components/ListGroup';
 import Alert from './components/Alert';
+
 
 // Define the type for a game object
 
@@ -84,9 +86,9 @@ const App = () => {
             <ListGroup items = {items} heading = "Games" onSelectItem={handleSelectItem }/>
           </div>
           <div>
-            <Alert> 
-              This is an alert
-            </Alert>
+            
+            <Button>Click me</Button>
+            
           </div>
         </div>
       </nav>
