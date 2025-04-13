@@ -4,9 +4,11 @@ import { Fragment, useState } from "react";
 interface Props {
     items: string[];
     heading: string;
+    //notify of selected item
+    onSelectItem: (item: string) => void;
 
 }
-function ListGroup({items, heading}: Props) {
+function ListGroup({items, heading, onSelectItem}: Props) {
   // Hook functional component
   const [selectedIndex, setSelectedIndex] = useState(-1);
  
@@ -25,7 +27,11 @@ function ListGroup({items, heading}: Props) {
                 : "list-group-item"
             }
             key={item}
-            onClick={() => {setSelectedIndex(index);}}
+            onClick={() => {
+                setSelectedIndex(index);
+                onSelectItem(item); // Notify the parent component of the selected item
+            }}
+
           >
             {item}
           </li>

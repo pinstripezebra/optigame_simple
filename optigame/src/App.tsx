@@ -1,6 +1,7 @@
 import { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import api from './api';
 import ListGroup from './components/ListGroup';
+import Alert from './components/Alert';
 
 // Define the type for a game object
 
@@ -30,6 +31,11 @@ const App = () => {
     sales_volume: '',
     reviews_count: 0,
   });
+
+  // Function to handle item selection
+  const handleSelectItem = (item: string) => {
+    console.log(item);
+  };
 
   const fetchGames = async () => {
     const response = await api.get('/v1/games/');
@@ -75,7 +81,12 @@ const App = () => {
             OptiGame
           </a>
           <div>
-            <ListGroup items = {items} heading = "Games"/>
+            <ListGroup items = {items} heading = "Games" onSelectItem={handleSelectItem }/>
+          </div>
+          <div>
+            <Alert> 
+              This is an alert
+            </Alert>
           </div>
         </div>
       </nav>
