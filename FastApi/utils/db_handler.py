@@ -35,34 +35,6 @@ class DatabaseHandler:
         cursor.close()
 
 
-    def populate_games_table(self,df):
-
-        """ Connect to the PostgreSQL database and the user specified table
-        with the desired query."""
-
-        # Create a cursor object
-        cursor = self.conn.cursor()
-
-        # Iterate over the rows of the DataFrame and insert each row into the table
-        for index, row in df.iterrows():
-            cursor.execute(
-                """INSERT INTO optigame_products (id, asin, title, price, rating, sales_volume, reviews_count, description)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)""",
-                (
-                    str(row['id']),  # Convert UUID to string
-                    row['asin'],
-                    row['title'],
-                    row['price'],
-                    row['rating'],
-                    row['sales_volume'],
-                    row['reviews_count'],
-                    row['description'],
-                )
-            )
-        self.conn.commit()
-        # Close the cursor and connection
-        cursor.close()
-
     def retrieve_all_from_table(self,table_name:str):
 
         """ Connect to the PostgreSQL database and retrieves all data from a user specified table"""
@@ -122,3 +94,55 @@ class DatabaseHandler:
         self.conn.commit()
         # Close the cursor and connection
         cursor.close()
+
+    def populate_games_table(self,df):
+
+        """ Connect to the PostgreSQL database and updates the games table with
+        data from the input dataframe."""
+
+        # Create a cursor object
+        cursor = self.conn.cursor()
+
+        # Iterate over the rows of the DataFrame and insert each row into the table
+        for index, row in df.iterrows():
+            cursor.execute(
+                """INSERT INTO optigame_products (id, asin, title, price, rating, sales_volume, reviews_count, description)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)""",
+                (
+                    str(row['id']),  # Convert UUID to string
+                    row['asin'],
+                    row['title'],
+                    row['price'],
+                    row['rating'],
+                    row['sales_volume'],
+                    row['reviews_count'],
+                    row['description'],
+                )
+            )
+        self.conn.commit()
+        # Close the cursor and connection
+        cursor.close()
+
+    def populate_game_tags_table(self,df):
+
+        """ Connect to the PostgreSQL database and updates the game tags table with
+        data from the input dataframe."""
+
+        # Create a cursor object
+        cursor = self.conn.cursor()
+
+        # Iterate over the rows of the DataFrame and insert each row into the table
+        for index, row in df.iterrows():
+            cursor.execute(
+                """INSERT INTO optigame_products (id, asin, game_tags)
+                VALUES (%s, %s, %s)""",
+                (
+                    str(row['id']),  # Convert UUID to string
+                    row['asin'],
+                    row['game_tags']
+                )
+            )
+        self.conn.commit()
+        # Close the cursor and connection
+        cursor.close()
+

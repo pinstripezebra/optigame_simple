@@ -5,10 +5,14 @@ from utils.db_handler import DatabaseHandler
 from utils.nlp_parsing import extract_common_noun_phrases_with_numbers, lemmatize_common_noun_phrases
 from utils.nlp_parsing import eliminate_shorter_subtags, filter_and_order_tags_by_frequency, add_game_tags_column
 
+
+#-------------------------------#
+#PART 1: Retrieving games data and tagging
+#-------------------------------#
+
 # creating database handler instance
 my_db_handler = DatabaseHandler()
 table_name = "optigame_products"
-
 
 # returning data from the database
 df = my_db_handler.retrieve_all_from_table(table_name)
@@ -39,3 +43,25 @@ game_tagged_df.drop(columns=["common_noun_phrases"], inplace=True)
 
 # writing output
 game_tagged_df.to_csv("Data/raw_data/optigame_products_with_tags.csv", index=False)
+
+#-------------------------------#
+#PART 2: Creating new table and populating it with tagged data
+#-------------------------------#
+
+tag_table_name = "optigame_game_tags"
+tag_table_creation_query = """CREATE TABLE IF NOT EXISTS optigame_game_tags (
+    id UUID PRIMARY KEY,
+    asin VARCHAR(255),
+    game_tags TEXT
+        )
+    """
+
+# creating tag table if it doesn't exist
+my_db_handler.create_table(tag_table_creation_query)
+
+# Populate the table with data from the DataFrame
+my_db_handler.populate_game_tags_table(df)
+
+
+# returning data from the database
+df = my_db_handler.retrieve_all_from_table(tag_table_name)

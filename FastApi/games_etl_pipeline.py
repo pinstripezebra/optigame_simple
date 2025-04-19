@@ -55,7 +55,7 @@ table_name = "optigame_products"
 table_creation_query = """CREATE TABLE IF NOT EXISTS optigame_products (
     id UUID PRIMARY KEY,
     asin VARCHAR(255),
-    title TEXT,
+    game_tags TEXT,
     price FLOAT,
     rating FLOAT,
     sales_volume TEXT,
@@ -63,7 +63,7 @@ table_creation_query = """CREATE TABLE IF NOT EXISTS optigame_products (
     reviews_count INTEGER
         )
     """
-#my_db_handler.delete_table(table_name)
+
 # Create the table if it doesn't exist
 my_db_handler.create_table(table_creation_query)
 # Populate the table with data from the DataFrame
