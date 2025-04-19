@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Depends, HTTPException
-from FastApi.models import User, Game, Role, GameModel, UserModel
+from FastApi.models import User, Game, Role, GameModel, UserModel, GameTags, GameTagsModel
 from typing import List
 from uuid import uuid4, UUID
 import os
@@ -41,7 +41,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-                  
+
+#-------------------------------------------------#
+# ----------PART 1: GET METHODS-------------------#
+#-------------------------------------------------#
 
 @app.get("/")
 async def root():
@@ -61,6 +64,19 @@ async def fetch_users(db: Session = Depends(get_db)):
     users = db.query(User).all()
     # Serialize the results using the Pydantic GameModel
     return [UserModel.from_orm(user) for user in users]
+
+@app.get("/api/v1/game_tags/")
+async def fetch_game_tags(db: Session = Depends(get_db)):
+    # Query the database using the SQLAlchemy Game model
+    gametags = db.query(GameTags).all()
+    # Serialize the results using the Pydantic GameModel
+    return [GameTagsModel.from_orm(gametag) for gametag in gametags]
+
+
+
+#-------------------------------------------------#
+# ----------PART 2: POST METHODS------------------#
+#-------------------------------------------------#
 
 @app.post("/api/v1/users/")
 async def create_user(user: UserModel, db: Session = Depends(get_db)):

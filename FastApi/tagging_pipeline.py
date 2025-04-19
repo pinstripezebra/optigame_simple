@@ -48,6 +48,7 @@ game_tagged_df_long = game_tagged_df.explode("game_tags")
 game_tagged_df_long.reset_index(drop=True, inplace=True)
 game_tagged_df_long['id'] = [uuid.uuid4() for _ in range(len(game_tagged_df_long))]
 print(game_tagged_df_long.columns)
+
 #-------------------------------#
 #PART 2: Creating new table and populating it with tagged data
 #-------------------------------#
