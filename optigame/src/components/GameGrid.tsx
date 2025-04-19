@@ -1,19 +1,19 @@
 import { useState, useEffect, ChangeEvent, FormEvent } from 'react'
-import api from '../api';
+//import api from '../api';
+import api from '../services/api-client';
+
+export interface Game {
+  id: string;
+  description: string;
+  asin: string;
+  title: string;
+  price: number;
+  rating: number;
+  sales_volume: string;
+  reviews_count: number;
+}
 
 const GameGrid = () => {
-
-    interface Game {
-        id: string;
-        description: string;
-        asin: string;
-        title: string;
-        price: number;
-        rating: number;
-        sales_volume: string;
-        reviews_count: number;
-      }
-    
 
     //declaring constants
     const [games, setGames] = useState<Game[]>([]);
