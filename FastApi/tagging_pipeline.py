@@ -47,8 +47,11 @@ game_tagged_df = game_tagged_df[['asin', 'game_tags']]
 game_tagged_df_long = game_tagged_df.explode("game_tags")
 game_tagged_df_long.reset_index(drop=True, inplace=True)
 game_tagged_df_long['id'] = [uuid.uuid4() for _ in range(len(game_tagged_df_long))]
-print(game_tagged_df_long.columns)
 
+# ensuring columns are in correct order
+game_tagged_df_long = game_tagged_df_long[["id", "asin", "game_tags"]]
+print("FIFTH CHECK")
+print(game_tagged_df_long.head(5))
 #-------------------------------#
 #PART 2: Creating new table and populating it with tagged data
 #-------------------------------#
@@ -69,4 +72,3 @@ my_db_handler.populate_game_tags_table(game_tagged_df_long)
 
 # returning data from the database
 out_df = my_db_handler.retrieve_all_from_table(tag_table_name)
-print(out_df)

@@ -78,7 +78,7 @@ class UserModel(BaseModel):
 # This is the Game Tags model for the database
 # we have separate classes for the pydantic model and the SQLAlchemy model
 class GameTags(Base):
-    __tablename__ = "optigame_users"  # Table name in the PostgreSQL database
+    __tablename__ = "optigame_game_tags"  # Table name in the PostgreSQL database
 
     id = Column(pg.UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True, nullable=False)
     asin = Column(String, nullable=False)

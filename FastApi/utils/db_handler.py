@@ -44,9 +44,14 @@ class DatabaseHandler:
             cursor = self.conn.cursor()
 
             # Fetch column names dynamically
-            cursor.execute(f"SELECT column_name FROM information_schema.columns WHERE table_name = '{table_name}'")
+            cursor.execute(f"""
+                SELECT column_name 
+                FROM information_schema.columns 
+                WHERE table_name = '{table_name}'
+                ORDER BY ordinal_position
+            """)
             columns = [row[0] for row in cursor.fetchall()]
-
+            print("Columns: ", columns)
             # Execute a query to retrieve data from the table
             cursor.execute("SELECT * FROM {table_name}".format(table_name=table_name))
 
