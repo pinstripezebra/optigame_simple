@@ -134,7 +134,7 @@ class DatabaseHandler:
         # Iterate over the rows of the DataFrame and insert each row into the table
         for index, row in df.iterrows():
             cursor.execute(
-                """INSERT INTO optigame_products (id, asin, game_tags)
+                """INSERT INTO optigame_game_tags (id, asin, game_tags)
                 VALUES (%s, %s, %s)""",
                 (
                     str(row['id']),  # Convert UUID to string
