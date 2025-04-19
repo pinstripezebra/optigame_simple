@@ -165,7 +165,7 @@ def filter_tags_with_substring(df: pd.DataFrame, common_noun_phrases_column: str
 
     return tags_with_substring
 
-def filter_and_order_tags_by_frequency(df: pd.DataFrame, common_noun_phrases_column: str = "common_noun_phrases", substring: str = "game") -> List[tuple]:
+def filter_and_order_tags_by_frequency(df: pd.DataFrame,min_frequency:int, common_noun_phrases_column: str = "common_noun_phrases", substring: str = "game") -> List[tuple]:
     """
     Filters tags containing a specific substring (not at the start of the string) and orders them by their frequency of occurrence.
 
@@ -193,7 +193,7 @@ def filter_and_order_tags_by_frequency(df: pd.DataFrame, common_noun_phrases_col
     # Sort tags by frequency in descending order
     sorted_tags = tag_counts.most_common()
 
-    return sorted_tags
+    return [game for game in sorted_tags if game[1] > min_frequency]
 
 def add_game_tags_column(df: pd.DataFrame, most_frequent_games: List[tuple], common_noun_phrases_column: str = "common_noun_phrases") -> pd.DataFrame:
     """

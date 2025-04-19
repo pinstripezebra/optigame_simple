@@ -27,7 +27,7 @@ df_with_lemmatized_nouns = lemmatize_common_noun_phrases(nlp, df_with_nouns, "co
 df_with_collapsed_tags = eliminate_shorter_subtags(df_with_lemmatized_nouns, "common_noun_phrases")
 
 # Now performing global filtering and ordering of tags by frequency
-most_frequent_games = filter_and_order_tags_by_frequency(df_with_collapsed_tags, "common_noun_phrases", "game")
+most_frequent_games = filter_and_order_tags_by_frequency(df_with_collapsed_tags,1 , "common_noun_phrases", "game")
 
 # now adding frequent game tages back to base dataframe
 game_tagged_df = add_game_tags_column(df_with_collapsed_tags, most_frequent_games, 
