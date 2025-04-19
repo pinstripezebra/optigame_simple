@@ -1,5 +1,5 @@
 import {Game} from './GameGrid'
-import { Card, CardBody, Image } from '@chakra-ui/react'
+import { Button, Card, Image, Text } from '@chakra-ui/react'
 
 interface Props {
     game: Game
@@ -9,13 +9,15 @@ interface Props {
 const GameCard = ({game}: Props) => {
   return (
     <Card.Root>
-        <Image>
-            src = {'../assets/placeholder_card.jpg'}
-        </Image>
 
-        <CardBody>
+        <Image
+        height="200px"
+        backgroundImage={'../assets/placeholder_card.png'}
+      />
+      <Card.Body>
             <Card.Title>{game.title}</Card.Title>
-        </CardBody>
+        </Card.Body>
+
 
     </Card.Root>
   )

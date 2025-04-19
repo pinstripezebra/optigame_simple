@@ -1,6 +1,8 @@
 import { useState, useEffect, ChangeEvent, FormEvent } from 'react'
 //import api from '../api';
 import api from '../services/api-client';
+import { SimpleGrid } from '@chakra-ui/react';
+import GameCard from './GameCard';
 
 export interface Game {
   id: string;
@@ -78,6 +80,7 @@ const GameGrid = () => {
               </nav>
               <div className="container">
                 <form onSubmit={handleFormSubmit}>
+
                   <div className="mb-3 mt-3">
                     <label htmlFor="title" className="form-label">
                       Title
@@ -91,54 +94,18 @@ const GameGrid = () => {
                       onChange={handleInputChange}
                     />
                   </div>
-        
-                  <div className="mb-3">
-                    <label htmlFor="description" className="form-label">
-                      Description
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="description"
-                      name="description"
-                      value={FormData.description}
-                      onChange={handleInputChange}
-                    />
-                  </div>
+      
         
                   <button type="submit" className="btn btn-primary">
                     Submit
                   </button>
                 </form>
         
-                <table className="table table-striped">
-                  <thead>
-                    <tr>
-                      <th scope="col">id</th>
-                      <th scope="col">description</th>
-                      <th scope="col">asin</th>
-                      <th scope="col">title</th>
-                      <th scope="col">price</th>
-                      <th scope="col">rating</th>
-                      <th scope="col">sales_volume</th>
-                      <th scope="col">reviews_count</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredGames?.map((game) => (
-                      <tr key={game.id}>
-                        <td>{game.id}</td>
-                        <td>{game.description}</td>
-                        <td>{game.asin}</td>
-                        <td>{game.title}</td>
-                        <td>{game.price}</td>
-                        <td>{game.rating}</td>
-                        <td>{game.sales_volume}</td>
-                        <td>{game.reviews_count}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                <SimpleGrid columns = {3} >
+                  {filteredGames.map((game) => (
+                    <GameCard key={game.id} game={game} />
+                  ))}
+                </SimpleGrid>
               </div>
             </div>
           );
