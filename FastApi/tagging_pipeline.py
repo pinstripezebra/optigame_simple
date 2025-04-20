@@ -72,3 +72,33 @@ my_db_handler.populate_game_tags_table(game_tagged_df_long)
 
 # returning data from the database
 out_df = my_db_handler.retrieve_all_from_table(tag_table_name)
+
+
+#-------------------------------#
+#PART 3: Creating unique tags table and populating it with unique game tags
+#-------------------------------#
+
+unique_tag_table_name = "optigame_unique_game_tags"
+unique_tag_table_creation_query = """CREATE TABLE IF NOT EXISTS optigame_unique_game_tags (
+    id UUID PRIMARY KEY,
+    game_tags TEXT UNIQUE
+        )
+    """
+
+# creating unique tag table if it doesn't exist
+my_db_handler.create_table(unique_tag_table_creation_query)
+
+# Extract unique game tags from the DataFrame
+unique_game_tags = game_tagged_df_long["game_tags"].drop_duplicates().reset_index(drop=True)
+unique_game_tags_df = unique_game_tags.to_frame(name="game_tags")
+unique_game_tags_df["id"] = [uuid.uuid4() for _ in range(len(unique_game_tags_df))]
+
+# ensuring columns are in correct order
+unique_game_tags_df = unique_game_tags_df[["id", "game_tags"]]
+
+# Populate the table with data from the unique game tags DataFrame
+my_db_handler.populate_unique_game_tags_table(unique_game_tags_df)
+
+# returning data from the database
+unique_out_df = my_db_handler.retrieve_all_from_table(unique_tag_table_name)
+print(unique_game_tags.head(5))

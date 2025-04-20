@@ -151,3 +151,25 @@ class DatabaseHandler:
         # Close the cursor and connection
         cursor.close()
 
+    def populate_unique_game_tags_table(self,df):
+
+        """ Connect to the PostgreSQL database and updates the game tags table with unique
+        tags from the input dataframe."""
+
+        # Create a cursor object
+        cursor = self.conn.cursor()
+
+        # Iterate over the rows of the DataFrame and insert each row into the table
+        for index, row in df.iterrows():
+            cursor.execute(
+                """INSERT INTO optigame_game_tags (id,  game_tags)
+                VALUES (%s,  %s)""",
+                (
+                    str(row['id']),  # Convert UUID to string
+                    row['game_tags']
+                )
+            )
+        self.conn.commit()
+        # Close the cursor and connection
+        cursor.close()
+

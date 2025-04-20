@@ -65,7 +65,7 @@ async def fetch_users(db: Session = Depends(get_db)):
     # Serialize the results using the Pydantic GameModel
     return [UserModel.from_orm(user) for user in users]
 
-@app.get("/api/v1/game_tags/")
+@app.get("/api/v1/genres/")
 async def fetch_game_tags(db: Session = Depends(get_db)):
     # Query the database using the SQLAlchemy Game model
     gametags = db.query(GameTags).all()

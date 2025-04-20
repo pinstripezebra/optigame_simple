@@ -4,9 +4,9 @@ import { CanceledError } from "axios";
 
 
 interface Genre {
-    id: number;
+    id: string;
     asin: string;
-    game_tages: string;
+    game_tags: string;
 }
 
 interface FetchGameGenres {
@@ -25,6 +25,7 @@ const useGenres = () => {
         setLoading(true);
         apiClient.get<FetchGameGenres>("/v1/genres", {signal: controller.signal})
             .then((res) => {
+                console.log("API Response:", res.data); // Log the response
                 setGameGenres(res.data.results);
                 setLoading(false);
             }).catch((err) => {
