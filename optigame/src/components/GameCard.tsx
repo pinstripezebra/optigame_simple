@@ -1,5 +1,5 @@
 import {Game} from './GameGrid'
-import { Button, Card, Image, Text } from '@chakra-ui/react'
+import { Card, Image} from '@chakra-ui/react'
 import { GameScore } from './GameScore';
 
 interface Props {
