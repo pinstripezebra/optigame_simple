@@ -1,0 +1,39 @@
+from dotenv import load_dotenv
+import os
+from oxylabs import RealtimeClient
+from utils.db_handler import DatabaseHandler
+from utils.amazon_api import add_images
+import pandas as pd
+
+
+#-------------------------------#
+#PART 1: Retrieving games data asin
+#-------------------------------#
+
+# creating database handler instance
+my_db_handler = DatabaseHandler()
+table_name = "optigame_products"
+
+# returning data from optigame_products table
+df = my_db_handler.retrieve_all_from_table(table_name)
+unique_products = df['asin'].unique().tolist()
+
+
+#-------------------------------#
+#PART 2: Scraping images for each asin
+#-------------------------------#
+
+# Load environment variables from .env2 file
+load_dotenv(dotenv_path=".env2")
+
+# Set your Oxylabs API Credentials.
+username = os.environ.get("USERNAME_OXY")
+password = os.environ.get("PASSWORD_OXY")
+
+
+# Initialize the Realtime client with your credentials.
+client = RealtimeClient(username, password)
+
+# adding images to the dataframe
+test_df = add_images(df.head(5), username, password)
+print(test_df)

@@ -84,3 +84,36 @@ def add_descriptions(df, username, password):
             descriptions.append("")
     df['description'] = descriptions
     return df
+
+
+def add_images(df, username, password):
+
+    image_links = []
+    keys = df['asin'].tolist()
+
+    for key in keys:
+        # Structure payload.
+        payload = {
+            'source': 'amazon_product',
+            'query': '{key}'.format(key=key),
+            'geo_location': '90210',
+            'parse': True
+        }
+
+        try:
+            # Get response.
+            response = requests.request(
+                'POST',
+                'https://realtime.oxylabs.io/v1/queries',
+                auth=(username, password),
+                json=payload,
+            )
+
+            # Print prettified response to stdout.
+            output = response.json()['results'][0]['content']
+            image_links.append(output['url_image'])
+        except:
+            print(f"Error retrieving description for ASIN {key}.")
+            image_links.append("")
+    df['image_link'] = image_links
+    return df
