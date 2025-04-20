@@ -1,5 +1,6 @@
 import {Game} from './GameGrid'
 import { Button, Card, Image, Text } from '@chakra-ui/react'
+import { GameScore } from './GameScore';
 
 interface Props {
     game: Game
@@ -15,6 +16,7 @@ const GameCard = ({ game }: Props) => {
         />
         <Card.Body>
           <Card.Title fontSize='2xl'>{game.title}</Card.Title>
+          <GameScore rating = {game.rating}/>   
         </Card.Body>
       </Card.Root>
     );
