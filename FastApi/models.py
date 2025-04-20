@@ -94,3 +94,22 @@ class GameTagsModel(BaseModel):
         orm_mode = True  # Enable ORM mode to work with SQLAlchemy objects
         from_attributes = True # Enable attribute access for SQLAlchemy objects
 
+
+
+# This is the UNIQUE Game Tags model for the database
+# we have separate classes for the pydantic model and the SQLAlchemy model
+class UniqueGameTags(Base):
+    __tablename__ = "optigame_unique_game_tags"  # Table name in the PostgreSQL database
+
+    id = Column(pg.UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True, nullable=False)
+    game_tags = Column(String, nullable=False)
+
+
+class UniqueGameTagsModel(BaseModel):
+    id: Optional[UUID]
+    game_tags: str
+
+    class Config:
+        orm_mode = True  # Enable ORM mode to work with SQLAlchemy objects
+        from_attributes = True # Enable attribute access for SQLAlchemy objects
+
