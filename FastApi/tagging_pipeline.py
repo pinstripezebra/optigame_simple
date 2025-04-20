@@ -50,8 +50,7 @@ game_tagged_df_long['id'] = [uuid.uuid4() for _ in range(len(game_tagged_df_long
 
 # ensuring columns are in correct order
 game_tagged_df_long = game_tagged_df_long[["id", "asin", "game_tags"]]
-print("FIFTH CHECK")
-print(game_tagged_df_long.head(5))
+
 #-------------------------------#
 #PART 2: Creating new table and populating it with tagged data
 #-------------------------------#
@@ -106,4 +105,3 @@ my_db_handler.populate_unique_game_tags_table(unique_game_tags_df)
 
 # returning data from the database
 unique_out_df = my_db_handler.retrieve_all_from_table(unique_tag_table_name)
-print(unique_game_tags.head(5))

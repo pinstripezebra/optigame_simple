@@ -5,7 +5,6 @@ import { CanceledError } from "axios";
 
 interface Genre {
     id: string;
-    asin: string;
     game_tags: string;
 }
 
@@ -23,10 +22,14 @@ const useGenres = () => {
         const controller = new AbortController();
 
         setLoading(true);
-        apiClient.get<FetchGameGenres>("/v1/genres", {signal: controller.signal})
+        apiClient.get<FetchGameGenres>("/v1/unique_genres", {signal: controller.signal})
             .then((res) => {
                 console.log("API Response:", res.data); // Log the response
-                setGameGenres(res.data.results);
+                if (res.data && Array.isArray(res.data)) {
+                    setGameGenres(res.data); // Parse and set the genres
+                } else {
+                    console.error("Unexpected API response format:", res.data);
+                }
                 setLoading(false);
             }).catch((err) => {
                 if (err instanceof CanceledError) return;
