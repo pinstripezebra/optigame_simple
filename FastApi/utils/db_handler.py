@@ -162,7 +162,7 @@ class DatabaseHandler:
         # Iterate over the rows of the DataFrame and insert each row into the table
         for index, row in df.iterrows():
             cursor.execute(
-                """INSERT INTO optigame_game_tags (id,  game_tags)
+                """INSERT INTO optigame_unique_game_tags (id,  game_tags)
                 VALUES (%s,  %s)""",
                 (
                     str(row['id']),  # Convert UUID to string

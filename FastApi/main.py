@@ -74,9 +74,9 @@ async def fetch_game_tags(db: Session = Depends(get_db)):
 
 @app.get("/api/v1/unique_genres/")
 async def fetch_unique_game_tags(db: Session = Depends(get_db)):
-    # Query the database using the SQLAlchemy Game model
+    # Query the database using the SQLAlchemy Unique Genres 
     gametags = db.query(UniqueGameTags).all()
-    # Serialize the results using the Pydantic GameModel
+    # Serialize the results using the Pydantic Unqiue Genres Model
     return [UniqueGameTagsModel.from_orm(gametag) for gametag in gametags]
 
 

@@ -63,6 +63,8 @@ tag_table_creation_query = """CREATE TABLE IF NOT EXISTS optigame_game_tags (
     game_tags TEXT
         )
     """
+# deleting the table if it exists
+my_db_handler.delete_table(tag_table_name)
 
 # creating tag table if it doesn't exist
 my_db_handler.create_table(tag_table_creation_query)
@@ -84,6 +86,9 @@ unique_tag_table_creation_query = """CREATE TABLE IF NOT EXISTS optigame_unique_
     game_tags TEXT UNIQUE
         )
     """
+
+# deleting the table if it exists
+my_db_handler.delete_table(unique_tag_table_name)
 
 # creating unique tag table if it doesn't exist
 my_db_handler.create_table(unique_tag_table_creation_query)
