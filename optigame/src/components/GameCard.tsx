@@ -6,21 +6,17 @@ interface Props {
 }
 
 
-const GameCard = ({game}: Props) => {
-  return (
-    <Card.Root>
-
+const GameCard = ({ game }: Props) => {
+    return (
+      <Card.Root borderRadius={10} overflow = "hidden">
         <Image
-        height="200px"
-        backgroundImage={'../assets/placeholder_card.png'}
-      />
-      <Card.Body>
-            <Card.Title>{game.title}</Card.Title>
+          src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
+            alt="Green double couch with wooden legs"
+        />
+        <Card.Body>
+          <Card.Title fontSize='2xl'>{game.title}</Card.Title>
         </Card.Body>
-
-
-    </Card.Root>
-  )
+      </Card.Root>
+    );
 }
-
 export default GameCard

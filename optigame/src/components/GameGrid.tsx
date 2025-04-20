@@ -101,7 +101,7 @@ const GameGrid = () => {
                   </button>
                 </form>
         
-                <SimpleGrid columns = {3} >
+                <SimpleGrid columns={{sm: 1, md: 2, lg: 3}} gap={10}>
                   {filteredGames.map((game) => (
                     <GameCard key={game.id} game={game} />
                   ))}
