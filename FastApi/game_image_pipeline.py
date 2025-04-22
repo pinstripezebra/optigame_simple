@@ -11,7 +11,14 @@ import pandas as pd
 #-------------------------------#
 
 # creating database handler instance
-my_db_handler = DatabaseHandler()
+load_dotenv(dotenv_path=".env")
+URL_database = os.environ.get("POST_DB_LINK")
+
+# ensuring database URL is set
+if URL_database is None:
+    raise ValueError("POST_DB_LINK environment variable not set.")
+
+my_db_handler = DatabaseHandler(URL_database)
 table_name = "optigame_products"
 
 # returning data from optigame_products table
@@ -23,17 +30,13 @@ unique_products = df['asin'].unique().tolist()
 #PART 2: Scraping images for each asin
 #-------------------------------#
 
-# Load environment variables from .env2 file
-load_dotenv(dotenv_path=".env2")
-
 # Set your Oxylabs API Credentials.
 username = os.environ.get("USERNAME_OXY")
 password = os.environ.get("PASSWORD_OXY")
-
 
 # Initialize the Realtime client with your credentials.
 client = RealtimeClient(username, password)
 
 # adding images to the dataframe
-test_df = add_images(df.head(5), username, password)
+test_df = add_images(df.head(1), username, password)
 print(test_df)

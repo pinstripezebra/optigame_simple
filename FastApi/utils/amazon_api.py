@@ -92,6 +92,7 @@ def add_images(df, username, password):
     keys = df['asin'].tolist()
 
     for key in keys:
+        print(f"Retrieving image for ASIN {key}...")
         # Structure payload.
         payload = {
             'source': 'amazon_product',
@@ -100,7 +101,8 @@ def add_images(df, username, password):
             'parse': True
         }
 
-        try:
+
+        if True:
             # Get response.
             response = requests.request(
                 'POST',
@@ -108,11 +110,20 @@ def add_images(df, username, password):
                 auth=(username, password),
                 json=payload,
             )
+            payload = {
+                'source': 'amazon_product',
+                'query': 'B07FZ8S74R',
+                'geo_location': '90210',
+                'parse': True
+            }
+
 
             # Print prettified response to stdout.
-            output = response.json()['results'][0]['content']
+            output = response.json()
+            print(output)
+            output = output['results'][0]['content']
             image_links.append(output['url_image'])
-        except:
+        else:
             print(f"Error retrieving description for ASIN {key}.")
             image_links.append("")
     df['image_link'] = image_links
