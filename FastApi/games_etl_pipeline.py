@@ -2,7 +2,7 @@ from oxylabs import RealtimeClient
 from dotenv import load_dotenv
 import os
 import json
-from utils.amazon_api import convert_to_dataframe, add_descriptions, parse_results
+from utils.amazon_api import convert_to_dataframe, add_descriptions, parse_results, add_images
 from utils.db_handler import DatabaseHandler
 import uuid
 
@@ -34,8 +34,11 @@ response_json = result.raw
 # parsing results
 combined_df = parse_results(response_json)
 
-# adding descriptions and saving csv
+# adding descriptions
 combined_df = add_descriptions(combined_df, username, password)
+
+# adding image link 
+combined_df = add_images(combined_df, username, password)
 
 # Ensuring no nan values in the dataframe
 combined_df['title'] = combined_df['title'].fillna("")
@@ -44,7 +47,8 @@ combined_df['rating'] = combined_df['rating'].fillna(0.0)
 combined_df['sales_volume'] = combined_df['sales_volume'].fillna("0")
 combined_df['description'] = combined_df['description'].fillna("")
 combined_df['reviews_count'] = combined_df['reviews_count'].fillna(0)
-combined_df.to_csv("Data/raw_data/results_with_description.csv", index=False)
+combined_df['image_link'] = combined_df['image_link'].fillna(0)
+combined_df.to_csv("Data/raw_data/results_with_description_image.csv", index=False)
 
 #-------------------------------#
 #PART 2: Loading Data into PostgreSQL Database
@@ -61,6 +65,7 @@ table_creation_query = """CREATE TABLE IF NOT EXISTS optigame_products (
     sales_volume TEXT,
     description TEXT,
     reviews_count INTEGER
+    image_link TEXT,
         )
     """
 
@@ -74,4 +79,4 @@ df = my_db_handler.retrieve_all_from_table(table_name)
 print("Data loaded successfully into the database.")
 
 # writing backup dataset
-df.to_csv("Data/raw_data/total_results_with_description.csv", index=False)
+df.to_csv("Data/raw_data/total_results_with_description_image.csv", index=False)

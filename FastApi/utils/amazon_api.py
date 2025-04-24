@@ -120,9 +120,8 @@ def add_images(df, username, password):
 
             # Print prettified response to stdout.
             output = response.json()
-            print(output)
-            output = output['results'][0]['content']
-            image_links.append(output['url_image'])
+            output = output['results'][0]['content']['images']
+            image_links.append(output[0])
         else:
             print(f"Error retrieving description for ASIN {key}.")
             image_links.append("")

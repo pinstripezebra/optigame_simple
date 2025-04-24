@@ -36,6 +36,7 @@ table_creation_query = """CREATE TABLE IF NOT EXISTS optigame_products (
     sales_volume TEXT,
     description TEXT,
     reviews_count INTEGER
+    image_link TEXT,
         )
     """
 # Create the table if it doesn't exist

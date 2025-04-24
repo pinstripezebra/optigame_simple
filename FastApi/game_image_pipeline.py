@@ -6,12 +6,14 @@ from utils.amazon_api import add_images
 import pandas as pd
 
 
+df = pd.read_csv("FastApi/Data/raw_data/clean_total_results_with_description.csv")
+
 #-------------------------------#
 #PART 1: Retrieving games data asin
 #-------------------------------#
 
 # creating database handler instance
-load_dotenv(dotenv_path=".env")
+load_dotenv(dotenv_path=".env2")
 URL_database = os.environ.get("POST_DB_LINK")
 
 # ensuring database URL is set
@@ -31,12 +33,13 @@ unique_products = df['asin'].unique().tolist()
 #-------------------------------#
 
 # Set your Oxylabs API Credentials.
-username = os.environ.get("USERNAME_OXY")
-password = os.environ.get("PASSWORD_OXY")
+username = os.environ.get("USERNAME_OXY2")
+password = os.environ.get("PASSWORD_OXY2")
+print(username, password)
 
 # Initialize the Realtime client with your credentials.
 client = RealtimeClient(username, password)
 
 # adding images to the dataframe
 test_df = add_images(df.head(1), username, password)
-print(test_df)
+print(test_df['image_link'])
