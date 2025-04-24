@@ -34,6 +34,7 @@ class Game(Base):
     sales_volume = Column(String, nullable=True)
     reviews_count = Column(Integer, nullable=True)
     asin = Column(String, unique=True, nullable=False)
+    image_link = Column(String, nullable=True)
 
 
 class GameModel(BaseModel):
@@ -45,6 +46,7 @@ class GameModel(BaseModel):
     sales_volume: Optional[str]
     reviews_count: Optional[int]
     asin: str
+    image_link: str
 
     class Config:
         orm_mode = True  # Enable ORM mode to work with SQLAlchemy objects

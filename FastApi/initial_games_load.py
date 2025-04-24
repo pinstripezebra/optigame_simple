@@ -49,9 +49,8 @@ table_creation_query = """CREATE TABLE IF NOT EXISTS optigame_products (
     rating FLOAT,
     sales_volume TEXT,
     description TEXT,
-    reviews_count INTEGER
-    image_link TEXT,
-        )
+    reviews_count INTEGER,
+    image_link TEXT)
     """
 # Create the table if it doesn't exist
 engine.create_table(table_creation_query)
