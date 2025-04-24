@@ -102,7 +102,7 @@ def add_images(df, username, password):
         }
 
 
-        if True:
+        try:
             # Get response.
             response = requests.request(
                 'POST',
@@ -122,7 +122,7 @@ def add_images(df, username, password):
             output = response.json()
             output = output['results'][0]['content']['images']
             image_links.append(output[0])
-        else:
+        except:
             print(f"Error retrieving description for ASIN {key}.")
             image_links.append("")
     df['image_link'] = image_links
