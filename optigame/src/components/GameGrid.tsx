@@ -13,6 +13,7 @@ export interface Game {
   rating: number;
   sales_volume: string;
   reviews_count: number;
+  image_link: string;
 }
 
 const GameGrid = () => {
