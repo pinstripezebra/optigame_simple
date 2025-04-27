@@ -1,15 +1,14 @@
-import { HStack, Image, List, ListItem, Text } from '@chakra-ui/react';
-import useGenres from '../hooks/UseGenres';
+import { HStack, Image, List, ListItem, Spinner, Text } from '@chakra-ui/react';
+import useGenres from '../hooks/useGenres';
 
 
 
 const GenreList = () => {
-    const {data} = useGenres(); // Fetch genres from the API
+    const {data, loading, error} = useGenres(); // Fetch genres from the API
 
-    // Ensure genres is defined and is an array before mapping
-  if (!data || data.length === 0) {
-    return <p>Loading genres...</p>; // Show a loading message or fallback UI
-  }
+  if (error) return null;
+  if (loading) return <Spinner/>
+  
 
   return (
     <List.Root listStyleType={'none'} padding={0}>
