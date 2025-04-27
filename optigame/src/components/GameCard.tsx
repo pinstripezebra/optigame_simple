@@ -1,5 +1,5 @@
 import {Game} from './GameGrid'
-import { Card, Image} from '@chakra-ui/react'
+import { Card, Image, Text } from '@chakra-ui/react'
 import { GameScore } from './GameScore';
 
 interface Props {
@@ -20,14 +20,22 @@ const GameCard = ({ game }: Props) => {
         imageUrl = 'https://via.placeholder.com/150';
     }
 
+    // Ensuring the title is not too long for display
+    const truncatedTitle = game.title.length > 100 ? `${game.title.slice(0, 100)}...` : game.title;
+
     return (
-        <Card.Root borderRadius={10} overflow="hidden">
+        <Card.Root borderRadius={10} overflow="hidden" justifyContent="center" alignItems="center" display = 'flex' padding = '10px'>
             <Image
-                src={imageUrl} // Use the validated or fallback URL
-                alt={game.title} // Use the game's title as the alt text
+                src={imageUrl} 
+                alt={game.title} 
+                boxSize="300px" // Setting width and height to 200px
+                fit="cover" // Ensure the image covers the box while maintaining aspect ratio
+
             />
-            <Card.Body>
-                <Card.Title fontSize="2xl">{game.title}</Card.Title>
+            <Card.Body display="flex" flexDirection="column" justifyContent="space-between">
+                <Text fontSize="2xl">
+                    {truncatedTitle}
+                </Text>
                 <GameScore rating={game.rating} />
             </Card.Body>
         </Card.Root>
