@@ -1,7 +1,13 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ]
+  "compilerOptions": {
+    // other options
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "esModuleInterop": true,
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  }
 }
+
+

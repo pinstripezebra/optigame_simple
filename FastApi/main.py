@@ -7,13 +7,17 @@ from sqlalchemy import create_engine, Column, String, Integer
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
-from dotenv import load_dotenv
+from dotenv import dotenv_values
 from fastapi.middleware.cors import CORSMiddleware
 
+# Load the .env file from the parent directory
+config = dotenv_values("./.env2")
 
 # Load the database connection string from the environment variable
-DATABASE_URL = os.environ.get("POST_DB_LINK")
-USER_TABLE = os.environ.get("USER_TABLE")
+DATABASE_URL = config["DATABASE_URL"]
+USER_TABLE = config["USER_TABLE"]
+
+print(DATABASE_URL)
 
 # Initialize the database connection
 engine = create_engine(DATABASE_URL)

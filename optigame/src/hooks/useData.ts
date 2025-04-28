@@ -1,8 +1,6 @@
-import { useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import apiClient from "../services/api-client";
-import { CanceledError } from "axios";
-
-
+import axios, { AxiosError } from "axios";
 
 interface FetchResponse<T> {
     count: number;
@@ -18,7 +16,8 @@ const useData = <T>(endpoint: string) => {
         const controller = new AbortController();
 
         setLoading(true);
-        apiClient.get<FetchResponse<T>>(endpoint, {signal: controller.signal})
+        apiClient
+            .get<FetchResponse<T>>(endpoint, { signal: controller.signal })
             .then((res) => {
                 console.log("API Response:", res.data); // Log the response
                 if (res.data && Array.isArray(res.data)) {
@@ -27,14 +26,19 @@ const useData = <T>(endpoint: string) => {
                     console.error("Unexpected API response format:", res.data);
                 }
                 setLoading(false);
-            }).catch((err) => {
-                if (err instanceof CanceledError) return;
-                setError(err.message);
+            })
+            .catch((err) => {
+                if (axios.isCancel(err)) return; // Check if the error is due to request cancellation
+                if (err instanceof AxiosError) {
+                    setError(err.message);
+                } else {
+                    setError("An unexpected error occurred");
+                }
                 setLoading(false);
             });
 
         return () => controller.abort();
-    }, []);
+    }, [endpoint]);
 
     return { data, loading, error };
 };
