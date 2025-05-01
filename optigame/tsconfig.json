@@ -1,19 +1,23 @@
 {
   "compilerOptions": {
-    // other options
-    "jsx": "react-jsx",
-    "baseUrl": ".",
-    "esModuleInterop": true,
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
-    "paths": {
-      "@/*": ["src/*"]
-    },
-    "typeRoots": ["./node_modules/@types"],
-    "types": ["offscreencanvas", "stats.js", "webxr"]
-    },
-    "include": ["next-env.d.ts", "src/**/*.ts", "src/**/*.tsx"],
-    "exclude": ["node_modules"]
-  
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "customConditions": ["source"]
+  },
+  "exclude": ["node_modules"],
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }
-
-
