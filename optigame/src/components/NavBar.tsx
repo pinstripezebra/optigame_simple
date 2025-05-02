@@ -1,27 +1,15 @@
-import { HStack, Image, Text,Spacer, Box, Button, Menu, Portal } from "@chakra-ui/react";
+import { HStack, Image, Text,Button, Spacer, Box, Menu, Portal } from "@chakra-ui/react";
 import { useRef } from "react"
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import logo from "../assets/logo.jpg";
-
-import { useColorMode } from "./ui/color-mode"
-import { ColorModeProvider } from "./ui/color-mode"
-import { Theme } from "@chakra-ui/react"
+import { ColorModeSwitch } from "./ColorModeButton";
 
 
 
-const Demo = () => {
-  const { toggleColorMode } = useColorMode()
-  return (
-    <Button variant="outline" onClick={toggleColorMode}>
-      Toggle Mode
-    </Button>
-  )
-}
 
 const NavBar = () => {
   const ref = useRef<HTMLDivElement | null>(null)
   const getAnchorRect = () => ref.current!.getBoundingClientRect()
-  const { toggleColorMode } = useColorMode()
 
   return (
     <HStack padding="10px">
@@ -30,10 +18,9 @@ const NavBar = () => {
         Optigame
       </Text>
 
-      <Button variant="outline" onClick={toggleColorMode}>
-      Toggle Mode
-    </Button>
+
       <Spacer />
+      <ColorModeSwitch /> {/* Add the ColorModeSwitch here */}
       <Menu.Root positioning={{ getAnchorRect }}>
       <Menu.Trigger asChild>
         <Button variant="outline" size="sm">
