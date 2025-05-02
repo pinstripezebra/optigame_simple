@@ -8,7 +8,7 @@ import {
   Portal,
 } from "@chakra-ui/react";
 import { useRef } from "react";
-import logo from "../assets/logo.jpg";
+import logo from "../assets/chess_logo.jpg";
 import { ColorModeSwitch } from "./NavBar/ColorModeButton";
 import { UserMenu } from "./NavBar/UserMenu";
 
@@ -17,7 +17,7 @@ const NavBar = () => {
 
   return (
     <HStack padding="10px">
-      <Image src={logo} boxSize="60px" />
+      <Image src={logo} boxSize="60px" borderRadius={10} />
       <Text fontSize="2xl" fontWeight="bold">
         Optigame
       </Text>
