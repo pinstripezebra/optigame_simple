@@ -1,8 +1,10 @@
 import { ChangeEvent, FormEvent, useState } from "react";
-import { Button, Field, Fieldset, Input } from "@chakra-ui/react";
+import { Input, Button } from "@chakra-ui/react";
+import { IconButton } from "@chakra-ui/react";
+import { LuSearch } from "react-icons/lu"; // Import LuSearch from react-icons
 
 interface SearchProps {
-  onSearch: (title: string) => void; // Callback to pass the search criteria
+  onSearch: (title: string) => void; // Callback to pass search input
 }
 
 const SearchGames = ({ onSearch }: SearchProps) => {
@@ -19,23 +21,17 @@ const SearchGames = ({ onSearch }: SearchProps) => {
 
   return (
     <form onSubmit={handleFormSubmit}>
-      <Fieldset.Root size="lg" maxW="md">
-        <Fieldset.Content>
-          <Field.Root>
-            <Field.Label>Title</Field.Label>
-            <Input
-              name="title"
-              id="title"
-              value={title} // Bind the input value to the title state
-              onChange={handleInputChange} // Update the title state on input change
-            />
-          </Field.Root>
-        </Fieldset.Content>
-
-        <Button type="submit" alignSelf="flex-start">
-          Submit
-        </Button>
-      </Fieldset.Root>
+      <Input
+        placeholder="Search games..."
+        value={title}
+        onChange={handleInputChange}
+        size="sm"
+        width="400px"
+        marginRight="10px"
+      />
+      <IconButton aria-label="Search database">
+        <LuSearch />
+      </IconButton>
     </form>
   );
 };
