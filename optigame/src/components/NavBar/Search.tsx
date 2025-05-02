@@ -1,6 +1,5 @@
 import { ChangeEvent, FormEvent, useState } from "react";
-import { Input, Button } from "@chakra-ui/react";
-import { IconButton } from "@chakra-ui/react";
+import { Input, IconButton } from "@chakra-ui/react";
 import { LuSearch } from "react-icons/lu"; // Import LuSearch from react-icons
 
 interface SearchProps {
@@ -29,9 +28,11 @@ const SearchGames = ({ onSearch }: SearchProps) => {
         width="400px"
         marginRight="10px"
       />
-      <IconButton aria-label="Search database">
-        <LuSearch />
-      </IconButton>
+      <IconButton
+        type="submit" // Ensure the button triggers form submission
+        aria-label="Search database"
+        icon={<LuSearch />} // Use the search icon
+      />
     </form>
   );
 };

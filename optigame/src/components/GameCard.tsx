@@ -24,7 +24,7 @@ const GameCard = ({ game }: Props) => {
     const truncatedTitle = game.title.length > 100 ? `${game.title.slice(0, 100)}...` : game.title;
 
     return (
-        <Card.Root borderRadius={10} overflow="hidden" justifyContent="center" alignItems="center" display = 'flex' padding = '10px'>
+        <Card borderRadius={10} overflow="hidden" justifyContent="center" alignItems="center" display = 'flex' padding = '10px'>
             <Image
                 src={imageUrl} 
                 alt={game.title} 
@@ -32,13 +32,13 @@ const GameCard = ({ game }: Props) => {
                 fit="cover" // Ensure the image covers the box while maintaining aspect ratio
 
             />
-            <Card.Body display="flex" flexDirection="column" justifyContent="space-between">
+            <Card display="flex" flexDirection="column" justifyContent="space-between">
                 <Text fontSize="2xl">
                     {truncatedTitle}
                 </Text>
                 <GameScore rating={game.rating} />
-            </Card.Body>
-        </Card.Root>
+            </Card>
+        </Card>
     );
 }
 export default GameCard

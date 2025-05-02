@@ -2,27 +2,27 @@ import {
   Button,
   Menu,
   Portal,
+  MenuButton,
+  MenuList,
+  MenuItem,
 } from "@chakra-ui/react";
 
 export const UserMenu = () => {
   return (
-    <Menu.Root>
-      <Menu.Trigger asChild>
-        <Button variant="outline" size="sm">
-          Account
-        </Button>
-      </Menu.Trigger>
+    <Menu>
+      <MenuButton as={Button} variant="outline" size="sm">
+        Account
+      </MenuButton>
       <Portal>
-        <Menu.Positioner>
-          <Menu.Content>
-            <Menu.Item value="My-Games">My Games</Menu.Item>
-            <Menu.Item value="Find-Games">Find Games</Menu.Item>
-            <Menu.Item value="Settings">Settings</Menu.Item>
-            <Menu.Item value="Logout">Logout</Menu.Item>
-          </Menu.Content>
-        </Menu.Positioner>
+        <MenuList>
+          <MenuItem value="My-Games">My Games</MenuItem>
+          <MenuItem value="Find-Games">Find Games</MenuItem>
+          <MenuItem value="Settings">Settings</MenuItem>
+          <MenuItem value="Logout">Logout</MenuItem>
+          <MenuItem  value="Logout">Logout</MenuItem >
+        </MenuList>
       </Portal>
-    </Menu.Root>
+    </Menu>
   );
 };
 
