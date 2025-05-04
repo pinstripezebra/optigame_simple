@@ -21,11 +21,6 @@ const NavBar = ({ onSearch }: NavBarProps) => {
         Optigame
       </Text>
 
-      {/* Username */}
-      <Text>
-        Welcome, {username}!
-      </Text>
-
       {/* Spacer to push Search to the center */}
       <Spacer />
 
@@ -36,6 +31,14 @@ const NavBar = ({ onSearch }: NavBarProps) => {
 
       {/* Spacer to push ColorModeButton and UserMenu to the right */}
       <Spacer />
+
+      {/* Username */}
+      <Text fontWeight="bold">
+        Welcome,{" "}
+        <Text as="span" color="teal">
+          {username}
+        </Text>
+      </Text>
 
       {/* Color Mode Button */}
       <ColorModeSwitch />

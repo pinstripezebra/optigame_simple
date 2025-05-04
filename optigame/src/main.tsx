@@ -15,11 +15,17 @@ import HomePage from "./pages/HomePage";
 import NotFoundPage from "./pages/NotFoundPage";
 import Login from "./components/LoginSignup/Login";
 import Signup from "./components/LoginSignup/Signup";
+import Logout from "./components/LoginSignup/Logout";
 
 const router = createBrowserRouter([
   {
     path: "/Login",
     element: <Login />,
+    errorElement: <NotFoundPage />,
+  },
+  {
+    path: "/Logout",
+    element: <Logout />,
     errorElement: <NotFoundPage />,
   },
   {
