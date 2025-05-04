@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./LoginSignup.css";
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Flex,
@@ -7,12 +8,11 @@ import {
   Heading,
   Stack,
   Button,
-  Text
+  Text,
 } from "@chakra-ui/react";
 
 const Logout = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const handleShowClick = () => setShowPassword(!showPassword);
+  const navigate = useNavigate(); // Initialize useNavigate
   return (
     <Flex
       flexDirection="column"
@@ -38,9 +38,10 @@ const Logout = () => {
               backgroundColor="whiteAlpha.900"
               boxShadow="md"
             >
-                <Text fontSize="lg" color="teal.400">
-                  You have successfully logged out. Thank you for using our service!
-                </Text>
+              <Text fontSize="lg" color="teal.400">
+                You have successfully logged out. Thank you for using our
+                service!
+              </Text>
 
               {/* Return to Login Button */}
 
@@ -50,6 +51,9 @@ const Logout = () => {
                 variant="solid"
                 colorScheme="teal"
                 width="full"
+                onClick={() => {
+                  navigate("/Login"); // Navigate to the login page
+                }}
               >
                 Back to Login
               </Button>
@@ -57,8 +61,6 @@ const Logout = () => {
           </form>
         </Box>
       </Stack>
-
-      
     </Flex>
   );
 };
