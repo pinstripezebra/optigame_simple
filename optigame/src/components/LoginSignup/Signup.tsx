@@ -21,7 +21,7 @@ import {
 } from "@chakra-ui/react";
 import { FaUserAlt, FaLock } from "react-icons/fa";
 
-const LoginSignup = () => {
+const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const handleShowClick = () => setShowPassword(!showPassword);
   return (
@@ -40,7 +40,7 @@ const LoginSignup = () => {
         alignItems="center"
       >
         <Avatar bg="teal.500" />
-        <Heading color="teal.400">Welcome</Heading>
+        <Heading color="teal.400">Create Account</Heading>
         <Box minW={{ base: "90%", md: "468px" }}>
           <form>
             <Stack
@@ -49,7 +49,19 @@ const LoginSignup = () => {
               backgroundColor="whiteAlpha.900"
               boxShadow="md"
             >
-              {/* Email */}
+
+                {/* email*/}
+              <FormControl>
+                <InputGroup>
+                  <InputLeftElement
+                    pointerEvents="none"
+                    children={<MdOutlineEmail color="gray.300" />}
+                  />
+                  <Input type="email" placeholder="email" />
+                </InputGroup>
+              </FormControl>
+
+              {/* username*/}
               <FormControl>
                 <InputGroup>
                   <InputLeftElement
@@ -78,9 +90,6 @@ const LoginSignup = () => {
                     </Button>
                   </InputRightElement>
                 </InputGroup>
-                <FormHelperText textAlign="right">
-                  <Link>forgot password?</Link>
-                </FormHelperText>
               </FormControl>
               {/* Login Button */}
 
@@ -91,22 +100,16 @@ const LoginSignup = () => {
                 colorScheme="teal"
                 width="full"
               >
-                Login
+                Signup
               </Button>
             </Stack>
           </form>
         </Box>
       </Stack>
 
-      <Box>
-        New to us?{" "}
-        <Link color="teal.500" href="#">
-          Sign Up
-        </Link>
-      </Box>
       
     </Flex>
   );
 };
 
-export default LoginSignup;
+export default Signup;

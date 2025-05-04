@@ -8,13 +8,19 @@ import UsersPage from "./pages/UsersPage";
 import UserProfilePage from "./pages/UserProfilePage";
 import HomePage from "./pages/HomePage";
 import NotFoundPage from "./pages/NotFoundPage";
-import LoginSignup from "./components/LoginSignup/LoginSignup"
+import Login from "./components/LoginSignup/Login"
+import Signup from "./components/LoginSignup/Signup"
 
 const router = createBrowserRouter([
 
   {
-    path: "/LoginSignup",
-    element: <LoginSignup />,
+    path: "/Login",
+    element: <Login />,
+    errorElement: <NotFoundPage />,
+  },
+  {
+    path: "/Signup",
+    element: <Signup />,
     errorElement: <NotFoundPage />,
   },
   {
