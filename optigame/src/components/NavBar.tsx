@@ -1,20 +1,16 @@
-import {
-  HStack,
-  Image,
-  Text,
-  Spacer,
-  Box,
-} from "@chakra-ui/react";
+import { HStack, Image, Text, Spacer, Box } from "@chakra-ui/react";
 import logo from "../assets/chess_logo.jpg";
 import SearchGames from "./NavBar/Search";
 import { ColorModeSwitch } from "./NavBar/ColorModeButton";
-import {UserMenu} from "./NavBar/UserMenu";
+import { UserMenu } from "./NavBar/UserMenu";
+import { useUser } from "../context/UserContext";
 
 interface NavBarProps {
   onSearch: (title: string) => void; // Callback to handle search input
 }
 
 const NavBar = ({ onSearch }: NavBarProps) => {
+  const { username } = useUser(); //Loading username from context
   return (
     <HStack padding="10px" alignItems="center">
       {/* Logo */}
@@ -23,6 +19,11 @@ const NavBar = ({ onSearch }: NavBarProps) => {
       {/* App Title */}
       <Text fontSize="2xl" fontWeight="bold">
         Optigame
+      </Text>
+
+      {/* Username */}
+      <Text>
+        Welcome, {username}!
       </Text>
 
       {/* Spacer to push Search to the center */}
