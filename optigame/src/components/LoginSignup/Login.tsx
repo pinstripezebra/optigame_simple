@@ -1,9 +1,9 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import "./LoginSignup.css";
 import { MdOutlineEmail } from "react-icons/md";
 import { TbLockPassword } from "react-icons/tb";
 import { CiUser } from "react-icons/ci";
-import { HStack, Text } from "@chakra-ui/react";
 import {
   Box,
   Flex,
@@ -20,10 +20,44 @@ import {
   Link,
 } from "@chakra-ui/react";
 import { FaUserAlt, FaLock } from "react-icons/fa";
+import api from "../../services/api-client";
+
+export interface User {
+  id: string;
+  username: string;
+  password: string;
+  email: string;
+  role: number;
+}
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const handleShowClick = () => setShowPassword(!showPassword);
+
+  const [username, setUsername] = useState(""); // State for username
+  const [password, setPassword] = useState(""); // State for password
+
+  const navigate = useNavigate(); // Initialize useNavigate
+
+  const handleLogin = async (event: React.FormEvent) => {
+    event.preventDefault();
+    try {
+      // Pass the username and password from the state to the API
+      const response = await api.get<User[]>("/v1/users", {
+        params: { username, password },
+      });
+
+      console.log(response.data); // Handle the returned User objects as needed
+
+      // Check if the returned array has a length greater than 0
+      if (response.data.length > 0) {
+        navigate("/"); // Navigate to the base "/" route
+      }
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
+
   return (
     <Flex
       flexDirection="column"
@@ -42,25 +76,30 @@ const Login = () => {
         <Avatar bg="teal.500" />
         <Heading color="teal.400">Welcome</Heading>
         <Box minW={{ base: "90%", md: "468px" }}>
-          <form>
+          <form onSubmit={handleLogin}>
             <Stack
               spacing={4}
               p="1rem"
               backgroundColor="whiteAlpha.900"
               boxShadow="md"
             >
-              {/* username */}
+              {/* Username */}
               <FormControl>
                 <InputGroup>
                   <InputLeftElement
                     pointerEvents="none"
                     children={<FaUserAlt color="gray.300" />}
                   />
-                  <Input type="username" placeholder="username" />
+                  <Input
+                    type="text"
+                    placeholder="username"
+                    value={username} // Bind input value to username state
+                    onChange={(e) => setUsername(e.target.value)} // Update username state on input change
+                  />
                 </InputGroup>
               </FormControl>
 
-              {/* password */}
+              {/* Password */}
               <FormControl>
                 <InputGroup>
                   <InputLeftElement
@@ -71,6 +110,8 @@ const Login = () => {
                   <Input
                     type={showPassword ? "text" : "password"}
                     placeholder="Password"
+                    value={password} // Bind input value to password state
+                    onChange={(e) => setPassword(e.target.value)} // Update password state on input change
                   />
                   <InputRightElement width="4.5rem">
                     <Button h="1.75rem" size="sm" onClick={handleShowClick}>
@@ -82,11 +123,11 @@ const Login = () => {
                   <Link>forgot password?</Link>
                 </FormHelperText>
               </FormControl>
-              {/* Login Button */}
 
+              {/* Login Button */}
               <Button
                 borderRadius={0}
-                type="submit"
+                type="submit" // Ensure the button triggers form submission
                 variant="solid"
                 colorScheme="teal"
                 width="full"
@@ -104,7 +145,6 @@ const Login = () => {
           Sign Up
         </Link>
       </Box>
-      
     </Flex>
   );
 };

@@ -63,10 +63,17 @@ async def fetch_products(db: Session = Depends(get_db)):
 
 
 @app.get("/api/v1/users/")
-async def fetch_users(db: Session = Depends(get_db)):
-    # Query the database using the SQLAlchemy Game model
+async def fetch_users(username: str, password: str, db: Session = Depends(get_db)):
+    # Query the database for users matching the username and password
+    users = db.query(User).filter(User.username == username, User.password == password).all()
+    # Serialize the results using the Pydantic UserModel
+    return [UserModel.from_orm(user) for user in users]
+
+@app.get("/api/v1/users_all/")
+async def fetch_all_users(db: Session = Depends(get_db)):
+    # Query the database for users matching the username and password
     users = db.query(User).all()
-    # Serialize the results using the Pydantic GameModel
+    # Serialize the results using the Pydantic UserModel
     return [UserModel.from_orm(user) for user in users]
 
 @app.get("/api/v1/genres/")

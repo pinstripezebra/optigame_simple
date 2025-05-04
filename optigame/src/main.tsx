@@ -2,17 +2,20 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { ThemeProvider } from "next-themes";
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  BrowserRouter,
+} from "react-router-dom";
 
 import UsersPage from "./pages/UsersPage";
 import UserProfilePage from "./pages/UserProfilePage";
 import HomePage from "./pages/HomePage";
 import NotFoundPage from "./pages/NotFoundPage";
-import Login from "./components/LoginSignup/Login"
-import Signup from "./components/LoginSignup/Signup"
+import Login from "./components/LoginSignup/Login";
+import Signup from "./components/LoginSignup/Signup";
 
 const router = createBrowserRouter([
-
   {
     path: "/Login",
     element: <Login />,
@@ -33,8 +36,15 @@ const router = createBrowserRouter([
     element: <UsersPage />,
   },
 
-  { path: "/user/:userId", 
-    element: <UserProfilePage username="JohnDoe" email="johndoe@example.com" games={[]} /> 
+  {
+    path: "/user/:userId",
+    element: (
+      <UserProfilePage
+        username="JohnDoe"
+        email="johndoe@example.com"
+        games={[]}
+      />
+    ),
   },
 ]);
 
