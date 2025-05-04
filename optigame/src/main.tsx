@@ -4,7 +4,8 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import UserPage from "./pages/UserPage";
+import UsersPage from "./pages/UsersPage";
+import UserProfilePage from "./pages/UserProfilePage";
 import HomePage from "./pages/HomePage";
 import NotFoundPage from "./pages/NotFoundPage";
 
@@ -16,7 +17,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/user",
-    element: <UserPage />,
+    element: <UsersPage />,
+  },
+
+  { path: "/user/:userId", 
+    element: <UserProfilePage username="JohnDoe" email="johndoe@example.com" games={[]} /> 
   },
 ]);
 
