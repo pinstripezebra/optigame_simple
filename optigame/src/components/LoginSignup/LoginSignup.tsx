@@ -1,0 +1,85 @@
+import {useState} from "react";
+import "./LoginSignup.css";
+import { MdOutlineEmail } from "react-icons/md";
+import { TbLockPassword } from "react-icons/tb";
+import { CiUser } from "react-icons/ci";
+import { HStack, Text } from "@chakra-ui/react";
+import { Box, Flex, Avatar, Heading, Stack, FormControl, InputGroup, InputLeftElement, Input, InputRightElement, Button, FormHelperText, Link } from "@chakra-ui/react";
+import { FaUserAlt, FaLock } from "react-icons/fa";
+
+const LoginSignup = () => {
+    const [showPassword, setShowPassword] = useState(false);
+    const handleShowClick = () => setShowPassword(!showPassword);
+  return (
+    <Flex
+      flexDirection="column"
+      width="100wh"
+      height="100vh"
+      backgroundColor="gray.200"
+      justifyContent="center"
+      alignItems="center"
+    >
+      <Stack
+        flexDir="column"
+        mb="2"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Avatar bg="teal.500" />
+        <Heading color="teal.400">Welcome</Heading>
+        <Box minW={{ base: "90%", md: "468px" }}>
+          <form>
+            <Stack
+              spacing={4}
+              p="1rem"
+              backgroundColor="whiteAlpha.900"
+              boxShadow="md"
+            >
+              {/* Email */}
+              <FormControl>
+                <InputGroup>
+                  <InputLeftElement
+                    pointerEvents="none"
+                    children={<FaUserAlt color="gray.300" />}
+                  />
+                  <Input type="email" placeholder="email address" />
+                </InputGroup>
+              </FormControl>
+
+              {/* Username */}
+              <FormControl>
+                <InputGroup>
+                  <InputLeftElement
+                    pointerEvents="none"
+                    color="gray.300"
+                    children={<FaLock color="gray.300" />}
+                  />
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Password"
+                  />
+                  <InputRightElement width="4.5rem">
+                    <Button h="1.75rem" size="sm" onClick={handleShowClick}>
+                      {showPassword ? "Hide" : "Show"}
+                    </Button>
+                  </InputRightElement>
+                </InputGroup>
+                <FormHelperText textAlign="right">
+                  <Link>forgot password?</Link>
+                </FormHelperText>
+              </FormControl>
+
+              {/* Password */}
+              <HStack spacing="2">
+                <TbLockPassword />
+                <Text>Password</Text>
+              </HStack>
+            </Stack>
+          </form>
+        </Box>
+      </Stack>
+    </Flex>
+  );
+};
+
+export default LoginSignup;

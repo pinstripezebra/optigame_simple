@@ -8,8 +8,15 @@ import UsersPage from "./pages/UsersPage";
 import UserProfilePage from "./pages/UserProfilePage";
 import HomePage from "./pages/HomePage";
 import NotFoundPage from "./pages/NotFoundPage";
+import LoginSignup from "./components/LoginSignup/LoginSignup"
 
 const router = createBrowserRouter([
+
+  {
+    path: "/LoginSignup",
+    element: <LoginSignup />,
+    errorElement: <NotFoundPage />,
+  },
   {
     path: "/",
     element: <HomePage />,
