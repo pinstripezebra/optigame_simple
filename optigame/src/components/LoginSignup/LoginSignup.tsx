@@ -1,15 +1,29 @@
-import {useState} from "react";
+import { useState } from "react";
 import "./LoginSignup.css";
 import { MdOutlineEmail } from "react-icons/md";
 import { TbLockPassword } from "react-icons/tb";
 import { CiUser } from "react-icons/ci";
 import { HStack, Text } from "@chakra-ui/react";
-import { Box, Flex, Avatar, Heading, Stack, FormControl, InputGroup, InputLeftElement, Input, InputRightElement, Button, FormHelperText, Link } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Avatar,
+  Heading,
+  Stack,
+  FormControl,
+  InputGroup,
+  InputLeftElement,
+  Input,
+  InputRightElement,
+  Button,
+  FormHelperText,
+  Link,
+} from "@chakra-ui/react";
 import { FaUserAlt, FaLock } from "react-icons/fa";
 
 const LoginSignup = () => {
-    const [showPassword, setShowPassword] = useState(false);
-    const handleShowClick = () => setShowPassword(!showPassword);
+  const [showPassword, setShowPassword] = useState(false);
+  const handleShowClick = () => setShowPassword(!showPassword);
   return (
     <Flex
       flexDirection="column"
@@ -42,11 +56,11 @@ const LoginSignup = () => {
                     pointerEvents="none"
                     children={<FaUserAlt color="gray.300" />}
                   />
-                  <Input type="email" placeholder="email address" />
+                  <Input type="username" placeholder="username" />
                 </InputGroup>
               </FormControl>
 
-              {/* Username */}
+              {/* password */}
               <FormControl>
                 <InputGroup>
                   <InputLeftElement
@@ -68,16 +82,29 @@ const LoginSignup = () => {
                   <Link>forgot password?</Link>
                 </FormHelperText>
               </FormControl>
+              {/* Login Button */}
 
-              {/* Password */}
-              <HStack spacing="2">
-                <TbLockPassword />
-                <Text>Password</Text>
-              </HStack>
+              <Button
+                borderRadius={0}
+                type="submit"
+                variant="solid"
+                colorScheme="teal"
+                width="full"
+              >
+                Login
+              </Button>
             </Stack>
           </form>
         </Box>
       </Stack>
+
+      <Box>
+        New to us?{" "}
+        <Link color="teal.500" href="#">
+          Sign Up
+        </Link>
+      </Box>
+      
     </Flex>
   );
 };
