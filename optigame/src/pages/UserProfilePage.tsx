@@ -11,13 +11,11 @@ interface Game {
 
 interface UserProfilePageProps {
   username: string;
-  email: string;
   games: Game[];
 }
 
 const UserProfilePage: React.FC<UserProfilePageProps> = ({
   username,
-  email,
   games,
 }) => {
   const params = useParams<{ userId: string }>();
@@ -32,9 +30,6 @@ const UserProfilePage: React.FC<UserProfilePageProps> = ({
       <Box marginBottom="20px">
         <Text fontSize="2xl" fontWeight="bold">
           {`Username: ${username}`}
-        </Text>
-        <Text fontSize="lg" color="gray.600">
-          {`Email: ${email}`}
         </Text>
       </Box>
 

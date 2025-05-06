@@ -16,16 +16,13 @@ import NotFoundPage from "./pages/NotFoundPage";
 import Login from "./components/LoginSignup/Login";
 import Signup from "./components/LoginSignup/Signup";
 import Logout from "./components/LoginSignup/Logout";
+import { useUser } from "./context/UserContext";
+import ProtectedRoute from "./components/LoginSignup/ProtectedRoute";
 
 const router = createBrowserRouter([
   {
     path: "/Login",
     element: <Login />,
-    errorElement: <NotFoundPage />,
-  },
-  {
-    path: "/Logout",
-    element: <Logout />,
     errorElement: <NotFoundPage />,
   },
   {
@@ -35,22 +32,27 @@ const router = createBrowserRouter([
   },
   {
     path: "/",
-    element: <HomePage />,
+    element: (
+      <ProtectedRoute>
+        <HomePage />
+      </ProtectedRoute>
+    ),
     errorElement: <NotFoundPage />,
   },
   {
     path: "/user",
-    element: <UsersPage />,
+    element: (
+      <ProtectedRoute>
+        <UsersPage />
+      </ProtectedRoute>
+    ),
   },
-
   {
     path: "/user/:userId",
     element: (
-      <UserProfilePage
-        username="JohnDoe"
-        email="johndoe@example.com"
-        games={[]}
-      />
+      <ProtectedRoute>
+        <UserProfilePage username="JohnDoe" games={[]} />
+      </ProtectedRoute>
     ),
   },
 ]);

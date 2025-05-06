@@ -29,29 +29,23 @@ export interface User {
 }
 
 const Login = () => {
-  const { setUsername } = useUser(); // Access setUsername from UserContext
  
   const [showPassword, setShowPassword] = useState(false);
   const handleShowClick = () => setShowPassword(!showPassword);
-
-  const [username, setLocalUsername] = useState(""); // Local state for username input
-  const [password, setPassword] = useState(""); // State for password
-
-  const navigate = useNavigate(); // Initialize useNavigate
+  const { setUsername } = useUser();
+  const [localUsername, setLocalUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-      // Pass the username and password from the state to the API
       const response = await api.get<User[]>("/v1/users", {
-        params: { username, password },
+        params: { username: localUsername, password },
       });
 
-      console.log(response.data); // Handle the returned User objects as needed
-
-      // Check if the returned array has a length greater than 0
       if (response.data.length > 0) {
-        setUsername(username); // Set the username in the context to the username from the input
+        setUsername(localUsername); // Set the global username
         navigate("/"); // Navigate to the base "/" route
       }
     } catch (error) {
@@ -94,7 +88,7 @@ const Login = () => {
                   <Input
                     type="text"
                     placeholder="username"
-                    value={username} // Bind input value to username state
+                    value={localUsername} // Bind input value to username state
                     onChange={(e) => setLocalUsername(e.target.value)} // Update username state on input change
                   />
                 </InputGroup>
