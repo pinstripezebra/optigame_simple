@@ -19,6 +19,7 @@ import Logout from "./components/LoginSignup/Logout";
 import { useUser } from "./context/UserContext";
 import ProtectedRoute from "./components/LoginSignup/ProtectedRoute";
 
+
 const router = createBrowserRouter([
   {
     path: "/Login",
@@ -51,7 +52,7 @@ const router = createBrowserRouter([
     path: "/user/:userId",
     element: (
       <ProtectedRoute>
-        <UserProfilePage username="JohnDoe" games={[]} />
+        <UserProfilePage games={[]} />
       </ProtectedRoute>
     ),
   },

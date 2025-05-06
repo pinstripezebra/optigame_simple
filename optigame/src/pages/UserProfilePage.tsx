@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Text, Grid, GridItem, Button } from "@chakra-ui/react";
 import { Link, useParams } from "react-router-dom";
+import { useUser } from "../context/UserContext";
 
 interface Game {
   id: string;
@@ -10,15 +11,13 @@ interface Game {
 }
 
 interface UserProfilePageProps {
-  username: string;
   games: Game[];
 }
 
-const UserProfilePage: React.FC<UserProfilePageProps> = ({
-  username,
-  games,
-}) => {
+const UserProfilePage: React.FC<UserProfilePageProps> = ({ games }) => {
+  const { username } = useUser(); // Access the username from UserContext
   const params = useParams<{ userId: string }>();
+
   return (
     <Box padding="20px">
       <div>
