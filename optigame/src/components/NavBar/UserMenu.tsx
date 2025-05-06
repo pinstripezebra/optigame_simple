@@ -6,8 +6,9 @@ import {
   MenuList,
   MenuItem,
 } from "@chakra-ui/react";
-
+import { useNavigate } from "react-router-dom";
 export const UserMenu = () => {
+  const navigate = useNavigate();
   return (
     <Menu>
       <MenuButton as={Button} variant="outline" size="sm">
@@ -15,14 +16,16 @@ export const UserMenu = () => {
       </MenuButton>
       <Portal>
         <MenuList>
-          <MenuItem value="My-Games">My Games</MenuItem>
+          <MenuItem onClick={() => navigate("/user")} value="My-Account">
+            My Account
+          </MenuItem>
           <MenuItem value="Find-Games">Find Games</MenuItem>
           <MenuItem value="Settings">Settings</MenuItem>
-          <MenuItem value="Logout">Logout</MenuItem>
-          <MenuItem  value="Logout">Logout</MenuItem >
+          <MenuItem onClick={() => navigate("/Logout")} value="Logout">
+            Logout
+          </MenuItem>
         </MenuList>
       </Portal>
     </Menu>
   );
 };
-

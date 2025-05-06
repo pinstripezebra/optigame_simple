@@ -4,13 +4,14 @@ import SearchGames from "./NavBar/Search";
 import { ColorModeSwitch } from "./NavBar/ColorModeButton";
 import { UserMenu } from "./NavBar/UserMenu";
 import { useUser } from "../context/UserContext";
-
+import { useNavigate } from "react-router-dom";
 interface NavBarProps {
   onSearch: (title: string) => void; // Callback to handle search input
 }
 
 const NavBar = ({ onSearch }: NavBarProps) => {
   const { username } = useUser(); //Loading username from context
+  const navigate = useNavigate(); // Initialize useNavigate
   return (
     <HStack padding="10px" alignItems="center">
       {/* Logo */}
