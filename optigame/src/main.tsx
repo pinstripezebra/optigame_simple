@@ -27,6 +27,11 @@ const router = createBrowserRouter([
     errorElement: <NotFoundPage />,
   },
   {
+    path: "/Logout",
+    element: <Logout />,
+    errorElement: <NotFoundPage />,
+  },
+  {
     path: "/Signup",
     element: <Signup />,
     errorElement: <NotFoundPage />,
@@ -40,16 +45,9 @@ const router = createBrowserRouter([
     ),
     errorElement: <NotFoundPage />,
   },
+
   {
     path: "/user",
-    element: (
-      <ProtectedRoute>
-        <UsersPage />
-      </ProtectedRoute>
-    ),
-  },
-  {
-    path: "/user/:userId",
     element: (
       <ProtectedRoute>
         <UserProfilePage games={[]} />
