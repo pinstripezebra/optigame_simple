@@ -1,7 +1,8 @@
 import React from "react";
 import { Box, Text, Grid, GridItem, Button } from "@chakra-ui/react";
 import { Link, useParams } from "react-router-dom";
-import { useUser } from "../context/UserContext";
+import { useUser } from "../../context/UserContext";
+import  UserNavBar from "./UserProfileNavBar"; // Import the NavBar component
 
 interface Game {
   id: string;
@@ -20,21 +21,12 @@ const UserProfilePage: React.FC<UserProfilePageProps> = ({ games }) => {
 
   return (
     <Box padding="20px">
-      <div>
-        <Text fontSize="xl" marginBottom="4">
-          {`User ID: ${params.userId}`}
-        </Text>
-      </div>
-      {/* User Info */}
-      <Box marginBottom="20px">
-        <Text fontSize="2xl" fontWeight="bold">
-          {`Username: ${username}`}
-        </Text>
-      </Box>
+      {/* User Profile NavBar */}
+      <UserNavBar/> {/* Pass an empty function for onSearch */}
 
       {/* Games Grid */}
       <Text fontSize="xl" fontWeight="bold" marginBottom="10px">
-        Games
+        Your Games
       </Text>
       <Box width="100%" overflowX="auto">
         <table style={{ width: "100%", borderCollapse: "collapse" }}>

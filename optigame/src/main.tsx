@@ -10,7 +10,7 @@ import {
 } from "react-router-dom";
 
 import UsersPage from "./pages/UsersPage";
-import UserProfilePage from "./pages/UserProfilePage";
+import UserProfilePage from "./pages/UserProfile/UserProfilePage";
 import HomePage from "./pages/HomePage";
 import NotFoundPage from "./pages/NotFoundPage";
 import Login from "./components/LoginSignup/Login";
