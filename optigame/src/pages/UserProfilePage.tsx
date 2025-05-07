@@ -36,30 +36,42 @@ const UserProfilePage: React.FC<UserProfilePageProps> = ({ games }) => {
       <Text fontSize="xl" fontWeight="bold" marginBottom="10px">
         Games
       </Text>
-      <Grid
-        templateColumns={{ sm: "1fr", md: "1fr 1fr", lg: "1fr 1fr 1fr" }}
-        gap={6}
-      >
-        {games.map((game) => (
-          <GridItem
-            key={game.id}
-            border="1px solid"
-            borderColor="gray.200"
-            borderRadius="md"
-            padding="10px"
-          >
-            <Text fontSize="lg" fontWeight="bold">
-              {game.name}
-            </Text>
-            <Text fontSize="sm" color="gray.500">
-              {game.tag}
-            </Text>
-            <Text fontSize="md" marginTop="5px">
-              {game.description}
-            </Text>
-          </GridItem>
-        ))}
-      </Grid>
+      <Box width="100%" overflowX="auto">
+        <table style={{ width: "100%", borderCollapse: "collapse" }}>
+          <thead>
+            <tr>
+              <th style={{ border: "1px solid gray", padding: "8px", textAlign: "left" }}>Name</th>
+              <th style={{ border: "1px solid gray", padding: "8px", textAlign: "left" }}>Tag</th>
+              <th style={{ border: "1px solid gray", padding: "8px", textAlign: "left" }}>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            {games.length > 0 ? (
+              games.map((game) => (
+                <tr key={game.id}>
+                  <td style={{ border: "1px solid gray", padding: "8px" }}>{game.name}</td>
+                  <td style={{ border: "1px solid gray", padding: "8px" }}>{game.tag}</td>
+                  <td style={{ border: "1px solid gray", padding: "8px" }}>{game.description}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan={3}
+                  style={{
+                    border: "1px solid gray",
+                    padding: "8px",
+                    textAlign: "center",
+                    color: "gray",
+                  }}
+                >
+                  No games available.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </Box>
 
       {/* Back to Home Button */}
       <Button as={Link} to="/" colorScheme="teal" size="md" marginTop="20px">
