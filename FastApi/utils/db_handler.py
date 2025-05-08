@@ -174,3 +174,25 @@ class DatabaseHandler:
         # Close the cursor and connection
         cursor.close()
 
+    def populate_user_game_table(self,df):
+
+        """ Connect to the PostgreSQL database and updates the user game table with
+        data from the input dataframe."""
+
+        # Create a cursor object
+        cursor = self.conn.cursor()
+
+        # Iterate over the rows of the DataFrame and insert each row into the table
+        for index, row in df.iterrows():
+            cursor.execute(
+                """INSERT INTO optigame_user_games (id, user_id, asin)
+                VALUES (%s, %s, %s)""",
+                (
+                    str(row['id']),  # Convert UUID to string
+                    row['user_id'],
+                    row['asin']
+                )
+            )
+        self.conn.commit()
+        # Close the cursor and connection
+        cursor.close()

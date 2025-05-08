@@ -118,7 +118,7 @@ class UniqueGameTagsModel(BaseModel):
 
 # This user_id:game_id mapping model
 # it stores the games that each user has liked
-class User_Games(Base):
+class User_Game(Base):
     __tablename__ = "optigame_user_games"  # Table name in the PostgreSQL database
 
     id = Column(pg.UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True, nullable=False)
