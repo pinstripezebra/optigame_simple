@@ -90,15 +90,12 @@ async def fetch_unique_game_tags(db: Session = Depends(get_db)):
     # Serialize the results using the Pydantic Unqiue Genres Model
     return [UniqueGameTagsModel.from_orm(gametag) for gametag in gametags]
 
-@app.get("/api/v1/unique_genres/")
-async def fetch_user_game(id: str, db: Session = Depends(get_db)):
+@app.get("/api/v1/user_game/")
+async def fetch_user_game(user_id: str, db: Session = Depends(get_db)):
     # Query the database using the SQLAlchemy Unique Genres 
-    user_games = db.query(User_Game).filter(User_Game.id == id)
+    user_games = db.query(User_Game).filter(User_Game.user_id == user_id)
     # Serialize the results using the Pydantic Unqiue Genres Model
     return [User_Game_Model.from_orm(user_game) for user_game in user_games]
-
-
-
 #-------------------------------------------------#
 # ----------PART 2: POST METHODS------------------#
 #-------------------------------------------------#
