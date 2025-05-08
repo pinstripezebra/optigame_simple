@@ -115,3 +115,23 @@ class UniqueGameTagsModel(BaseModel):
         orm_mode = True  # Enable ORM mode to work with SQLAlchemy objects
         from_attributes = True # Enable attribute access for SQLAlchemy objects
 
+
+# This user_id:game_id mapping model
+# it stores the games that each user has liked
+class User_Games(Base):
+    __tablename__ = "optigame_user_games"  # Table name in the PostgreSQL database
+
+    id = Column(pg.UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True, nullable=False)
+    user_id = Column(String, nullable=False)
+    asin = Column(String, nullable=False)
+
+
+class User_Game_Model(BaseModel):
+    id: Optional[UUID]
+    user_id:str
+    asin: str
+
+    class Config:
+        orm_mode = True  # Enable ORM mode to work with SQLAlchemy objects
+        from_attributes = True # Enable attribute access for SQLAlchemy objects
+

@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Depends, HTTPException
-from FastApi.models import User, Game, Role, GameModel, UserModel, GameTags, GameTagsModel, UniqueGameTags, UniqueGameTagsModel
+from FastApi.models import User, Game, Role, GameModel, UserModel, GameTags, GameTagsModel, UniqueGameTags, UniqueGameTagsModel, User_Game_Model
 from typing import List
 from uuid import uuid4, UUID
 import os
@@ -97,6 +97,7 @@ async def fetch_unique_game_tags(db: Session = Depends(get_db)):
 # ----------PART 2: POST METHODS------------------#
 #-------------------------------------------------#
 
+# for adding a new user to the database
 @app.post("/api/v1/users/")
 async def create_user(user: UserModel, db: Session = Depends(get_db)):
     """
@@ -120,3 +121,29 @@ async def create_user(user: UserModel, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="User with this username already exists")
 
     return {"message": "User created successfully", "user": new_user}
+
+
+# for adding a new user-game match to database
+@app.post("/api/v1/user_game/")
+async def create_user(user_game: User_Game_Model, db: Session = Depends(get_db)):
+    """
+    Create a new user and insert it into the user table.
+    """
+    # Create a new User_Game instance
+    new_user_model = User(
+        id=uuid4(),  
+        asin = user_game.asin,
+        user_id = user_game.user_id,
+
+    )
+
+    try:
+        # Add the new user to the database
+        db.add(new_user_model)
+        db.commit()
+        db.refresh(new_user_model)  # Refresh to get the new user's data from the database
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(status_code=400, detail="User_model with this data already exists")
+
+    return {"message": "User created successfully", "user": new_user_model}
