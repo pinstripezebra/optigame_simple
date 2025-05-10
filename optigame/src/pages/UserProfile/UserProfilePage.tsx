@@ -3,6 +3,8 @@ import { Box, Text, Grid, GridItem, Button } from "@chakra-ui/react";
 import { Link, useParams } from "react-router-dom";
 import { useUser } from "../../context/UserContext";
 import  UserNavBar from "./UserProfileNavBar"; // Import the NavBar component
+import { useState, useEffect } from "react";
+import api from "../../services/api-client";
 
 interface Game {
   id: string;
@@ -11,13 +13,39 @@ interface Game {
   description: string;
 }
 
-interface UserProfilePageProps {
-  games: Game[];
+interface  UserGame {
+  id: string;
+  user_id: string;
+  asin: string;
 }
 
-const UserProfilePage: React.FC<UserProfilePageProps> = ({ games }) => {
+interface UserProfilePageProps {
+  games: Game[];
+  usergames: UserGame[];
+}
+
+const UserProfilePage: React.FC<UserProfilePageProps> = ({ games}) => {
   const { username } = useUser(); // Access the username from UserContext
   const params = useParams<{ userId: string }>();
+
+
+  const [usergames, setUserGames] = useState<UserGame[]>([]);
+  const [filteredGames, setFilteredUserGames] = useState<UserGame[]>([]);
+  
+  useEffect(() => {
+      const fetchUserGames = async () => {
+        const response = await api.get<Game[]>("/v1/games/");
+        const userGamesData = response.data.map((game) => ({
+          id: game.id,
+          user_id: "", // Replace with actual user_id if available
+          asin: "", // Replace with actual asin if available
+        }));
+        setUserGames(userGamesData);
+        setFilteredUserGames(userGamesData);
+      };
+  
+      fetchUserGames();
+    }, []);
 
   return (
     <Box padding="20px">
@@ -74,3 +102,5 @@ const UserProfilePage: React.FC<UserProfilePageProps> = ({ games }) => {
 };
 
 export default UserProfilePage;
+
+
