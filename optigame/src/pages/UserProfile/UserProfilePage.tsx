@@ -30,22 +30,43 @@ const UserProfilePage: React.FC<UserProfilePageProps> = ({ games}) => {
 
 
   const [usergames, setUserGames] = useState<UserGame[]>([]);
-  const [filteredGames, setFilteredUserGames] = useState<UserGame[]>([]);
+  const [filteredGames, setFilteredUserGames] = useState<Game[]>([]);
   
   useEffect(() => {
-      const fetchUserGames = async () => {
-        const response = await api.get<Game[]>("/v1/games/");
+    const fetchUserGames = async () => {
+      try {
+        const response = await api.get<UserGame[]>("/v1/user_game/", {
+          params: { user_id: username }, // Pass username as user_id
+        });
         const userGamesData = response.data.map((game) => ({
           id: game.id,
-          user_id: "", // Replace with actual user_id if available
-          asin: "", // Replace with actual asin if available
+          user_id: game.user_id, // Use actual user_id from response
+          asin: game.asin, // Use actual asin from response
         }));
         setUserGames(userGamesData);
-        setFilteredUserGames(userGamesData);
-      };
-  
-      fetchUserGames();
-    }, []);
+        console.log(userGamesData);
+
+        // Fetch Game objects for each asin
+        const gamePromises = userGamesData.map(async (userGame) => {
+          const gameResponse = await api.get<Game>(`/v1/games/`, {
+            params: { asin: userGame.asin },
+          });
+          return gameResponse.data;
+        });
+
+        const gamesData = await Promise.all(gamePromises);
+        setFilteredUserGames(gamesData as Game[]);
+        console.log(gamesData);
+      } catch (error) {
+        console.error("Error fetching user games or game details:", error);
+      }
+    };
+
+    fetchUserGames();
+  }, [username]);
+
+
+    
 
   return (
     <Box padding="20px">

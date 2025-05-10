@@ -55,10 +55,13 @@ async def root():
     return {"message": "Hello World"}
 
 @app.get("/api/v1/games/")
-async def fetch_products(db: Session = Depends(get_db)):
-    # Query the database using the SQLAlchemy User model
-    products = db.query(Game).all()
-    # Serialize the results using the Pydantic UserModel
+async def fetch_products(asin: str = None, db: Session = Depends(get_db)):
+    # Query the database using the SQLAlchemy Game model
+    if asin:
+        products = db.query(Game).filter(Game.asin == asin).all()
+    else:
+        products = db.query(Game).all()
+    # Serialize the results using the Pydantic GameModel
     return [GameModel.from_orm(product) for product in products]
 
 
