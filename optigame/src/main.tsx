@@ -50,7 +50,7 @@ const router = createBrowserRouter([
     path: "/user",
     element: (
       <ProtectedRoute>
-        <UserProfilePage games={[]} />
+        <UserProfilePage />
       </ProtectedRoute>
     ),
   },

@@ -10,19 +10,20 @@ import uuid
 from dotenv import load_dotenv
 
 table_name = "optigame_products"
-URL_database = os.environ.get("POST_DB_LINK")
-engine = DatabaseHandler(URL_database)
-engine.delete_table(table_name)
 
 # Load environment variables from .env2 file
 load_dotenv(dotenv_path=".env2")
+URL_database = os.environ.get("DATABASE_URL")
+engine = DatabaseHandler(URL_database)
+engine.delete_table(table_name)
 
 # Set your Oxylabs API Credentials.
 username = os.environ.get("USERNAME_OXY2")
 password = os.environ.get("PASSWORD_OXY2")
 
 # loading dataframe
-df = pd.read_csv("FastApi/Data/raw_data/clean_total_results_with_description.csv")
+df = pd.read_csv("FastApi/Data/raw_data/test.csv")
+print("Dataframe loaded from CSV file")
 
 if 'image_link' not in df.columns:
     df = add_images(df, username, password)
@@ -36,6 +37,9 @@ df['sales_volume'] = df['sales_volume'].fillna("0")
 df['description'] = df['description'].fillna("")
 df['reviews_count'] = df['reviews_count'].fillna(0)
 df['image_link'] = df['image_link'].fillna("")
+
+# ensuring asin is unique
+df = df.drop_duplicates(subset='asin', keep='first')
 
 print(df['price'].apply(pd.to_numeric, errors='coerce').isna())
 print(df['rating'].apply(pd.to_numeric, errors='coerce').isna())
