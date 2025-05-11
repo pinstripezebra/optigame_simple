@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Text, Button } from "@chakra-ui/react";
+import { Box, Text, Button, Spinner } from "@chakra-ui/react";
 import { Link, useParams } from "react-router-dom";
 import { useUser } from "../../context/UserContext";
 import UserNavBar from "./UserProfileNavBar"; // Import the NavBar component
@@ -29,10 +29,12 @@ const UserProfilePage: React.FC = () => {
 
   const [usergames, setUserGames] = useState<UserGame[]>([]);
   const [filteredUserGames, setFilteredUserGames] = useState<Game[]>([]);
-  
+  const [loading, setLoading] = useState<boolean>(true); // Add loading state
 
   useEffect(() => {
     const fetchUserGames = async () => {
+      setLoading(true); // Set loading to true before starting the API calls
+
       try {
         const response = await api.get<UserGame[]>("/v1/user_game", {
           params: { user_id: username },
@@ -40,7 +42,6 @@ const UserProfilePage: React.FC = () => {
 
         const userGamesData = response.data;
         setUserGames(userGamesData);
-
 
         const responseGames = await api.get<Game[]>("/v1/games");
         const gamesData = responseGames.data;
@@ -51,9 +52,10 @@ const UserProfilePage: React.FC = () => {
 
         setFilteredUserGames(gamesUserData);
         console.log("Fetched games data:", gamesUserData);
-        console.log("Filtered User Games:", filteredUserGames);
       } catch (error) {
         console.error("Error fetching user games or game details:", error);
+      } finally {
+        setLoading(false); // Set loading to false after the API calls are complete
       }
     };
 
@@ -103,7 +105,13 @@ const UserProfilePage: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredUserGames.length > 0 ? (
+            {loading ? (
+              <tr>
+                <td colSpan={3} style={{ textAlign: "center", padding: "20px" }}>
+                  <Spinner size="lg" />
+                </td>
+              </tr>
+            ) : filteredUserGames.length > 0 ? (
               filteredUserGames.map((game, index) => (
                 <tr key={game.id || `game-${index}`}>
                   <td style={{ border: "1px solid gray", padding: "8px" }}>
@@ -132,7 +140,6 @@ const UserProfilePage: React.FC = () => {
                 </td>
               </tr>
             )}
-            {/* Debugging: Log filteredGames */}
           </tbody>
         </table>
       </Box>
