@@ -30,6 +30,7 @@ const UserProfilePage: React.FC = () => {
   const [usergames, setUserGames] = useState<UserGame[]>([]);
   const [filteredUserGames, setFilteredUserGames] = useState<Game[]>([]);
   const [loading, setLoading] = useState<boolean>(true); // Add loading state
+  const [expandedRow, setExpandedRow] = useState<string | null>(null); // Track the expanded row
 
   useEffect(() => {
     const fetchUserGames = async () => {
@@ -62,6 +63,10 @@ const UserProfilePage: React.FC = () => {
     fetchUserGames();
   }, [username]); // Ensure the dependency array is correct
 
+  const handleRowClick = (id: string) => {
+    setExpandedRow((prev) => (prev === id ? null : id)); // Toggle expanded row
+  };
+
   return (
     <Box padding="20px">
       {/* User Profile NavBar */}
@@ -80,6 +85,7 @@ const UserProfilePage: React.FC = () => {
                   border: "1px solid gray",
                   padding: "8px",
                   textAlign: "left",
+                  width: "20%", // Set width for Asin column
                 }}
               >
                 Asin
@@ -89,6 +95,7 @@ const UserProfilePage: React.FC = () => {
                   border: "1px solid gray",
                   padding: "8px",
                   textAlign: "left",
+                  width: "30%", // Set width for Title column
                 }}
               >
                 Title
@@ -98,6 +105,7 @@ const UserProfilePage: React.FC = () => {
                   border: "1px solid gray",
                   padding: "8px",
                   textAlign: "left",
+                  width: "50%", // Set width for Description column
                 }}
               >
                 Description
@@ -107,21 +115,53 @@ const UserProfilePage: React.FC = () => {
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={3} style={{ textAlign: "center", padding: "20px" }}>
+                <td
+                  colSpan={3}
+                  style={{ textAlign: "center", padding: "20px" }}
+                >
                   <Spinner size="lg" />
                 </td>
               </tr>
             ) : filteredUserGames.length > 0 ? (
-              filteredUserGames.map((game, index) => (
-                <tr key={game.id || `game-${index}`}>
-                  <td style={{ border: "1px solid gray", padding: "8px" }}>
+              filteredUserGames.map((game) => (
+                <tr
+                  key={game.id}
+                  onClick={() => handleRowClick(game.id)} // Handle row click
+                  style={{
+                    cursor: "pointer",
+                    backgroundColor:
+                      expandedRow === game.id ? "#f9f9f9" : "transparent",
+                  }}
+                >
+                  <td
+                    style={{
+                      border: "1px solid gray",
+                      padding: "8px",
+                      width: "20%", // Match width for Asin column
+                    }}
+                  >
                     {game.asin}
                   </td>
-                  <td style={{ border: "1px solid gray", padding: "8px" }}>
+                  <td
+                    style={{
+                      border: "1px solid gray",
+                      padding: "8px",
+                      width: "30%", // Match width for Title column
+                    }}
+                  >
                     {game.title}
                   </td>
-                  <td style={{ border: "1px solid gray", padding: "8px" }}>
-                    {game.description}
+                  <td
+                    style={{
+                      border: "1px solid gray",
+                      padding: "8px",
+                      width: "50%", // Match width for Description column
+                    }}
+                  >
+                    {expandedRow === game.id
+                      ? game.description // Show full description if expanded
+                      : `${game.description.slice(0, 50)}...`}{" "}
+                    {/* Truncate description */}
                   </td>
                 </tr>
               ))
