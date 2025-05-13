@@ -10,7 +10,7 @@ import {
   Button,
   Text,
 } from "@chakra-ui/react";
-import backgroundImage from "../../assets/logout.jpg";
+import backgroundImage from "../../assets/background5.jpg";
 
 const Logout = () => {
   const navigate = useNavigate(); // Initialize useNavigate
