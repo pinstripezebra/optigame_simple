@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
-import "./LoginSignup.css";
 import {
   Box,
   Flex,
@@ -22,7 +21,7 @@ import {
 import { FaUserAlt, FaLock } from "react-icons/fa";
 import api from "../../services/api-client";
 import { useUser } from "../../context/UserContext";
-import backgroundImage from "../../assets/background.jpg";
+import backgroundImage from "../../assets/background4.jpg";
 import logo from "../../assets/chess_logo.jpg";
 
 export interface User {
@@ -68,100 +67,101 @@ const Login = () => {
       backgroundSize="cover" // Ensure the image covers the entire container
       backgroundPosition="center" // Center the image
     >
+      {/* Header Section */}
       <Box position="absolute" top="0" left="0" padding="10px">
         <HStack alignItems="center">
           {/* Logo */}
           <Image src={logo} boxSize="60px" borderRadius={10} />
 
           {/* App Title */}
-          <Text fontSize="2xl" fontWeight="bold">
-        Optigame
+          <Text fontSize="2xl" fontWeight="bold" color="teal.700">
+            Optigame
           </Text>
         </HStack>
       </Box>
 
       <Stack
-        flexDir="column"
-        mb="2"
-        justifyContent="center"
-        alignItems="center"
+        spacing={4}
+        p="1rem"
+        backgroundColor="rgba(255, 255, 255, 0.9)" // Semi-transparent white background
+        boxShadow="md"
+        borderRadius="md"
+        width="400px"
       >
-        <Box minW={{ base: "90%", md: "468px" }}>
-          <form onSubmit={handleLogin}>
-            <Stack
-              spacing={4}
-              p="1rem"
-              backgroundColor="whiteAlpha.900"
-              boxShadow="md"
-              borderRadius="md"
-              opacity={0.7}
-            >
-              <Stack alignItems="center">
-                <Avatar bg="teal.500" />
-                <Heading color="teal.400">Welcome</Heading>
-              </Stack>
-              {/* Username */}
-              <FormControl>
-                <InputGroup>
-                  <InputLeftElement
-                    pointerEvents="none"
-                    children={<FaUserAlt color="gray.300" />}
-                  />
-                  <Input
-                    type="text"
-                    placeholder="username"
-                    value={localUsername} // Bind input value to username state
-                    onChange={(e) => setLocalUsername(e.target.value)} // Update username state on input change
-                  />
-                </InputGroup>
-              </FormControl>
+        {/* Avatar and Heading */}
+        <Stack alignItems="center">
+          <Avatar bg="teal.500" />
+          <Heading color="teal.600">Welcome</Heading>
+        </Stack>
 
-              {/* Password */}
-              <FormControl>
-                <InputGroup>
-                  <InputLeftElement
-                    pointerEvents="none"
-                    color="gray.300"
-                    children={<FaLock color="gray.300" />}
-                  />
-                  <Input
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Password"
-                    value={password} // Bind input value to password state
-                    onChange={(e) => setPassword(e.target.value)} // Update password state on input change
-                  />
-                  <InputRightElement width="4.5rem">
-                    <Button h="1.75rem" size="sm" onClick={handleShowClick}>
-                      {showPassword ? "Hide" : "Show"}
-                    </Button>
-                  </InputRightElement>
-                </InputGroup>
-                <FormHelperText textAlign="right">
-                  <Link>forgot password?</Link>
-                </FormHelperText>
-              </FormControl>
+        {/* Username Input */}
+        <FormControl>
+          <InputGroup>
+            <InputLeftElement
+              pointerEvents="none"
+              children={<FaUserAlt color="teal.300" />}
+            />
+            <Input
+              type="text"
+              placeholder="Username"
+              value={localUsername}
+              onChange={(e) => setLocalUsername(e.target.value)}
+              focusBorderColor="teal.500"
+            />
+          </InputGroup>
+        </FormControl>
 
-              {/* Login Button */}
+        {/* Password Input */}
+        <FormControl>
+          <InputGroup>
+            <InputLeftElement
+              pointerEvents="none"
+              color="teal.300"
+              children={<FaLock color="teal.300" />}
+            />
+            <Input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              focusBorderColor="teal.500"
+            />
+            <InputRightElement width="4.5rem">
               <Button
-                borderRadius={0}
-                type="submit" // Ensure the button triggers form submission
-                variant="solid"
+                h="1.75rem"
+                size="sm"
+                onClick={handleShowClick}
                 colorScheme="teal"
-                width="full"
               >
-                Login
+                {showPassword ? "Hide" : "Show"}
               </Button>
-              <Stack alignItems="center">
-                <Box>
-                  New to us?{" "}
-                  <Link color="teal.500" href="#">
-                    Sign Up
-                  </Link>
-                </Box>
-              </Stack>
-            </Stack>
-          </form>
-        </Box>
+            </InputRightElement>
+          </InputGroup>
+          <FormHelperText textAlign="right">
+            <Link color="teal.500">Forgot password?</Link>
+          </FormHelperText>
+        </FormControl>
+
+        {/* Login Button */}
+        <Button
+          borderRadius={0}
+          type="submit"
+          variant="solid"
+          colorScheme="teal"
+          width="full"
+        >
+          Login
+        </Button>
+
+        {/* Sign-Up Link */}
+        <Stack alignItems="center">
+          <Box>
+            New to us?{" "}
+            <Link color="teal.500" href="#">
+              Sign Up
+            </Link>
+          </Box>
+        </Stack>
       </Stack>
     </Flex>
   );
