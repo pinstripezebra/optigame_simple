@@ -9,15 +9,14 @@ import {
   BrowserRouter,
 } from "react-router-dom";
 
-import UsersPage from "./pages/UsersPage";
 import UserProfilePage from "./pages/UserProfile/UserProfilePage";
 import HomePage from "./pages/HomePage";
 import NotFoundPage from "./pages/NotFoundPage";
-import Login from "./components/LoginSignup/Login";
-import Signup from "./components/LoginSignup/Signup";
-import Logout from "./components/LoginSignup/Logout";
+import Login from "./pages/LoginSignup/Login";
+import Signup from "./pages/LoginSignup/Signup";
+import Logout from "./pages/LoginSignup/Logout";
 import { useUser } from "./context/UserContext";
-import ProtectedRoute from "./components/LoginSignup/ProtectedRoute";
+import ProtectedRoute from "./pages/LoginSignup/ProtectedRoute";
 
 
 const router = createBrowserRouter([

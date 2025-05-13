@@ -20,6 +20,7 @@ import {
   Link,
 } from "@chakra-ui/react";
 import { FaUserAlt, FaLock } from "react-icons/fa";
+import backgroundImage from "../../assets/background.jpg";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -29,9 +30,11 @@ const Signup = () => {
       flexDirection="column"
       width="100wh"
       height="100vh"
-      backgroundColor="gray.200"
       justifyContent="center"
       alignItems="center"
+      backgroundImage={`url(${backgroundImage})`} // Set the background image
+      backgroundSize="cover" // Ensure the image covers the entire container
+      backgroundPosition="center" // Center the image
     >
       <Stack
         flexDir="column"

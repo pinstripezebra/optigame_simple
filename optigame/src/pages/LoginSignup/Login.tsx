@@ -19,6 +19,7 @@ import {
 import { FaUserAlt, FaLock } from "react-icons/fa";
 import api from "../../services/api-client";
 import { useUser } from "../../context/UserContext";
+import backgroundImage from "../../assets/background.jpg";
 
 export interface User {
   id: string;
@@ -29,7 +30,6 @@ export interface User {
 }
 
 const Login = () => {
- 
   const [showPassword, setShowPassword] = useState(false);
   const handleShowClick = () => setShowPassword(!showPassword);
   const { setUsername } = useUser();
@@ -58,9 +58,11 @@ const Login = () => {
       flexDirection="column"
       width="100wh"
       height="100vh"
-      backgroundColor="gray.200"
       justifyContent="center"
       alignItems="center"
+      backgroundImage={`url(${backgroundImage})`} // Set the background image
+      backgroundSize="cover" // Ensure the image covers the entire container
+      backgroundPosition="center" // Center the image
     >
       <Stack
         flexDir="column"
@@ -70,7 +72,10 @@ const Login = () => {
       >
         <Avatar bg="teal.500" />
         <Heading color="teal.400">Welcome</Heading>
+
         <Box minW={{ base: "90%", md: "468px" }}>
+          <Avatar bg="teal.500" />
+          <Heading color="teal.400">Welcome</Heading>
           <form onSubmit={handleLogin}>
             <Stack
               spacing={4}

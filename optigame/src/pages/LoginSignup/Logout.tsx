@@ -10,6 +10,7 @@ import {
   Button,
   Text,
 } from "@chakra-ui/react";
+import backgroundImage from "../../assets/background.jpg";
 
 const Logout = () => {
   const navigate = useNavigate(); // Initialize useNavigate
@@ -18,9 +19,11 @@ const Logout = () => {
       flexDirection="column"
       width="100wh"
       height="100vh"
-      backgroundColor="gray.200"
       justifyContent="center"
       alignItems="center"
+      backgroundImage={`url(${backgroundImage})`} // Set the background image
+      backgroundSize="cover" // Ensure the image covers the entire container
+      backgroundPosition="center" // Center the image
     >
       <Stack
         flexDir="column"
