@@ -31,8 +31,6 @@ const Logout = () => {
         justifyContent="center"
         alignItems="center"
       >
-        <Avatar bg="teal.500" />
-        <Heading color="teal.400">Goodbye</Heading>
         <Box minW={{ base: "90%", md: "468px" }}>
           <form>
             <Stack
@@ -40,14 +38,16 @@ const Logout = () => {
               p="1rem"
               backgroundColor="whiteAlpha.900"
               boxShadow="md"
+              alignItems="center" // Ensure all components in the Stack are centered
             >
-              <Text fontSize="lg" color="teal.400">
+              <Avatar bg="teal.500" />
+              <Heading color="teal.400">Goodbye</Heading>
+              <Text fontSize="lg" color="teal.400" textAlign="center">
                 You have successfully logged out. Thank you for using our
                 service!
               </Text>
 
               {/* Return to Login Button */}
-
               <Button
                 borderRadius={0}
                 type="submit"
