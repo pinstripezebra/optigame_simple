@@ -93,9 +93,11 @@ const Login = () => {
           <Avatar bg="teal.500" />
           <Heading color="teal.600">Welcome</Heading>
         </Stack>
+
+    
         <form onSubmit={handleLogin}>
           {/* Username */}
-          <FormControl>
+          <FormControl mb = {4}>
             <InputGroup>
               <InputLeftElement
                 pointerEvents="none"
@@ -111,7 +113,7 @@ const Login = () => {
           </FormControl>
 
           {/* Password */}
-          <FormControl>
+          <FormControl mb = {4}>
             <InputGroup>
               <InputLeftElement
                 pointerEvents="none"
