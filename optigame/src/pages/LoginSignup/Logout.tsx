@@ -24,14 +24,18 @@ const Logout = () => {
       backgroundImage={`url(${backgroundImage})`} // Set the background image
       backgroundSize="cover" // Ensure the image covers the entire container
       backgroundPosition="center" // Center the image
+      
     >
       <Stack
         flexDir="column"
+        backgroundColor="rgba(255, 255, 255, 0.9)"
         mb="2"
         justifyContent="center"
         alignItems="center"
+        borderRadius="md"
+        
       >
-        <Box minW={{ base: "90%", md: "468px" }}>
+        <Box minW={{ base: "90%", md: "468px" }} >
           <form>
             <Stack
               spacing={4}
@@ -39,6 +43,7 @@ const Logout = () => {
               backgroundColor="whiteAlpha.900"
               boxShadow="md"
               alignItems="center" // Ensure all components in the Stack are centered
+              borderRadius="md"
             >
               <Avatar bg="teal.500" />
               <Heading color="teal.400">Goodbye</Heading>
