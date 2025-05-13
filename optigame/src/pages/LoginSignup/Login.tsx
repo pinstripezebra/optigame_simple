@@ -93,66 +93,59 @@ const Login = () => {
           <Avatar bg="teal.500" />
           <Heading color="teal.600">Welcome</Heading>
         </Stack>
+        <form onSubmit={handleLogin}>
+          {/* Username */}
+          <FormControl>
+            <InputGroup>
+              <InputLeftElement
+                pointerEvents="none"
+                children={<FaUserAlt color="gray.300" />}
+              />
+              <Input
+                type="text"
+                placeholder="username"
+                value={localUsername} // Bind input value to username state
+                onChange={(e) => setLocalUsername(e.target.value)} // Update username state on input change
+              />
+            </InputGroup>
+          </FormControl>
 
-        {/* Username Input */}
-        <FormControl>
-          <InputGroup>
-            <InputLeftElement
-              pointerEvents="none"
-              children={<FaUserAlt color="teal.300" />}
-            />
-            <Input
-              type="text"
-              placeholder="Username"
-              value={localUsername}
-              onChange={(e) => setLocalUsername(e.target.value)}
-              focusBorderColor="teal.500"
-            />
-          </InputGroup>
-        </FormControl>
+          {/* Password */}
+          <FormControl>
+            <InputGroup>
+              <InputLeftElement
+                pointerEvents="none"
+                color="gray.300"
+                children={<FaLock color="gray.300" />}
+              />
+              <Input
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+                value={password} // Bind input value to password state
+                onChange={(e) => setPassword(e.target.value)} // Update password state on input change
+              />
+              <InputRightElement width="4.5rem">
+                <Button h="1.75rem" size="sm" onClick={handleShowClick}>
+                  {showPassword ? "Hide" : "Show"}
+                </Button>
+              </InputRightElement>
+            </InputGroup>
+            <FormHelperText textAlign="right">
+              <Link>forgot password?</Link>
+            </FormHelperText>
+          </FormControl>
 
-        {/* Password Input */}
-        <FormControl>
-          <InputGroup>
-            <InputLeftElement
-              pointerEvents="none"
-              color="teal.300"
-              children={<FaLock color="teal.300" />}
-            />
-            <Input
-              type={showPassword ? "text" : "password"}
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              focusBorderColor="teal.500"
-            />
-            <InputRightElement width="4.5rem">
-              <Button
-                h="1.75rem"
-                size="sm"
-                onClick={handleShowClick}
-                colorScheme="teal"
-              >
-                {showPassword ? "Hide" : "Show"}
-              </Button>
-            </InputRightElement>
-          </InputGroup>
-          <FormHelperText textAlign="right">
-            <Link color="teal.500">Forgot password?</Link>
-          </FormHelperText>
-        </FormControl>
-
-        {/* Login Button */}
-        <Button
-          borderRadius={0}
-          type="submit"
-          variant="solid"
-          colorScheme="teal"
-          width="full"
-        >
-          Login
-        </Button>
-
+          {/* Login Button */}
+          <Button
+            borderRadius={0}
+            type="submit" // Ensure the button triggers form submission
+            variant="solid"
+            colorScheme="teal"
+            width="full"
+          >
+            Login
+          </Button>
+        </form>
         {/* Sign-Up Link */}
         <Stack alignItems="center">
           <Box>
