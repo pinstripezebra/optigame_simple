@@ -70,19 +70,20 @@ const Login = () => {
         justifyContent="center"
         alignItems="center"
       >
-        <Avatar bg="teal.500" />
-        <Heading color="teal.400">Welcome</Heading>
-
         <Box minW={{ base: "90%", md: "468px" }}>
-          <Avatar bg="teal.500" />
-          <Heading color="teal.400">Welcome</Heading>
           <form onSubmit={handleLogin}>
             <Stack
               spacing={4}
               p="1rem"
               backgroundColor="whiteAlpha.900"
               boxShadow="md"
+              borderRadius="md"
+              opacity={0.7} 
             >
+              <Stack alignItems="center">
+                <Avatar bg="teal.500" />
+                <Heading color="teal.400">Welcome</Heading>
+              </Stack>
               {/* Username */}
               <FormControl>
                 <InputGroup>
@@ -134,17 +135,18 @@ const Login = () => {
               >
                 Login
               </Button>
+              <Stack alignItems="center">
+              <Box>
+                New to us?{" "}
+                <Link color="teal.500" href="#">
+                  Sign Up
+                </Link>
+              </Box>
+              </Stack>
             </Stack>
           </form>
         </Box>
       </Stack>
-
-      <Box>
-        New to us?{" "}
-        <Link color="teal.500" href="#">
-          Sign Up
-        </Link>
-      </Box>
     </Flex>
   );
 };
