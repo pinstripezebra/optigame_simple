@@ -15,11 +15,15 @@ import {
   Button,
   FormHelperText,
   Link,
+  HStack,
+  Text,
+  Image,
 } from "@chakra-ui/react";
 import { FaUserAlt, FaLock } from "react-icons/fa";
 import api from "../../services/api-client";
 import { useUser } from "../../context/UserContext";
 import backgroundImage from "../../assets/background.jpg";
+import logo from "../../assets/chess_logo.jpg";
 
 export interface User {
   id: string;
@@ -64,6 +68,18 @@ const Login = () => {
       backgroundSize="cover" // Ensure the image covers the entire container
       backgroundPosition="center" // Center the image
     >
+      <Box position="absolute" top="0" left="0" padding="10px">
+        <HStack alignItems="center">
+          {/* Logo */}
+          <Image src={logo} boxSize="60px" borderRadius={10} />
+
+          {/* App Title */}
+          <Text fontSize="2xl" fontWeight="bold">
+        Optigame
+          </Text>
+        </HStack>
+      </Box>
+
       <Stack
         flexDir="column"
         mb="2"
@@ -78,7 +94,7 @@ const Login = () => {
               backgroundColor="whiteAlpha.900"
               boxShadow="md"
               borderRadius="md"
-              opacity={0.7} 
+              opacity={0.7}
             >
               <Stack alignItems="center">
                 <Avatar bg="teal.500" />
@@ -136,12 +152,12 @@ const Login = () => {
                 Login
               </Button>
               <Stack alignItems="center">
-              <Box>
-                New to us?{" "}
-                <Link color="teal.500" href="#">
-                  Sign Up
-                </Link>
-              </Box>
+                <Box>
+                  New to us?{" "}
+                  <Link color="teal.500" href="#">
+                    Sign Up
+                  </Link>
+                </Box>
               </Stack>
             </Stack>
           </form>
