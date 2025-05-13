@@ -150,7 +150,7 @@ const Login = () => {
         <Stack alignItems="center">
           <Box>
             New to us?{" "}
-            <Link color="teal.500" href="#">
+            <Link color="teal.500" onClick={() => navigate("/Signup")}>
               Sign Up
             </Link>
           </Box>
