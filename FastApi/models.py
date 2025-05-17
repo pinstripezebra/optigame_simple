@@ -4,9 +4,13 @@ from typing import Optional
 from enum import Enum
 from sqlalchemy import Column, String, Float, Integer
 import sqlalchemy.dialects.postgresql as pg
+from sqlalchemy.dialects.postgresql import UUID as SA_UUID
 from sqlalchemy.ext.declarative import declarative_base
 import uuid
 from uuid import UUID
+
+# loading sql model
+from sqlmodel import Field, Session, SQLModel, create_engine, select
 
 # Initialize the base class for SQLAlchemy models
 Base = declarative_base()
@@ -121,17 +125,23 @@ class UniqueGameTagsModel(BaseModel):
 class User_Game(Base):
     __tablename__ = "optigame_user_games"  # Table name in the PostgreSQL database
 
-    id =Column(pg.UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True, nullable=False)
+    id = Column(SA_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     username = Column(String, nullable=False)
     asin = Column(String, nullable=False)
 
 
 class User_Game_Model(BaseModel):
     id: Optional[UUID]
-    username:str
+    username: str
     asin: str
 
     class Config:
         orm_mode = True  # Enable ORM mode to work with SQLAlchemy objects
         from_attributes = True # Enable attribute access for SQLAlchemy objects
+
+class User_Game_Model2(SQLModel, table=True):
+    id: str | None = Field(default=None, primary_key=True)
+    username: str = Field(index=True)
+    asin: str  = Field(index=True)
+    
 

@@ -144,16 +144,18 @@ async def create_user(user: UserModel, db: Session = Depends(get_db)):
 # for adding a new user-game match to database
 @app.post("/api/v1/user_game/")
 async def create_user_game(user_game: User_Game_Model, db: Session = Depends(get_db)):
-    """
-    Create a new user_game entry and insert it into the user_game table.
-    """
     # Check if the user_game entry already exists
     existing_user_game = db.query(User_Game).filter_by(username=user_game.username, asin=user_game.asin).first()
     if existing_user_game:
         raise HTTPException(status_code=400, detail="User_game with this id already exists")
 
+    # Ensure id is a UUID object
+    new_id = user_game.id if user_game.id is not None else uuid4()
+    if isinstance(new_id, str):
+        new_id = UUID(new_id)
+
     new_user_game = User_Game(
-        id=uuid4(),  # Generate a new UUID for the id field
+        id=new_id,
         username=user_game.username,
         asin=user_game.asin
     )
