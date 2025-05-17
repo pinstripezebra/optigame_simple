@@ -15,13 +15,13 @@ engine.delete_table(table_name)
 
 initial_user_game = pd.DataFrame({
     "id": [uuid.uuid4() for _ in range(2)],
-    "user_id": ["admin_username", "user_username"],
+    "username": ["admin_username", "user_username"],
     "asin": ["B008J87PVC", "B08BHHRSPK"] 
 })
 
 engine.create_table("""CREATE TABLE IF NOT EXISTS optigame_user_games (
     id UUID PRIMARY KEY,
-    user_id VARCHAR(255) UNIQUE NOT NULL,
+    username VARCHAR(255) UNIQUE NOT NULL,
     asin VARCHAR(255) NOT NULL
         )
     """)

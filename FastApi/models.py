@@ -122,13 +122,13 @@ class User_Game(Base):
     __tablename__ = "optigame_user_games"  # Table name in the PostgreSQL database
 
     id = Column(pg.UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True, nullable=False)
-    user_id = Column(String, nullable=False)
+    username = Column(String, nullable=False)
     asin = Column(String, nullable=False)
 
 
 class User_Game_Model(BaseModel):
     id: Optional[UUID]
-    user_id:str
+    username:str
     asin: str
 
     class Config:

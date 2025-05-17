@@ -2,6 +2,7 @@ import { Game } from "./GameGrid";
 import { Card, Image, Text, Flex, Box } from "@chakra-ui/react";
 import { GameScore } from "./GameScore";
 import { Checkbox } from "@chakra-ui/react";
+import { useUser } from "../context/UserContext";
 
 interface Props {
   game: Game;
@@ -25,6 +26,9 @@ const GameCard = ({ game }: Props) => {
   // Ensuring the title is not too long for display
   const truncatedTitle =
     game.title.length > 100 ? `${game.title.slice(0, 100)}...` : game.title;
+
+  // Ensuring we have user information for updating liked games if necessary
+  const { username } = useUser(); //Loading username from context
 
   return (
     <Card
@@ -61,10 +65,32 @@ const GameCard = ({ game }: Props) => {
             <GameScore rating={game.rating} />
           </Flex>
 
-          {/* Checkbox aligned to the right */}
-          <Checkbox size="lg" colorScheme="teal">
+          {/* If user checks box gamme is logged to 'liked' user_games table */}
+            <Checkbox
+            size="lg"
+            colorScheme="teal"
+            onChange={async (e) => {
+              if (e.target.checked) {
+                await fetch("/v1/user_game/", {
+                  method: "POST",
+                  headers: {
+                  "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                  id: crypto.randomUUID(),
+                  user_id: username,
+                  asin: game.asin,
+                  }),
+                });
+              console.log("Game added to collection");
+              console.log(crypto.randomUUID());
+              console.log(username);
+              console.log(game.asin);
+              }
+            }}
+            >
             Your Collection
-          </Checkbox>
+            </Checkbox>
         </Flex>
       </Card>
     </Card>

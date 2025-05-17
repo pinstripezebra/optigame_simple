@@ -185,11 +185,11 @@ class DatabaseHandler:
         # Iterate over the rows of the DataFrame and insert each row into the table
         for index, row in df.iterrows():
             cursor.execute(
-                """INSERT INTO optigame_user_games (id, user_id, asin)
+                """INSERT INTO optigame_user_games (id, username, asin)
                 VALUES (%s, %s, %s)""",
                 (
                     str(row['id']),  # Convert UUID to string
-                    row['user_id'],
+                    row['username'],
                     row['asin']
                 )
             )
