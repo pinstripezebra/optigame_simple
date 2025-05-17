@@ -3,6 +3,7 @@ import { Card, Image, Text, Flex, Box } from "@chakra-ui/react";
 import { GameScore } from "./GameScore";
 import { Checkbox } from "@chakra-ui/react";
 import { useUser } from "../context/UserContext";
+import apiClient from "../services/api-client";
 
 interface Props {
   game: Game;
@@ -67,29 +68,22 @@ const GameCard = ({ game }: Props) => {
 
           {/* If user checks box gamme is logged to 'liked' user_games table */}
             <Checkbox
-            size="lg"
-            colorScheme="teal"
-            onChange={async (e) => {
-                if (e.target.checked) {
-                await fetch("http://localhost:8000/api/v1/user_game/", {
-                  method: "POST",
-                  headers: {
-                  "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify({
-                  id: crypto.randomUUID(),
-                  username: username,
-                  asin: game.asin,
-                  }),
+              size="lg"
+              colorScheme="teal"
+              onChange={async (e) => {
+              if (e.target.checked) {
+                await apiClient.post("/v1/user_game/", {
+                id: crypto.randomUUID(),
+                username: username,
+                asin: game.asin,
                 });
-              console.log("Game added to collection");
-              console.log(crypto.randomUUID());
-              console.log(username);
-              console.log(game.asin);
+                console.log("Game added to collection");
+                console.log(username);
+                console.log(game.asin);
               }
-            }}
+              }}
             >
-            Your Collection
+              Your Collection
             </Checkbox>
         </Flex>
       </Card>

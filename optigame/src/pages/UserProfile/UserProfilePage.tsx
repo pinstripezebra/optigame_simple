@@ -38,7 +38,7 @@ const UserProfilePage: React.FC = () => {
 
       try {
         const response = await api.get<UserGame[]>("/v1/user_game", {
-          params: { user_id: username },
+          params: { username: username },
         });
 
         const userGamesData = response.data;
