@@ -25,8 +25,6 @@ interface UserGame {
 
 const UserProfilePage: React.FC = () => {
   const { username } = useUser(); // Access the username from UserContext
-  const params = useParams<{ userId: string }>();
-
   const [usergames, setUserGames] = useState<UserGame[]>([]);
   const [filteredUserGames, setFilteredUserGames] = useState<Game[]>([]);
   const [loading, setLoading] = useState<boolean>(true); // Add loading state

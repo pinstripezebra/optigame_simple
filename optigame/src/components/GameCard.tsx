@@ -73,9 +73,9 @@ const GameCard = ({ game }: Props) => {
               onChange={async (e) => {
               if (e.target.checked) {
                 await apiClient.post("/v1/user_game/", {
-                id: crypto.randomUUID(),
-                username: username,
-                asin: game.asin,
+                  "id": `${username}_${game.asin}`,
+                  "username": username,
+                  "asin": game.asin,
                 });
                 console.log("Game added to collection");
                 console.log(username);

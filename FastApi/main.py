@@ -101,6 +101,15 @@ async def fetch_user_game(username: str, db: Session = Depends(get_db)):
     return [User_Game_Model.from_orm(user_game) for user_game in user_games]
 
 
+@app.get("/api/v1/user_game_all/")
+async def fetch_user_game_all(db: Session = Depends(get_db)):
+
+    # Query the database using the SQLAlchemy Unique Genres 
+    user_games = db.query(User_Game).all()
+    # Serialize the results using the Pydantic Unqiue Genres Model
+    return [User_Game_Model.from_orm(user_game) for user_game in user_games]
+
+
 #-------------------------------------------------#
 # ----------PART 2: POST METHODS------------------#
 #-------------------------------------------------#
@@ -135,23 +144,24 @@ async def create_user(user: UserModel, db: Session = Depends(get_db)):
 @app.post("/api/v1/user_game/")
 async def create_user_game(user_game: User_Game_Model, db: Session = Depends(get_db)):
     """
-    Create a new user and insert it into the user table.
+    Create a new user_game entry and insert it into the user_game table.
     """
-    # Create a new User_Game instance
     new_user_game = User_Game(
-        id=uuid4(),  
-        username = user_game.username,
-        asin = user_game.asin,
-
+        id=f"{user_game.username}_{user_game.asin}",
+        username=user_game.username,
+        asin=user_game.asin
     )
 
     try:
-        # Add the new user to the database
         db.add(new_user_game)
         db.commit()
-        db.refresh(new_user_game)  # Refresh to get the new user's data from the database
-    except IntegrityError:
+        db.refresh(new_user_game)
+    except IntegrityError as e:
         db.rollback()
-        raise HTTPException(status_code=400, detail="User_model with this data already exists")
+        # Only raise error if the id (primary key) is duplicated
+        if "UNIQUE constraint failed: user_game.id" in str(e.orig):
+            raise HTTPException(status_code=400, detail="User_game with this id already exists")
+        else:
+            raise HTTPException(status_code=400, detail="Database integrity error")
 
     return {"message": "User_game created successfully", "user_game": new_user_game}
