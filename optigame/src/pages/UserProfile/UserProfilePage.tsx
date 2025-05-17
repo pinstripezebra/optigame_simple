@@ -19,7 +19,7 @@ export interface Game {
 
 interface UserGame {
   id: string;
-  user_id: string;
+  username: string;
   asin: string;
 }
 
