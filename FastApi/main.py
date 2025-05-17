@@ -40,7 +40,7 @@ app = FastAPI(title="Game Store API", version="1.0.0")
 origins = ["http://localhost:3000", "http://localhost:8000", " http://localhost:5174/"]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5174", "http://localhost:5173"],  # React app's URL
+    allow_origins=["http://localhost:5174", "http://localhost:5173", "http://localhost:8000"],  # React app's URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -138,7 +138,7 @@ async def create_user_game(user_game: User_Game_Model, db: Session = Depends(get
     Create a new user and insert it into the user table.
     """
     # Create a new User_Game instance
-    new_user_game = User(
+    new_user_game = User_Game(
         id=uuid4(),  
         username = user_game.username,
         asin = user_game.asin,

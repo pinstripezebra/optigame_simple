@@ -70,15 +70,15 @@ const GameCard = ({ game }: Props) => {
             size="lg"
             colorScheme="teal"
             onChange={async (e) => {
-              if (e.target.checked) {
-                await fetch("/v1/user_game/", {
+                if (e.target.checked) {
+                await fetch("http://localhost:8000/api/v1/user_game/", {
                   method: "POST",
                   headers: {
                   "Content-Type": "application/json",
                   },
                   body: JSON.stringify({
                   id: crypto.randomUUID(),
-                  user_id: username,
+                  username: username,
                   asin: game.asin,
                   }),
                 });
