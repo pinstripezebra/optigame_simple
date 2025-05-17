@@ -121,7 +121,7 @@ class UniqueGameTagsModel(BaseModel):
 class User_Game(Base):
     __tablename__ = "optigame_user_games"  # Table name in the PostgreSQL database
 
-    id = Column(pg.UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True, nullable=False)
+    id =Column(pg.UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True, nullable=False)
     username = Column(String, nullable=False)
     asin = Column(String, nullable=False)
 

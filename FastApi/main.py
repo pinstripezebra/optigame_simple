@@ -9,6 +9,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 from dotenv import dotenv_values
 from fastapi.middleware.cors import CORSMiddleware
+from uuid import uuid4
 
 # Load the .env file from the parent directory
 config = dotenv_values("./.env2")
@@ -146,8 +147,13 @@ async def create_user_game(user_game: User_Game_Model, db: Session = Depends(get
     """
     Create a new user_game entry and insert it into the user_game table.
     """
+    # Check if the user_game entry already exists
+    existing_user_game = db.query(User_Game).filter_by(username=user_game.username, asin=user_game.asin).first()
+    if existing_user_game:
+        raise HTTPException(status_code=400, detail="User_game with this id already exists")
+
     new_user_game = User_Game(
-        id=f"{user_game.username}_{user_game.asin}",
+        id=uuid4(),  # Generate a new UUID for the id field
         username=user_game.username,
         asin=user_game.asin
     )
@@ -158,10 +164,6 @@ async def create_user_game(user_game: User_Game_Model, db: Session = Depends(get
         db.refresh(new_user_game)
     except IntegrityError as e:
         db.rollback()
-        # Only raise error if the id (primary key) is duplicated
-        if "UNIQUE constraint failed: user_game.id" in str(e.orig):
-            raise HTTPException(status_code=400, detail="User_game with this id already exists")
-        else:
-            raise HTTPException(status_code=400, detail="Database integrity error")
+        raise HTTPException(status_code=400, detail="Database integrity error")
 
     return {"message": "User_game created successfully", "user_game": new_user_game}

@@ -14,13 +14,13 @@ engine = DatabaseHandler(URL_database)
 engine.delete_table(table_name)
 
 initial_user_game = pd.DataFrame({
-    "id": [uuid.uuid4() for _ in range(2)],
+    "id": [str(uuid.uuid4()), str(uuid.uuid4())],
     "username": ["admin_username", "user_username"],
     "asin": ["B008J87PVC", "B08BHHRSPK"] 
 })
 
 engine.create_table("""CREATE TABLE IF NOT EXISTS optigame_user_games (
-    id UUID PRIMARY KEY,
+    UUID PRIMARY KEY,
     username VARCHAR(255) UNIQUE NOT NULL,
     asin VARCHAR(255) NOT NULL
         )
