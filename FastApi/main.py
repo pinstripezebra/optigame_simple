@@ -144,28 +144,23 @@ async def create_user(user: UserModel, db: Session = Depends(get_db)):
 # for adding a new user-game match to database
 @app.post("/api/v1/user_game/")
 async def create_user_game(user_game: User_Game_Model, db: Session = Depends(get_db)):
-    # Check if the user_game entry already exists
-    existing_user_game = db.query(User_Game).filter_by(username=user_game.username, asin=user_game.asin).first()
-    if existing_user_game:
-        raise HTTPException(status_code=400, detail="User_game with this id already exists")
+    # Check if the entry already exists
+    existing = db.query(User_Game).filter_by(username=user_game.username, asin=user_game.asin).first()
+    if existing:
+        raise HTTPException(status_code=400, detail="User already has this game.")
 
-    # Ensure id is a UUID object
-    new_id = user_game.id if user_game.id is not None else uuid4()
-    if isinstance(new_id, str):
-        new_id = UUID(new_id)
+    # Only include id if provided, otherwise let SQLAlchemy generate it
+    user_game_data = {
+        "username": user_game.username,
+        "asin": user_game.asin
+    }
+    if user_game.id is not None:
+        # Ensure it's a UUID object
+        user_game_data["id"] = UUID(str(user_game.id))
 
-    new_user_game = User_Game(
-        id=new_id,
-        username=user_game.username,
-        asin=user_game.asin
-    )
+    db_user_game = User_Game(**user_game_data)
+    db.add(db_user_game)
+    db.commit()
+    db.refresh(db_user_game)
+    return db_user_game
 
-    try:
-        db.add(new_user_game)
-        db.commit()
-        db.refresh(new_user_game)
-    except IntegrityError as e:
-        db.rollback()
-        raise HTTPException(status_code=400, detail="Database integrity error")
-
-    return {"message": "User_game created successfully", "user_game": new_user_game}

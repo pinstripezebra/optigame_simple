@@ -20,8 +20,8 @@ initial_user_game = pd.DataFrame({
 })
 
 engine.create_table("""CREATE TABLE IF NOT EXISTS optigame_user_games (
-    id VARCHAR(255) PRIMARY KEY,
-    username VARCHAR(255) UNIQUE NOT NULL,
+    id UUID PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
     asin VARCHAR(255) NOT NULL
     )
 """)

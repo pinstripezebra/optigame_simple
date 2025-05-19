@@ -131,7 +131,7 @@ class User_Game(Base):
 
 
 class User_Game_Model(BaseModel):
-    id: Optional[UUID]
+    id: Optional[UUID]  = None
     username: str
     asin: str
 
@@ -139,9 +139,4 @@ class User_Game_Model(BaseModel):
         orm_mode = True  # Enable ORM mode to work with SQLAlchemy objects
         from_attributes = True # Enable attribute access for SQLAlchemy objects
 
-class User_Game_Model2(SQLModel, table=True):
-    id: str | None = Field(default=None, primary_key=True)
-    username: str = Field(index=True)
-    asin: str  = Field(index=True)
-    
 
