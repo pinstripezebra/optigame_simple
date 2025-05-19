@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Grid, GridItem, Button, HStack  } from "@chakra-ui/react";
+import { Grid, GridItem, Button, HStack } from "@chakra-ui/react";
 import NavBar from "../components/NavBar";
 import GameGrid from "../components/GameGrid";
 import GenreList from "../components/GenreList";
@@ -20,8 +20,6 @@ export interface Game {
 const GAMES_PER_PAGE = 20;
 
 function HomePage() {
-
-  // storing games, page, and genre variables
   const [games, setGames] = useState<Game[]>([]);
   const [filteredGames, setFilteredGames] = useState<Game[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -37,6 +35,7 @@ function HomePage() {
     fetchGames();
   }, []);
 
+  // Filter by search
   const handleSearch = (title: string) => {
     const filtered = games.filter((game) =>
       title ? game.title.toLowerCase().includes(title.toLowerCase()) : true
@@ -45,34 +44,55 @@ function HomePage() {
     setCurrentPage(1); // Reset to first page on search
   };
 
+  // Filter by genre
+  useEffect(() => {
+    const filterByGenre = async () => {
+      if (selectedGameTags) {
+        // Fetch asins for the selected genre
+        const response = await api.get<{ asin: string }[]>("/v1/genres_filtered/", {
+          params: { genre: selectedGameTags },
+        });
+        const asinList = response.data.map((item) => item.asin);
+        console.log("Asin List:", asinList);
+        // Filter games by asin
+        const filtered = games.filter((game) => asinList.includes(game.asin));
+        setFilteredGames(filtered);
+        setCurrentPage(1);
+      } else {
+        // If no genre selected, show all games
+        setFilteredGames(games);
+      }
+    };
+    filterByGenre();
+  }, [selectedGameTags, games]);
+
   // Pagination logic
   const totalPages = Math.ceil(filteredGames.length / GAMES_PER_PAGE);
   const startIdx = (currentPage - 1) * GAMES_PER_PAGE;
   const endIdx = startIdx + GAMES_PER_PAGE;
   const gamesToShow = filteredGames.slice(startIdx, endIdx);
 
-  console.log("Genre:", selectedGameTags);
   return (
     <Grid
       templateAreas={{
         base: `"nav" "main"`,
-        lg: `"nav nav" "aside main"`, // Two-column layout with GenreList on the left
+        lg: `"nav nav" "aside main"`,
       }}
       templateColumns={{
-        base: "1fr", // Single column for small screens
-        lg: "1fr 3fr", // 1:3 ratio with GenreList on the left
+        base: "1fr",
+        lg: "1fr 3fr",
       }}
     >
       {/* Navigation Bar */}
       <GridItem area="nav">
         <NavBar onSearch={handleSearch} />
       </GridItem>
-  
+
       {/* Genre List */}
       <GridItem area="aside" padding="10px" bg="gray.100">
-        <GenreList onGenreSelect={setSelectedGameTags}/>
+        <GenreList onGenreSelect={setSelectedGameTags} />
       </GridItem>
-  
+
       {/* Main Content (GameGrid) */}
       <GridItem area="main" padding="10px">
         <GameGrid games={gamesToShow} />

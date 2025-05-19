@@ -87,6 +87,14 @@ async def fetch_game_tags(db: Session = Depends(get_db)):
     # Serialize the results using the Pydantic GameModel
     return [GameTagsModel.from_orm(gametag) for gametag in gametags]
 
+@app.get("/api/v1/genres_filtered/")
+async def fetch_game_tags_filtered(genre: str, db: Session = Depends(get_db)):
+    # Query the database using the SQLAlchemy GameTags model and filter by genre
+    gametags = db.query(GameTags).filter(GameTags.game_tags == genre).all()
+    # Serialize the results using the Pydantic GameTagsModel
+    return [GameTagsModel.from_orm(gametag) for gametag in gametags]
+
+
 @app.get("/api/v1/unique_genres/")
 async def fetch_unique_game_tags(db: Session = Depends(get_db)):
     # Query the database using the SQLAlchemy Unique Genres 
