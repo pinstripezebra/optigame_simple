@@ -19,19 +19,19 @@ const SearchGames = ({ onSearch }: SearchProps) => {
   };
 
   return (
-    <form onSubmit={handleFormSubmit}>
+    <form onSubmit={handleFormSubmit} style={{ display: "flex", alignItems: "center" }}>
       <Input
-        placeholder="Search games..."
-        value={title}
-        onChange={handleInputChange}
-        size="sm"
-        width="400px"
-        marginRight="10px"
+      placeholder="Search games..."
+      value={title}
+      onChange={handleInputChange}
+      size="sm"
+      width="400px"
+      marginRight="10px"
       />
       <IconButton
-        type="submit" // Ensure the button triggers form submission
-        aria-label="Search database"
-        icon={<LuSearch />} // Use the search icon
+      type="submit"
+      aria-label="Search database"
+      icon={<LuSearch />}
       />
     </form>
   );
