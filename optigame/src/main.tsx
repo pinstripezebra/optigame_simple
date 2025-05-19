@@ -18,6 +18,7 @@ import Logout from "./pages/LoginSignup/Logout";
 import { useUser } from "./context/UserContext";
 import ProtectedRoute from "./pages/LoginSignup/ProtectedRoute";
 import { UserGamesProvider } from "./context/UserGamesContext";
+import GamePage from "./pages/GamePage/GamePage";
 
 const router = createBrowserRouter([
   {
@@ -52,6 +53,16 @@ const router = createBrowserRouter([
         <UserProfilePage />
       </ProtectedRoute>
     ),
+  },
+
+  {
+    path: "/asin/:asin",
+    element: (
+      <ProtectedRoute>
+        <GamePage />
+      </ProtectedRoute>
+    ),
+    errorElement: <NotFoundPage />,
   },
 ]);
 

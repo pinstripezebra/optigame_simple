@@ -3,6 +3,7 @@ import { Card, Image, Text, Flex, Box } from "@chakra-ui/react";
 import { GameScore } from "./GameScore";
 import { Checkbox } from "@chakra-ui/react";
 import apiClient from "../services/api-client";
+import { useNavigate } from "react-router-dom";
 
 // user context
 import { useUser } from "../context/UserContext";
@@ -15,7 +16,7 @@ interface Props {
 
 const GameCard = ({ game }: Props) => {
   let imageUrl;
-
+  const navigate = useNavigate();
   try {
     // Check if the URL is valid and prepend 'https://' if necessary
     imageUrl = game.image_link.startsWith("http")
@@ -48,6 +49,8 @@ const GameCard = ({ game }: Props) => {
       display="flex"
       flexDirection="column"
       padding="10px"
+      onClick={() => navigate(`/asin/${game.asin}`)}
+      cursor="pointer"
     >
       <Image
         src={imageUrl}
