@@ -20,9 +20,13 @@ import {
 } from "@chakra-ui/react";
 import { FaUserAlt, FaLock } from "react-icons/fa";
 import api from "../../services/api-client";
-import { useUser } from "../../context/UserContext";
 import backgroundImage from "../../assets/background4.jpg";
 import logo from "../../assets/chess_logo.jpg";
+
+// setting user context when they login
+import { useUser } from "../../context/UserContext";
+import { useUserGames } from "../../context/UserGamesContext";
+
 
 export interface User {
   id: string;
@@ -32,13 +36,24 @@ export interface User {
   role: number;
 }
 
+export interface UserGame {
+  id: string;
+  username: string;
+  asin: string;
+}
+
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const handleShowClick = () => setShowPassword(!showPassword);
-  const { setUsername } = useUser();
-  const [localUsername, setLocalUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+
+  // username context
+  const { setUsername } = useUser();
+  const [localUsername, setLocalUsername] = useState("");
+
+  // liked games context
+  const { setAsins} = useUserGames();
 
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -49,10 +64,20 @@ const Login = () => {
 
       if (response.data.length > 0) {
         setUsername(localUsername); // Set the global username
+
+        // Fetch user games
+        const gamesResponse = await api.get<UserGame[]>("/v1/user_game/", {
+          params: { username: localUsername },
+        });
+
+        // Extract asin values into a list
+        const asinList = gamesResponse.data.map((game) => game.asin);
+        setAsins(asinList);
+
         navigate("/"); // Navigate to the base "/" route
       }
     } catch (error) {
-      console.error("Error fetching users:", error);
+      console.error("Error fetching users or user games:", error);
     }
   };
 

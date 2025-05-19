@@ -2,8 +2,12 @@ import { Game } from "./GameGrid";
 import { Card, Image, Text, Flex, Box } from "@chakra-ui/react";
 import { GameScore } from "./GameScore";
 import { Checkbox } from "@chakra-ui/react";
-import { useUser } from "../context/UserContext";
 import apiClient from "../services/api-client";
+
+// user context
+import { useUser } from "../context/UserContext";
+import { useUserGames } from "../context/UserGamesContext";
+
 
 interface Props {
   game: Game;
@@ -28,8 +32,12 @@ const GameCard = ({ game }: Props) => {
   const truncatedTitle =
     game.title.length > 100 ? `${game.title.slice(0, 100)}...` : game.title;
 
-  // Ensuring we have user information for updating liked games if necessary
-  const { username } = useUser(); //Loading username from context
+  // Ensuring we have username and games context
+  const { username } = useUser(); 
+  const { asins } = useUserGames();
+
+  // Check if the game is already in the user's collection
+  const isChecked = asins.includes(game.asin);
 
   return (
     <Card
@@ -38,27 +46,29 @@ const GameCard = ({ game }: Props) => {
       justifyContent="center"
       alignItems="center"
       display="flex"
+      flexDirection="column"
       padding="10px"
     >
       <Image
         src={imageUrl}
         alt={game.title}
-        boxSize="300px" // Setting width and height to 200px
-        fit="cover" // Ensure the image covers the box while maintaining aspect ratio
+        boxSize="300px"
+        fit="cover"
       />
-      <Card
+      <Box
         display="flex"
         flexDirection="column"
         justifyContent="space-between"
+        width="100%"
+        marginTop="10px"
       >
         <Text fontSize="2xl">{truncatedTitle}</Text>
 
         <Flex
           alignItems="center"
           justifyContent="space-between"
-          marginTop="10px" // Reduced margin to decrease space
+          marginTop="10px"
         >
-          {/* Group Text and GameScore together */}
           <Flex alignItems="center">
             <Text fontSize="lg" color="gray.600" marginRight="5px">
               Score
@@ -66,11 +76,11 @@ const GameCard = ({ game }: Props) => {
             <GameScore rating={game.rating} />
           </Flex>
 
-          {/* If user checks box gamme is logged to 'liked' user_games table */}
-            <Checkbox
-              size="lg"
-              colorScheme="teal"
-              onChange={async (e) => {
+          <Checkbox
+            size="lg"
+            colorScheme="teal"
+            isChecked={isChecked}
+            onChange={async (e) => {
               if (e.target.checked) {
                 await apiClient.post("/v1/user_game/", {
                   "username": username,
@@ -80,13 +90,14 @@ const GameCard = ({ game }: Props) => {
                 console.log(username);
                 console.log(game.asin);
               }
-              }}
-            >
-              Your Collection
-            </Checkbox>
+            }}
+          >
+            Your Collection
+          </Checkbox>
         </Flex>
-      </Card>
+      </Box>
     </Card>
-  );
+  )
 };
+
 export default GameCard;

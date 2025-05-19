@@ -17,6 +17,7 @@ import Signup from "./pages/LoginSignup/Signup";
 import Logout from "./pages/LoginSignup/Logout";
 import { useUser } from "./context/UserContext";
 import ProtectedRoute from "./pages/LoginSignup/ProtectedRoute";
+import { UserGamesProvider } from "./context/UserGamesContext";
 
 
 const router = createBrowserRouter([
@@ -58,11 +59,13 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <UserProvider>
-      <ChakraProvider>
-        <ThemeProvider attribute="class" disableTransitionOnChange>
-          <RouterProvider router={router} />
-        </ThemeProvider>
-      </ChakraProvider>
+      <UserGamesProvider>
+        <ChakraProvider>
+          <ThemeProvider attribute="class" disableTransitionOnChange>
+            <RouterProvider router={router} />
+          </ThemeProvider>
+        </ChakraProvider>
+      </UserGamesProvider>
     </UserProvider>
   </React.StrictMode>
 );
