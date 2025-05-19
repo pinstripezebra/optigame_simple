@@ -15,6 +15,9 @@ const GenreList = ({ onGenreSelect }: GenreListProps) => {
 
   return (
     <VStack align="stretch" spacing={2}>
+      <Text fontSize="2xl" fontWeight="bold" mb={4}>
+        Genres
+      </Text>
       {data.map((genre) => (
         <Button
           key={genre.id}

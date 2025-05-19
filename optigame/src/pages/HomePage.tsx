@@ -49,9 +49,12 @@ function HomePage() {
     const filterByGenre = async () => {
       if (selectedGameTags) {
         // Fetch asins for the selected genre
-        const response = await api.get<{ asin: string }[]>("/v1/genres_filtered/", {
-          params: { genre: selectedGameTags },
-        });
+        const response = await api.get<{ asin: string }[]>(
+          "/v1/genres_filtered/",
+          {
+            params: { genre: selectedGameTags },
+          }
+        );
         const asinList = response.data.map((item) => item.asin);
         console.log("Asin List:", asinList);
         // Filter games by asin
@@ -84,7 +87,7 @@ function HomePage() {
       }}
     >
       {/* Navigation Bar */}
-      <GridItem area="nav">
+      <GridItem area="nav" position="sticky" top="0" zIndex={1000}>
         <NavBar onSearch={handleSearch} />
       </GridItem>
 

@@ -24,6 +24,7 @@ const SearchGames = ({ onSearch }: SearchProps) => {
       placeholder="Search games..."
       value={title}
       onChange={handleInputChange}
+      bg="white" 
       size="sm"
       width="400px"
       marginRight="10px"
