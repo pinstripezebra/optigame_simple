@@ -1,27 +1,42 @@
-import { HStack, Image, List, ListItem, Spinner, Text } from '@chakra-ui/react';
+import { useState } from 'react';
+import { HStack, Image, Spinner, Text, Button, VStack } from '@chakra-ui/react';
 import useGenres from '../hooks/useGenres';
-import { LiaStarHalf } from 'react-icons/lia';
-
-
 
 const GenreList = () => {
-    const {data, loading, error} = useGenres(); // Fetch genres from the API
+  const { data, loading, error } = useGenres(); // Fetch genres from the API
+  const [selectedGenreId, setSelectedGenreId] = useState<string | null>(null);
 
   if (error) return null;
-  if (loading) return <Spinner/>
-  
+  if (loading) return <Spinner />;
 
   return (
-    <List listStyleType={'none'} padding={0}>
-        {data.map((genre) => (
-          <ListItem key={genre.id} padding={2} borderWidth={1} borderRadius={8}>
-            <HStack>
-                <Image boxSize='32px' borderRadius={8} src='/src/assets/placeholder_card.png'></Image>
-              <Text fontSize={'lg'}>{genre.game_tags}</Text>
-            </HStack>
-          </ListItem>))}
-    </List>
-  )
-}
+    <VStack align="stretch" spacing={2}>
+      {data.map((genre) => (
+        <Button
+          key={genre.id}
+          variant={selectedGenreId === genre.id ? "solid" : "outline"}
+          colorScheme="teal"
+          borderRadius={8}
+          justifyContent="flex-start"
+          leftIcon={
+            <Image
+              boxSize="32px"
+              borderRadius={8}
+              src="/src/assets/placeholder_card.png"
+              alt={genre.game_tags}
+            />
+          }
+          onClick={() =>
+            setSelectedGenreId(
+              selectedGenreId === genre.id ? null : genre.id
+            )
+          }
+        >
+          <Text fontSize="lg">{genre.game_tags}</Text>
+        </Button>
+      ))}
+    </VStack>
+  );
+};
 
-export default GenreList
+export default GenreList;
