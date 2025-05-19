@@ -3,6 +3,7 @@ import logo from "../assets/chess_logo.jpg";
 import SearchGames from "./NavBar/Search";
 import { ColorModeSwitch } from "./NavBar/ColorModeButton";
 import { UserMenu } from "./NavBar/UserMenu";
+import { HomeButton } from "./NavBar/HomeButton";
 import { useUser } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
 interface NavBarProps {
@@ -55,7 +56,9 @@ const NavBar = ({ onSearch }: NavBarProps) => {
 
         {/* Color Mode Button */}
         <ColorModeSwitch />
-
+        <Box>
+          <HomeButton />
+        </Box>
         {/* User Menu */}
         <Box>
           <UserMenu />
