@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Grid, GridItem } from "@chakra-ui/react";
+import { Grid, GridItem, Button, HStack  } from "@chakra-ui/react";
 import NavBar from "../components/NavBar";
 import GameGrid from "../components/GameGrid";
 import GenreList from "../components/GenreList";
@@ -17,9 +17,12 @@ export interface Game {
   image_link: string;
 }
 
+const GAMES_PER_PAGE = 20;
+
 function HomePage() {
   const [games, setGames] = useState<Game[]>([]);
   const [filteredGames, setFilteredGames] = useState<Game[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     const fetchGames = async () => {
@@ -36,7 +39,14 @@ function HomePage() {
       title ? game.title.toLowerCase().includes(title.toLowerCase()) : true
     );
     setFilteredGames(filtered);
+    setCurrentPage(1); // Reset to first page on search
   };
+
+  // Pagination logic
+  const totalPages = Math.ceil(filteredGames.length / GAMES_PER_PAGE);
+  const startIdx = (currentPage - 1) * GAMES_PER_PAGE;
+  const endIdx = startIdx + GAMES_PER_PAGE;
+  const gamesToShow = filteredGames.slice(startIdx, endIdx);
 
   return (
     <Grid
@@ -61,7 +71,25 @@ function HomePage() {
   
       {/* Main Content (GameGrid) */}
       <GridItem area="main" padding="10px">
-        <GameGrid games={filteredGames} />
+        <GameGrid games={gamesToShow} />
+        {/* Pagination Controls */}
+        <HStack justify="center" mt={4}>
+          <Button
+            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            isDisabled={currentPage === 1}
+          >
+            Previous
+          </Button>
+          <span>
+            Page {currentPage} of {totalPages}
+          </span>
+          <Button
+            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+            isDisabled={currentPage === totalPages}
+          >
+            Next
+          </Button>
+        </HStack>
       </GridItem>
     </Grid>
   );
