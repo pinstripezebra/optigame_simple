@@ -49,7 +49,7 @@ const GameCard = ({ game }: Props) => {
       display="flex"
       flexDirection="column"
       padding="10px"
-      onClick={() => navigate(`/asin/${game.asin}`)}
+      onClick={() => navigate(`/asin/${game.asin}`, { state: { game } })}
       cursor="pointer"
     >
       <Image
