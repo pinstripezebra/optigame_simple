@@ -1,9 +1,13 @@
 import { useState } from 'react';
-import { HStack, Image, Spinner, Text, Button, VStack } from '@chakra-ui/react';
+import { Image, Spinner, Text, Button, VStack } from '@chakra-ui/react';
 import useGenres from '../hooks/useGenres';
 
-const GenreList = () => {
-  const { data, loading, error } = useGenres(); // Fetch genres from the API
+interface GenreListProps {
+  onGenreSelect: (gameTags: string | null) => void; // Now returns game_tags
+}
+
+const GenreList = ({ onGenreSelect }: GenreListProps) => {
+  const { data, loading, error } = useGenres();
   const [selectedGenreId, setSelectedGenreId] = useState<string | null>(null);
 
   if (error) return null;
@@ -26,11 +30,12 @@ const GenreList = () => {
               alt={genre.game_tags}
             />
           }
-          onClick={() =>
-            setSelectedGenreId(
-              selectedGenreId === genre.id ? null : genre.id
-            )
-          }
+          onClick={() => {
+            const isSelected = selectedGenreId === genre.id;
+            const newSelectedId = isSelected ? null : genre.id;
+            setSelectedGenreId(newSelectedId);
+            onGenreSelect(isSelected ? null : genre.game_tags); // Pass game_tags or null
+          }}
         >
           <Text fontSize="lg">{genre.game_tags}</Text>
         </Button>

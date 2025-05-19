@@ -20,9 +20,12 @@ export interface Game {
 const GAMES_PER_PAGE = 20;
 
 function HomePage() {
+
+  // storing games, page, and genre variables
   const [games, setGames] = useState<Game[]>([]);
   const [filteredGames, setFilteredGames] = useState<Game[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedGameTags, setSelectedGameTags] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchGames = async () => {
@@ -48,6 +51,7 @@ function HomePage() {
   const endIdx = startIdx + GAMES_PER_PAGE;
   const gamesToShow = filteredGames.slice(startIdx, endIdx);
 
+  console.log("Genre:", selectedGameTags);
   return (
     <Grid
       templateAreas={{
@@ -66,7 +70,7 @@ function HomePage() {
   
       {/* Genre List */}
       <GridItem area="aside" padding="10px" bg="gray.100">
-        <GenreList />
+        <GenreList onGenreSelect={setSelectedGameTags}/>
       </GridItem>
   
       {/* Main Content (GameGrid) */}
