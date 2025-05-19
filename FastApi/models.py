@@ -19,12 +19,6 @@ class Role(str, Enum):
     admin = 'admin'
     user = 'user'
 
-class User(BaseModel):
-    id: Optional[UUID] = uuid4()
-    username: str
-    password: str
-    role: Role
-
 # This is the game model for the database
 # we have separate classes for the pydantic model and the SQLAlchemy model
 class Game(Base):
@@ -70,7 +64,7 @@ class User(Base):
 
 
 class UserModel(BaseModel):
-    id: Optional[UUID]
+    id: Optional[UUID] = None
     username: str
     password: str
     email: str
@@ -92,7 +86,7 @@ class GameTags(Base):
 
 
 class GameTagsModel(BaseModel):
-    id: Optional[UUID]
+    id: Optional[UUID] = None
     asin: str
     game_tags: str
 

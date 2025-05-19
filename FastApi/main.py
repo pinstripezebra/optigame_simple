@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Depends, HTTPException
-from FastApi.models import User, Game, Role, GameModel, UserModel, GameTags, GameTagsModel, UniqueGameTags, UniqueGameTagsModel, User_Game_Model, User_Game
+from FastApi.models import User, Game, GameModel, UserModel, GameTags, GameTagsModel, UniqueGameTags, UniqueGameTagsModel, User_Game_Model, User_Game
 from typing import List
 from uuid import uuid4, UUID
 import os
@@ -115,31 +115,6 @@ async def fetch_user_game_all(db: Session = Depends(get_db)):
 # ----------PART 2: POST METHODS------------------#
 #-------------------------------------------------#
 
-# for adding a new user to the database
-@app.post("/api/v1/users/")
-async def create_user(user: UserModel, db: Session = Depends(get_db)):
-    """
-    Create a new user and insert it into the user table.
-    """
-    # Create a new User instance
-    new_user = User(
-        id=uuid4(),  # Generate a new UUID for the user
-        username=user.username,
-        password=user.password,
-        role=user.role
-    )
-
-    try:
-        # Add the new user to the database
-        db.add(new_user)
-        db.commit()
-        db.refresh(new_user)  # Refresh to get the new user's data from the database
-    except IntegrityError:
-        db.rollback()
-        raise HTTPException(status_code=400, detail="User with this username already exists")
-
-    return {"message": "User created successfully", "user": new_user}
-
 
 # for adding a new user-game match to database
 @app.post("/api/v1/user_game/")
@@ -163,4 +138,30 @@ async def create_user_game(user_game: User_Game_Model, db: Session = Depends(get
     db.commit()
     db.refresh(db_user_game)
     return db_user_game
+
+
+# for adding a new user to database
+@app.post("/api/v1/user/")
+async def  create_user(user: UserModel, db: Session = Depends(get_db)):
+    # Check if the entry already exists
+    existing = db.query(User).filter_by(username=user.username, password=user.password).first()
+    if existing:
+        raise HTTPException(status_code=400, detail="User already exists.")
+
+    # Only include id if provided, otherwise let SQLAlchemy generate it
+    user_data = {
+        "username": user.username,
+        "password": user.password,
+        "email": user.email,
+        "role": user.role
+    }
+    if user.id is not None:
+        # Ensure it's a UUID object
+        user_data["id"] = UUID(str(user.id))
+
+    db_user = User(**user_data)
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    return db_user
 
