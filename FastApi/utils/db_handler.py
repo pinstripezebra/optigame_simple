@@ -196,3 +196,28 @@ class DatabaseHandler:
         self.conn.commit()
         # Close the cursor and connection
         cursor.close()
+
+    def populate_similarity_table(self,df):
+
+        """ Connect to the PostgreSQL database and updates the similarity table
+        data from the input dataframe."""
+
+        # Create a cursor object
+        cursor = self.conn.cursor()
+
+        # Iterate over the rows of the DataFrame and insert each row into the table
+        for index, row in df.iterrows():
+            cursor.execute(
+                """INSERT INTO game_similarity (id, game1, game2, similarity)
+                VALUES (%s, %s, %s, %s)""",
+                (
+                    str(row['id']),  # Convert UUID to string
+                    row['game1'],
+                    row['game2'],
+                    row['similarity']
+                )
+            )
+        self.conn.commit()
+        # Close the cursor and connection
+        cursor.close()
+

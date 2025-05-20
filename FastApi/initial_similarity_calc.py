@@ -51,7 +51,32 @@ def calculate_similarity(game_vectors):
 # creating game vectors
 similarity_df = add_game_vector(unique_tags, unique_games)
 
-
 # calculating similarity matrix and pivoting to long format
 similarity_matrix = calculate_similarity(similarity_df)
 print(similarity_matrix)
+
+
+# uploading the similarity matrix to the database
+table_creation_query = """CREATE TABLE IF NOT EXISTS game_similarity (
+    id UUID PRIMARY KEY,
+    game1 VARCHAR(255),
+    game2 VARCHAR(255),
+    similarity FLOAT
+    )
+    """
+
+# delete table if it exists
+engine.delete_table(target_table_name)
+# creating table
+engine.create_table(table_creation_query)
+
+# add 'id' column with unique UUIDs as strings
+similarity_matrix['id'] = [str(uuid.uuid4()) for _ in range(len(similarity_matrix))]
+similarity_matrix = similarity_matrix[['id', 'game1', 'game2', 'similarity']]
+
+# populating table with similarity data
+engine.populate_similarity_table(similarity_matrix)
+
+# checking to ensure data is in table
+df = engine.retrieve_all_from_table(target_table_name)
+print(df)
