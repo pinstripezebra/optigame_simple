@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Depends, HTTPException
-from FastApi.models import User, Game, GameModel, UserModel, GameTags, GameTagsModel, UniqueGameTags, UniqueGameTagsModel, User_Game_Model, User_Game
+from FastApi.models import User, Game, GameModel, UserModel, GameTags, GameTagsModel, UniqueGameTags, UniqueGameTagsModel, User_Game_Model, User_Game, GameSimilarity,GameSimilarityModel
 from typing import List
 from uuid import uuid4, UUID
 import os
@@ -62,7 +62,6 @@ async def fetch_products(asin: str = None, db: Session = Depends(get_db)):
         products = db.query(Game).filter(Game.asin == asin).all()
     else:
         products = db.query(Game).all()
-    # Serialize the results using the Pydantic GameModel
     return [GameModel.from_orm(product) for product in products]
 
 
@@ -70,43 +69,43 @@ async def fetch_products(asin: str = None, db: Session = Depends(get_db)):
 async def fetch_users(username: str, password: str, db: Session = Depends(get_db)):
     # Query the database for users matching the username and password
     users = db.query(User).filter(User.username == username, User.password == password).all()
-    # Serialize the results using the Pydantic UserModel
     return [UserModel.from_orm(user) for user in users]
 
 @app.get("/api/v1/users_all/")
 async def fetch_all_users(db: Session = Depends(get_db)):
     # Query the database for users matching the username and password
     users = db.query(User).all()
-    # Serialize the results using the Pydantic UserModel
     return [UserModel.from_orm(user) for user in users]
 
 @app.get("/api/v1/genres/")
 async def fetch_game_tags(db: Session = Depends(get_db)):
     # Query the database using the SQLAlchemy Game model
     gametags = db.query(GameTags).all()
-    # Serialize the results using the Pydantic GameModel
     return [GameTagsModel.from_orm(gametag) for gametag in gametags]
 
 @app.get("/api/v1/genres_filtered/")
 async def fetch_game_tags_filtered(genre: str, db: Session = Depends(get_db)):
     # Query the database using the SQLAlchemy GameTags model and filter by genre
     gametags = db.query(GameTags).filter(GameTags.game_tags == genre).all()
-    # Serialize the results using the Pydantic GameTagsModel
     return [GameTagsModel.from_orm(gametag) for gametag in gametags]
+
+@app.get("/api/v1/similar_games/")
+async def fetch_similar_games(asin: str, db: Session = Depends(get_db)):
+    # Query the database and return result
+    similar_games = db.query(GameSimilarity).filter(GameSimilarity.game1 == asin).all()
+    return [GameSimilarityModel.from_orm(game) for game in similar_games]
 
 
 @app.get("/api/v1/unique_genres/")
 async def fetch_unique_game_tags(db: Session = Depends(get_db)):
-    # Query the database using the SQLAlchemy Unique Genres 
+    # Query the database using the SQLAlchemy Unique Game tags
     gametags = db.query(UniqueGameTags).all()
-    # Serialize the results using the Pydantic Unqiue Genres Model
     return [UniqueGameTagsModel.from_orm(gametag) for gametag in gametags]
 
 @app.get("/api/v1/user_game/")
 async def fetch_user_game(username: str, db: Session = Depends(get_db)):
-    # Query the database using the SQLAlchemy Unique Genres 
+    # Query the database using the SQLAlchemyfor user_games
     user_games = db.query(User_Game).filter(User_Game.username == username)
-    # Serialize the results using the Pydantic Unqiue Genres Model
     return [User_Game_Model.from_orm(user_game) for user_game in user_games]
 
 
@@ -115,7 +114,6 @@ async def fetch_user_game_all(db: Session = Depends(get_db)):
 
     # Query the database using the SQLAlchemy Unique Genres 
     user_games = db.query(User_Game).all()
-    # Serialize the results using the Pydantic Unqiue Genres Model
     return [User_Game_Model.from_orm(user_game) for user_game in user_games]
 
 

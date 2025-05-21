@@ -97,7 +97,6 @@ class GameTagsModel(BaseModel):
 
 
 # This is the UNIQUE Game Tags model for the database
-# we have separate classes for the pydantic model and the SQLAlchemy model
 class UniqueGameTags(Base):
     __tablename__ = "optigame_unique_game_tags"  # Table name in the PostgreSQL database
 
@@ -115,7 +114,6 @@ class UniqueGameTagsModel(BaseModel):
 
 
 # This user_id:game_id mapping model
-# it stores the games that each user has liked
 class User_Game(Base):
     __tablename__ = "optigame_user_games"  # Table name in the PostgreSQL database
 
@@ -132,5 +130,26 @@ class User_Game_Model(BaseModel):
     class Config:
         orm_mode = True  # Enable ORM mode to work with SQLAlchemy objects
         from_attributes = True # Enable attribute access for SQLAlchemy objects
+
+
+# This is the Game Similarity model for the database
+class GameSimilarity(Base):
+    __tablename__ = "game_similarity"  # Table name in the PostgreSQL database
+
+    id = Column(SA_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    game1 = Column(String, nullable=False)
+    game2 = Column(String, nullable=False)
+    similarity = Column(Float, nullable=False)
+    
+class GameSimilarityModel(BaseModel):
+    id: Optional[UUID] = None
+    game1: str
+    game2: str
+    similarity: float
+
+    class Config:
+        orm_mode = True  # Enable ORM mode to work with SQLAlchemy objects
+        from_attributes = True # Enable attribute access for SQLAlchemy objects
+
 
 
