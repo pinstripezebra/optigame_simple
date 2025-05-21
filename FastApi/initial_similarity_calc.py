@@ -73,10 +73,15 @@ engine.create_table(table_creation_query)
 # add 'id' column with unique UUIDs as strings
 similarity_matrix['id'] = [str(uuid.uuid4()) for _ in range(len(similarity_matrix))]
 similarity_matrix = similarity_matrix[['id', 'game1', 'game2', 'similarity']]
+print(similarity_matrix)
+
+# Keep only the top 100 similarities for each unique game1
+# will reduce size of table
+similarity_matrix = similarity_matrix.sort_values(['game1', 'similarity'], ascending=[True, False])
+similarity_matrix = similarity_matrix.groupby('game1').head(100).reset_index(drop=True)
 
 # populating table with similarity data
 engine.populate_similarity_table(similarity_matrix)
 
 # checking to ensure data is in table
 df = engine.retrieve_all_from_table(target_table_name)
-print(df)

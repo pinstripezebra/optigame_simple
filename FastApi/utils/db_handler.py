@@ -2,6 +2,7 @@ from dotenv import load_dotenv
 import pandas as pd
 import psycopg2
 import os
+from psycopg2.extras import execute_values
 import uuid
 
 # Load environment variables from .env2 file
@@ -197,27 +198,31 @@ class DatabaseHandler:
         # Close the cursor and connection
         cursor.close()
 
-    def populate_similarity_table(self,df):
-
+    def populate_similarity_table(self, df):
         """ Connect to the PostgreSQL database and updates the similarity table
         data from the input dataframe."""
 
-        # Create a cursor object
         cursor = self.conn.cursor()
 
-        # Iterate over the rows of the DataFrame and insert each row into the table
-        for index, row in df.iterrows():
-            cursor.execute(
-                """INSERT INTO game_similarity (id, game1, game2, similarity)
-                VALUES (%s, %s, %s, %s)""",
-                (
-                    str(row['id']),  # Convert UUID to string
-                    row['game1'],
-                    row['game2'],
-                    row['similarity']
-                )
+        # Prepare the data as a list of tuples
+        data = [
+            (
+                str(row['id']),
+                row['game1'],
+                row['game2'],
+                row['similarity']
             )
+            for _, row in df.iterrows()
+        ]
+
+        # Use execute_values for faster insert with large dataset
+        execute_values(
+            cursor,
+            """INSERT INTO game_similarity (id, game1, game2, similarity)
+            VALUES %s""",
+            data
+        )
+
         self.conn.commit()
-        # Close the cursor and connection
         cursor.close()
 
