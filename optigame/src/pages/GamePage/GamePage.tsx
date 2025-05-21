@@ -2,6 +2,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Grid, GridItem, Button, HStack, Text } from "@chakra-ui/react";
 import NavBar from "../../components/NavBar";
 import SimilarGames from "./SimilarGames";
+import api from "../../services/api-client";
+
 
 export interface Game {
   id: string;
@@ -17,6 +19,7 @@ export interface Game {
 const GamePage = () => {
   const location = useLocation();
   const game = location.state?.game as Game | undefined;
+  
 
   // Optionally, redirect if no game is provided
   const navigate = useNavigate();
@@ -98,7 +101,7 @@ const GamePage = () => {
       <Text fontSize="2xl" marginTop="20px" marginBottom="10px" textAlign="center" fontWeight={"bold"}>
         Similar Games
       </Text>
-      <SimilarGames />
+      <SimilarGames game={game} />
     </div>
   );
 };
