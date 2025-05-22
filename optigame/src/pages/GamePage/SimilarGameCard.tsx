@@ -1,7 +1,7 @@
 import { Card, Image, Text, Spinner, Box } from "@chakra-ui/react";
 import { GameSimilarity } from "./SimilarGames";
 import { useNavigate } from "react-router-dom";
-import useGame, { Game as GameType } from '../../hooks/useGame';
+import useGame from '../../hooks/useGame';
 
 interface Props {
   game: GameSimilarity; // receives id, game1, game2, similarity
@@ -11,7 +11,8 @@ const SimilarGameCard = ({ game }: Props) => {
   const navigate = useNavigate();
 
   // Fetch the full game2 object using useGame and game.game2 as the asin/id
-  const { data: game2, loading, error } = useGame(game.game2);
+  const { data, loading, error } = useGame(game.game2);
+  const game2 = Array.isArray(data) ? data[0] : data;
 
   let imageUrl = "https://via.placeholder.com/150";
   if (game2 && game2.image_link) {
@@ -25,7 +26,7 @@ const SimilarGameCard = ({ game }: Props) => {
     }
   }
 
-  if (isLoading) {
+  if (loading) {
     return (
       <Card
         borderRadius={10}
