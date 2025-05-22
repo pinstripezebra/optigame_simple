@@ -1,26 +1,62 @@
-import { Card, Image, Text, Flex, Box } from "@chakra-ui/react";
+import { Card, Image, Text, Spinner, Box } from "@chakra-ui/react";
 import { GameSimilarity } from "./SimilarGames";
 import { useNavigate } from "react-router-dom";
-
-
+import useGame, { Game as GameType } from '../../hooks/useGame';
 
 interface Props {
-  game: GameSimilarity;
+  game: GameSimilarity; // receives id, game1, game2, similarity
 }
 
 const SimilarGameCard = ({ game }: Props) => {
-  let imageUrl;
   const navigate = useNavigate();
-  try {
-    // Check if the URL is valid and prepend 'https://' if necessary
-    imageUrl = game.image_link.startsWith("http")
-      ? game.image_link
-      : `https://${game.image_link}`;
-    // Validate the URL using the URL constructor
-    imageUrl = new URL(imageUrl).toString();
-  } catch {
-    // Fallback to a default image if the URL is invalid
-    imageUrl = "https://via.placeholder.com/150";
+
+  // Fetch the full game2 object using useGame and game.game2 as the asin/id
+  const { data: game2, loading, error } = useGame(game.game2);
+
+  let imageUrl = "https://via.placeholder.com/150";
+  if (game2 && game2.image_link) {
+    try {
+      imageUrl = game2.image_link.startsWith("http")
+        ? game2.image_link
+        : `https://${game2.image_link}`;
+      imageUrl = new URL(imageUrl).toString();
+    } catch {
+      imageUrl = "https://via.placeholder.com/150";
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <Card
+        borderRadius={10}
+        overflow="hidden"
+        justifyContent="center"
+        alignItems="center"
+        display="flex"
+        flexDirection="column"
+        padding="2px"
+        minHeight="320px"
+      >
+        <Spinner />
+      </Card>
+    );
+  }
+
+  if (error || !game2) {
+    return (
+      <Card
+        borderRadius={10}
+        overflow="hidden"
+        justifyContent="center"
+        alignItems="center"
+        display="flex"
+        flexDirection="column"
+        padding="2px"
+        minHeight="320px"
+      >
+        <Text>Error loading game</Text>
+      </Card>
+    );
   }
 
   return (
@@ -32,12 +68,12 @@ const SimilarGameCard = ({ game }: Props) => {
       display="flex"
       flexDirection="column"
       padding="2px"
-      onClick={() => navigate(`/asin/${game.asin}`, { state: { game } })}
+      onClick={() => navigate(`/asin/${game2.asin}`, { state: { game: game2 } })}
       cursor="pointer"
     >
       <Image
         src={imageUrl}
-        alt={game.title}
+        alt={game2.title}
         boxSize="300px"
         fit="cover"
       />
@@ -48,17 +84,14 @@ const SimilarGameCard = ({ game }: Props) => {
         width="100%"
         marginTop="10px"
       >
-
-        <Flex
-          alignItems="center"
-          justifyContent="space-between"
-          marginTop="10px"
-        >
-
-        </Flex>
+        <Text fontWeight="bold" textAlign="center">{game2.title}</Text>
+        <Text fontSize="sm" textAlign="center">{game2.description}</Text>
+        <Text fontSize="xs" textAlign="center" color="gray.500">
+          Similarity: {game.similarity.toFixed(2)}
+        </Text>
       </Box>
     </Card>
-  )
+  );
 };
 
 export default SimilarGameCard;

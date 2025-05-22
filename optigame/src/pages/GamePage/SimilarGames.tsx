@@ -1,9 +1,8 @@
-
-import { SimpleGrid, Box, IconButton, Spinner, Text } from '@chakra-ui/react';
-import React, { useState } from 'react';
-import { ChevronRightIcon, ChevronLeftIcon } from '@chakra-ui/icons';
-import useSimilarGame from '../../hooks/useSimilarGame';
-import { Game } from './GamePage'; // Import the Game type
+import { SimpleGrid, Box, IconButton, Spinner, Text } from "@chakra-ui/react";
+import React, { useState } from "react";
+import { ChevronRightIcon, ChevronLeftIcon } from "@chakra-ui/icons";
+import useSimilarGame from "../../hooks/useSimilarGame";
+import { Game } from "./GamePage"; // Import the Game type
 import SimilarGameCard from "./SimilarGameCard";
 
 interface SimilarGamesProps {
@@ -20,14 +19,17 @@ export interface GameSimilarity {
 const VISIBLE_COUNT = 5;
 
 const SimilarGames = ({ game }: SimilarGamesProps) => {
-  const { data: similarGames} = useSimilarGame(game.asin);
+  const { data: similarGames } = useSimilarGame(game.asin);
   const [startIdx, setStartIdx] = useState(0);
 
-  if (!similarGames || similarGames.length === 0) return <Text>No similar games found.</Text>;
+  if (!similarGames || similarGames.length === 0)
+    return <Text>No similar games found.</Text>;
 
   const handleLeft = () => setStartIdx((prev) => Math.max(prev - 1, 0));
   const handleRight = () =>
-    setStartIdx((prev) => Math.min(prev + 1, similarGames.length - VISIBLE_COUNT));
+    setStartIdx((prev) =>
+      Math.min(prev + 1, similarGames.length - VISIBLE_COUNT)
+    );
 
   const visibleGames = similarGames.slice(startIdx, startIdx + VISIBLE_COUNT);
 
@@ -42,8 +44,8 @@ const SimilarGames = ({ game }: SimilarGamesProps) => {
         isDisabled={startIdx === 0}
       />
       <SimpleGrid columns={VISIBLE_COUNT} spacing={4} flex="1">
-        {visibleGames.map((GameSimilarity) => (
-          <SimilarGameCard key={GameSimilarity.id} game2={GameSimilarity.game2} />
+        {visibleGames.map((gameSimilarity) => (
+          <SimilarGameCard key={gameSimilarity.id} game={gameSimilarity} />
         ))}
       </SimpleGrid>
       <IconButton
