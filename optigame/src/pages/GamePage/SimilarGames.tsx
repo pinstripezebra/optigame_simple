@@ -4,9 +4,17 @@ import React, { useState } from 'react';
 import { ChevronRightIcon, ChevronLeftIcon } from '@chakra-ui/icons';
 import useSimilarGame from '../../hooks/useSimilarGame';
 import { Game } from './GamePage'; // Import the Game type
+import SimilarGameCard from "./SimilarGameCard";
 
 interface SimilarGamesProps {
   game: Game;
+}
+
+export interface GameSimilarity {
+  id: string;
+  game1: string;
+  game2: string;
+  similarity: number;
 }
 
 const VISIBLE_COUNT = 5;
@@ -34,20 +42,8 @@ const SimilarGames = ({ game }: SimilarGamesProps) => {
         isDisabled={startIdx === 0}
       />
       <SimpleGrid columns={VISIBLE_COUNT} spacing={4} flex="1">
-        {visibleGames.map((simGame) => (
-          <Box
-            key={simGame.id}
-            bg="gray.200"
-            height="120px"
-            borderRadius="md"
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            flexDirection="column"
-          >
-            <Text fontWeight="bold">{simGame.game2}</Text>
-            <Text fontSize="sm">Similarity: {simGame.similarity.toFixed(2)}</Text>
-          </Box>
+        {visibleGames.map((GameSimilarity) => (
+          <SimilarGameCard key={GameSimilarity.id} game2={GameSimilarity.game2} />
         ))}
       </SimpleGrid>
       <IconButton
