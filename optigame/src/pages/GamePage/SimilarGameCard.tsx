@@ -43,6 +43,7 @@ const SimilarGameCard = ({ game }: Props) => {
     );
   }
 
+
   if (error || !game2) {
     return (
       <Card
@@ -86,10 +87,6 @@ const SimilarGameCard = ({ game }: Props) => {
         marginTop="10px"
       >
         <Text fontWeight="bold" textAlign="center">{game2.title}</Text>
-        <Text fontSize="sm" textAlign="center">{game2.description}</Text>
-        <Text fontSize="xs" textAlign="center" color="gray.500">
-          Similarity: {game.similarity.toFixed(2)}
-        </Text>
       </Box>
     </Card>
   );
