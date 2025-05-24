@@ -120,12 +120,18 @@ class User_Game(Base):
     id = Column(SA_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     username = Column(String, nullable=False)
     asin = Column(String, nullable=False)
+    shelf = Column(String, nullable=False)
+    rating = Column(Float, nullable=False)
+    review = Column(String, nullable=False)
 
 
 class User_Game_Model(BaseModel):
     id: Optional[UUID]  = None
     username: str
     asin: str
+    shelf: str
+    rating: float
+    review: str
 
     class Config:
         orm_mode = True  # Enable ORM mode to work with SQLAlchemy objects

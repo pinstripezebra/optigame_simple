@@ -16,13 +16,19 @@ engine.delete_table(table_name)
 initial_user_game = pd.DataFrame({
     "id": [str(uuid.uuid4()), str(uuid.uuid4())],
     "username": ["admin_username", "user_username"],
-    "asin": ["B008J87PVC", "B08BHHRSPK"] 
+    "asin": ["B008J87PVC", "B08BHHRSPK"], 
+    "shelf": ["played", "Wishlist"],
+    "rating": [5.0, 4.0],
+    "review": ["Great game!", "Enjoyable experience!"]
 })
 
 engine.create_table("""CREATE TABLE IF NOT EXISTS optigame_user_games (
     id UUID PRIMARY KEY,
     username VARCHAR(255) NOT NULL,
     asin VARCHAR(255) NOT NULL
+    shelf VARCHAR(50) NOT NULL,
+    rating FLOAT NOT NULL,
+    review TEXT NOT NULL
     )
 """)
 
