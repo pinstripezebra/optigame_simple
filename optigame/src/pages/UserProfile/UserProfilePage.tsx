@@ -4,6 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import { useUser } from "../../context/UserContext";
 import UserNavBar from "./UserProfileNavBar"; // Import the NavBar component
 import api from "../../services/api-client";
+import UserGameShelf from "./UserGameShelf";
 
 export interface Game {
   id: string;
@@ -66,128 +67,29 @@ const UserProfilePage: React.FC = () => {
   };
 
   return (
-    <Box padding="20px">
-      {/* User Profile NavBar */}
-      <UserNavBar />
+  <Box padding="20px">
+    {/* User Profile NavBar */}
+    <UserNavBar />
 
-      {/* Games Grid */}
-      <Text fontSize="xl" fontWeight="bold" marginBottom="10px">
-        Your Games
-      </Text>
-      <Box width="100%" overflowX="auto">
-        <table style={{ width: "100%", borderCollapse: "collapse" }}>
-          <thead>
-            <tr>
-              <th
-                style={{
-                  border: "1px solid gray",
-                  padding: "8px",
-                  textAlign: "left",
-                  width: "20%", // Set width for Asin column
-                }}
-              >
-                Asin
-              </th>
-              <th
-                style={{
-                  border: "1px solid gray",
-                  padding: "8px",
-                  textAlign: "left",
-                  width: "30%", // Set width for Title column
-                }}
-              >
-                Title
-              </th>
-              <th
-                style={{
-                  border: "1px solid gray",
-                  padding: "8px",
-                  textAlign: "left",
-                  width: "50%", // Set width for Description column
-                }}
-              >
-                Description
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              <tr>
-                <td
-                  colSpan={3}
-                  style={{ textAlign: "center", padding: "20px" }}
-                >
-                  <Spinner size="lg" />
-                </td>
-              </tr>
-            ) : filteredUserGames.length > 0 ? (
-              filteredUserGames.map((game) => (
-                <tr
-                  key={game.id}
-                  onClick={() => handleRowClick(game.id)} // Handle row click
-                  style={{
-                    cursor: "pointer",
-                    backgroundColor:
-                      expandedRow === game.id ? "#f9f9f9" : "transparent",
-                  }}
-                >
-                  <td
-                    style={{
-                      border: "1px solid gray",
-                      padding: "8px",
-                      width: "20%", // Match width for Asin column
-                    }}
-                  >
-                    {game.asin}
-                  </td>
-                  <td
-                    style={{
-                      border: "1px solid gray",
-                      padding: "8px",
-                      width: "30%", // Match width for Title column
-                    }}
-                  >
-                    {game.title}
-                  </td>
-                  <td
-                    style={{
-                      border: "1px solid gray",
-                      padding: "8px",
-                      width: "50%", // Match width for Description column
-                    }}
-                  >
-                    {expandedRow === game.id
-                      ? game.description // Show full description if expanded
-                      : `${game.description.slice(0, 50)}...`}{" "}
-                    {/* Truncate description */}
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td
-                  colSpan={3}
-                  style={{
-                    border: "1px solid gray",
-                    padding: "8px",
-                    textAlign: "center",
-                    color: "gray",
-                  }}
-                >
-                  No games available.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </Box>
-
-      {/* Back to Home Button */}
-      <Button as={Link} to="/" colorScheme="teal" size="md" marginTop="20px">
-        Go back to Home
-      </Button>
+    {/* Games Grid */}
+    <Text fontSize="xl" fontWeight="bold" marginBottom="10px">
+      Your Games
+    </Text>
+    <Box width="100%" overflowX="auto">
+      <UserGameShelf
+        filteredUserGames={filteredUserGames}
+        loading={loading}
+        expandedRow={expandedRow}
+        handleRowClick={handleRowClick}
+      />
     </Box>
-  );
-};
+
+    {/* Back to Home Button */}
+    <Button as={Link} to="/" colorScheme="teal" size="md" marginTop="20px">
+      Go back to Home
+    </Button>
+  </Box>
+);
+}
 
 export default UserProfilePage;
