@@ -26,9 +26,9 @@ engine.create_table("""CREATE TABLE IF NOT EXISTS optigame_user_games (
     id UUID PRIMARY KEY,
     username VARCHAR(255) NOT NULL,
     asin VARCHAR(255) NOT NULL,
-    shelf VARCHAR(50) NOT NULL,
-    rating FLOAT NOT NULL,
-    review TEXT NOT NULL
+    shelf VARCHAR(50),
+    rating FLOAT,
+    review TEXT
     )
 """)
 
