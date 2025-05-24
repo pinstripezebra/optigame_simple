@@ -1,5 +1,5 @@
 import React from 'react'
-import { Spinner } from "@chakra-ui/react";
+import { Spinner, Image } from "@chakra-ui/react";
 
 // Defining inputs
 interface Game {
@@ -14,8 +14,19 @@ interface Game {
   image_link: string;
 }
 
+interface UserGame {
+  id: string;
+  username: string;
+  asin: string;
+  shelf: string;
+  rating: number;
+  review: string;
+}
+
+
 interface UserGameShelfProps {
   filteredUserGames: Game[];
+  userGamesData: UserGame[]; // <-- add this prop
   loading: boolean;
   expandedRow: string | null;
   handleRowClick: (id: string) => void;
@@ -23,6 +34,7 @@ interface UserGameShelfProps {
 
 const UserGameShelf: React.FC<UserGameShelfProps> = ({
   filteredUserGames,
+  userGamesData,
   loading,
   expandedRow,
   handleRowClick,
@@ -30,40 +42,53 @@ const UserGameShelf: React.FC<UserGameShelfProps> = ({
   <table style={{ width: "100%", borderCollapse: "collapse" }}>
     <thead>
       <tr>
-        <th style={{ border: "1px solid gray", padding: "8px", textAlign: "left", width: "20%" }}>Asin</th>
-        <th style={{ border: "1px solid gray", padding: "8px", textAlign: "left", width: "30%" }}>Title</th>
-        <th style={{ border: "1px solid gray", padding: "8px", textAlign: "left", width: "50%" }}>Description</th>
+        <th style={{ border: "1px solid gray", padding: "8px", textAlign: "left", width: "20%" }}>Image</th>
+        <th style={{ border: "1px solid gray", padding: "8px", textAlign: "left", width: "20%" }}>Title</th>
+        <th style={{ border: "1px solid gray", padding: "8px", textAlign: "left", width: "10%" }}>Your Rating</th>
+        <th style={{ border: "1px solid gray", padding: "8px", textAlign: "left", width: "10%" }}> Your Review</th>
       </tr>
     </thead>
     <tbody>
       {loading ? (
         <tr>
-          <td colSpan={3} style={{ textAlign: "center", padding: "20px" }}>
+          <td colSpan={5} style={{ textAlign: "center", padding: "20px" }}>
             <Spinner size="lg" />
           </td>
         </tr>
       ) : filteredUserGames.length > 0 ? (
-        filteredUserGames.map((game) => (
-          <tr
-            key={game.id}
-            onClick={() => handleRowClick(game.id)}
-            style={{
-              cursor: "pointer",
-              backgroundColor: expandedRow === game.id ? "#f9f9f9" : "transparent",
-            }}
-          >
-            <td style={{ border: "1px solid gray", padding: "8px", width: "20%" }}>{game.asin}</td>
-            <td style={{ border: "1px solid gray", padding: "8px", width: "30%" }}>{game.title}</td>
-            <td style={{ border: "1px solid gray", padding: "8px", width: "50%" }}>
-              {expandedRow === game.id
-                ? game.description
-                : `${game.description.slice(0, 50)}...`}
-            </td>
-          </tr>
-        ))
+        filteredUserGames.map((game) => {
+          // Find the review for this game by asin
+          const userGame = userGamesData.find((ug) => ug.asin === game.asin);
+          return (
+            <tr
+              key={game.id}
+              onClick={() => handleRowClick(game.id)}
+              style={{
+                cursor: "pointer",
+                backgroundColor: expandedRow === game.id ? "#f9f9f9" : "transparent",
+              }}
+            >
+              <td style={{ border: "1px solid gray", padding: "8px", width: "20%" }}>
+                <Image
+                  src={game.image_link}
+                  alt={game.title}
+                  boxSize="60px"
+                  objectFit="cover"
+                  borderRadius="6px"
+                  fallbackSrc="https://via.placeholder.com/48"
+                />
+              </td>
+              <td style={{ border: "1px solid gray", padding: "8px", width: "20%" }}>{game.title}</td>
+              <td style={{ border: "1px solid gray", padding: "8px", width: "10%" }}>{userGame?.rating}</td>
+              <td style={{ border: "1px solid gray", padding: "8px", width: "10%" }}>
+                {userGame?.review ?? "—"}
+              </td>
+            </tr>
+          );
+        })
       ) : (
         <tr>
-          <td colSpan={3} style={{ border: "1px solid gray", padding: "8px", textAlign: "center", color: "gray" }}>
+          <td colSpan={5} style={{ border: "1px solid gray", padding: "8px", textAlign: "center", color: "gray" }}>
             No games available.
           </td>
         </tr>

@@ -22,6 +22,9 @@ interface UserGame {
   id: string;
   username: string;
   asin: string;
+  shelf: string;
+  rating: number;
+  review: string;
 }
 
 const UserProfilePage: React.FC = () => {
@@ -67,29 +70,37 @@ const UserProfilePage: React.FC = () => {
   };
 
   return (
-  <Box padding="20px">
-    {/* User Profile NavBar */}
-    <UserNavBar />
-
-    {/* Games Grid */}
-    <Text fontSize="xl" fontWeight="bold" marginBottom="10px">
-      Your Games
-    </Text>
-    <Box width="100%" overflowX="auto">
-      <UserGameShelf
+    <Box padding="20px">
+      {/* User Profile NavBar */}
+      <UserNavBar />
+    <Box py={6} />
+      {/* Games Grid */}
+      <Box px="50px">
+        <Text
+          fontSize="2xl"
+          fontWeight="bold"
+          marginBottom="10px"
+          textAlign="center"
+        >
+          Your Game Shelf
+        </Text>
+        <Box width="100%" overflowX="auto">
+          <UserGameShelf
         filteredUserGames={filteredUserGames}
+        userGamesData={usergames}
         loading={loading}
         expandedRow={expandedRow}
         handleRowClick={handleRowClick}
-      />
-    </Box>
+          />
+        </Box>
 
-    {/* Back to Home Button */}
-    <Button as={Link} to="/" colorScheme="teal" size="md" marginTop="20px">
-      Go back to Home
-    </Button>
-  </Box>
-);
-}
+        {/* Back to Home Button */}
+        <Button as={Link} to="/" colorScheme="teal" size="md" marginTop="20px">
+          Go back to Home
+        </Button>
+      </Box>
+    </Box>
+  );
+};
 
 export default UserProfilePage;
