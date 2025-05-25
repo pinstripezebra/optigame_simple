@@ -8,8 +8,13 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 from dotenv import dotenv_values
-from fastapi.middleware.cors import CORSMiddleware
 from uuid import uuid4
+
+# security imports
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from passlib.context import CryptContext
+
 
 # Load the .env file from the parent directory
 config = dotenv_values("./.env2")
@@ -18,7 +23,6 @@ config = dotenv_values("./.env2")
 DATABASE_URL = config["DATABASE_URL"]
 USER_TABLE = config["USER_TABLE"]
 
-print(DATABASE_URL)
 
 # Initialize the database connection
 engine = create_engine(DATABASE_URL)
@@ -38,14 +42,26 @@ def get_db():
 
 # Initialize the FastAPI app
 app = FastAPI(title="Game Store API", version="1.0.0")
+
+# secure the API with OAuth2
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+# Add CORS middleware to allow requests from the React app
 origins = ["http://localhost:3000", "http://localhost:8000", " http://localhost:5174/"]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5174", "http://localhost:5173", "http://localhost:8000"],  # React app's URL
+    allow_origins=["http://localhost:5174", "http://localhost:5173", "http://localhost:8000"],  
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+# JWT configuration
+SECRET_KEY = config["SECRET_KEY"]
+ALGORITHM = config["ALGORITHM"]
+ACCESS_TOKEN_EXPIRE_MINUTES = int(config["ACCESS_TOKEN_EXPIRE_MINUTES"])
 
 #-------------------------------------------------#
 # ----------PART 1: GET METHODS-------------------#
@@ -150,14 +166,17 @@ async def create_user_game(user_game: User_Game_Model, db: Session = Depends(get
 @app.post("/api/v1/user/")
 async def  create_user(user: UserModel, db: Session = Depends(get_db)):
     # Check if the entry already exists
-    existing = db.query(User).filter_by(username=user.username, password=user.password).first()
+    existing = db.query(User).filter_by(username=user.username).first()
     if existing:
         raise HTTPException(status_code=400, detail="User already exists.")
+    
+    # Hash the password before storing
+    hashed_password = pwd_context.hash(user.password)
 
     # Only include id if provided, otherwise let SQLAlchemy generate it
     user_data = {
         "username": user.username,
-        "password": user.password,
+        "password": hashed_password,
         "email": user.email,
         "role": user.role
     }
