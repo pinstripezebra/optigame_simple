@@ -128,6 +128,14 @@ async def fetch_user_game_all(db: Session = Depends(get_db)):
     user_games = db.query(User_Game).all()
     return [User_Game_Model.from_orm(user_game) for user_game in user_games]
 
+# for verifying JWT token
+@app.get("/api/v1/verify/{token}")
+async def verify_token_endpoint(token: str):
+    try:
+        payload = verify_token(token)
+        return {"message": "Token is valid", "payload": payload}
+    except HTTPException as e:
+        raise e
 
 #-------------------------------------------------#
 # ----------PART 2: POST METHODS------------------#
