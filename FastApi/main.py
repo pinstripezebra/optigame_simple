@@ -67,6 +67,9 @@ ACCESS_TOKEN_EXPIRE_MINUTES = int(config["ACCESS_TOKEN_EXPIRE_MINUTES"])
 # ----------PART 1: GET METHODS-------------------#
 #-------------------------------------------------#
 
+
+
+
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
@@ -83,15 +86,10 @@ async def fetch_products(asin: str = None, db: Session = Depends(get_db)):
 
 @app.get("/api/v1/users/")
 async def fetch_users(username: str, password: str, db: Session = Depends(get_db)):
-    # Query the database for users matching the username and password
-    users = db.query(User).filter(User.username == username, User.password == password).all()
-    return [UserModel.from_orm(user) for user in users]
-
-@app.get("/api/v1/users_all/")
-async def fetch_all_users(db: Session = Depends(get_db)):
-    # Query the database for users matching the username and password
-    users = db.query(User).all()
-    return [UserModel.from_orm(user) for user in users]
+    user = user_authentication(db, username, password)
+    if not user:
+        raise HTTPException(status_code=401, detail="Invalid username or password")
+    return [UserModel.from_orm(user)]
 
 @app.get("/api/v1/genres/")
 async def fetch_game_tags(db: Session = Depends(get_db)):
@@ -190,3 +188,15 @@ async def  create_user(user: UserModel, db: Session = Depends(get_db)):
     db.refresh(db_user)
     return db_user
 
+
+#-------------------------------------------------#
+# ----------PART 3: HELPER METHODS----------------#
+#-------------------------------------------------#
+
+def user_authentication(db: Session, username: str, password: str):
+    user = db.query(User).filter(User.username == username).first()
+    if not user:
+        return None
+    if not pwd_context.verify(password, user.password):
+        return None
+    return user
