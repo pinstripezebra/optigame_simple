@@ -1,19 +1,17 @@
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, status
 from FastApi.models import User, Game, GameModel, UserModel, GameTags, GameTagsModel, UniqueGameTags, UniqueGameTagsModel, User_Game_Model, User_Game, GameSimilarity,GameSimilarityModel
-from typing import List
 from uuid import uuid4, UUID
-import os
 from sqlalchemy import create_engine, Column, String, Integer
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 from dotenv import dotenv_values
-from uuid import uuid4
+from datetime import datetime, timedelta
 
 # security imports
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from passlib.context import CryptContext
+from jose import jwt
 
 
 # Load the .env file from the parent directory
@@ -188,11 +186,28 @@ async def  create_user(user: UserModel, db: Session = Depends(get_db)):
     db.refresh(db_user)
     return db_user
 
+# for generating a JWT token for user authentication
+@app.post("/api/v1/token")
+async def login_for_access_token(
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    db: Session = Depends(get_db)
+):
+    user = user_authentication(db, form_data.username, form_data.password)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES) if "ACCESS_TOKEN_EXPIRE_MINUTES" in config and ACCESS_TOKEN_EXPIRE_MINUTES else timedelta(minutes=15)
+    access_token = create_access_token(data={"sub": user.username}, expires_delta=access_token_expires)
+    return {"access_token": access_token, "token_type": "bearer"}
 
 #-------------------------------------------------#
 # ----------PART 3: HELPER METHODS----------------#
 #-------------------------------------------------#
 
+# helper function to authenticate user by hasing password
 def user_authentication(db: Session, username: str, password: str):
     user = db.query(User).filter(User.username == username).first()
     if not user:
@@ -200,3 +215,25 @@ def user_authentication(db: Session, username: str, password: str):
     if not pwd_context.verify(password, user.password):
         return None
     return user
+
+# helper function to create JWT access token
+def create_access_token(data: dict, expires_delta: timedelta | None = None):
+    to_encode = data.copy()
+    if expires_delta is None:
+        expire = datetime.utcnow() + timedelta(minutes=15)
+    else:
+        expire = datetime.utcnow() + expires_delta
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+
+# helper function to verify JWT token
+def verify_token(token: str = Depends(oauth2_scheme)):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        if username is None:
+            raise HTTPException(status_code=401, detail="Invalid authentication credentials")
+        return payload
+    except jwt.JWTError:
+        raise HTTPException(status_code=401, detail="Invalid authentication credentials")
