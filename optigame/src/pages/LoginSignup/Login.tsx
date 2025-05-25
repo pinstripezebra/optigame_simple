@@ -165,7 +165,7 @@ const Login = () => {
           {/* Login Button */}
           <Button
             borderRadius={0}
-            type="submit" // Ensure the button triggers form submission
+            type="submit" 
             variant="solid"
             colorScheme="teal"
             width="full"

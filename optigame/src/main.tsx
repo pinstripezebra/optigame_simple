@@ -15,7 +15,6 @@ import NotFoundPage from "./pages/NotFoundPage";
 import Login from "./pages/LoginSignup/Login";
 import Signup from "./pages/LoginSignup/Signup";
 import Logout from "./pages/LoginSignup/Logout";
-import { useUser } from "./context/UserContext";
 import ProtectedRoute from "./pages/LoginSignup/ProtectedRoute";
 import { UserGamesProvider } from "./context/UserGamesContext";
 import GamePage from "./pages/GamePage/GamePage";
