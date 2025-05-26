@@ -37,7 +37,7 @@ const router = createBrowserRouter([
     errorElement: <NotFoundPage />,
   },
   {
-    path: "/home",
+    path: "/",
     element: (
       <ProtectedRoute>
         <HomePage />

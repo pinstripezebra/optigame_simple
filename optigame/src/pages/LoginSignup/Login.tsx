@@ -88,7 +88,7 @@ function Login() {
         localStorage.setItem("token", data.access_token);
         localStorage.setItem("username", localUsername); 
         setUsername(localUsername);
-        navigate("/home");
+        navigate("/");
         console.log("Login successful:", data.access_token);
       } else {
         const errorData = await response.json();
