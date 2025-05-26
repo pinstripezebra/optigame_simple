@@ -60,6 +60,9 @@ const Logout = () => {
                 colorScheme="teal"
                 width="full"
                 onClick={() => {
+                  // Clear local storage items
+                  localStorage.removeItem("token");    
+                  localStorage.removeItem("username");
                   navigate("/Login"); // Navigate to the login page
                 }}
               >

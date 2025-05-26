@@ -12,6 +12,10 @@ import HomePage from "./pages/HomePage";
 import NotFoundPage from "./pages/NotFoundPage";
 import Login from "./pages/LoginSignup/Login2";
 
+import UserProfilePage from "./pages/UserProfile/UserProfilePage";
+import Signup from "./pages/LoginSignup/Signup";
+import Logout from "./pages/LoginSignup/Logout";
+import GamePage from "./pages/GamePage/GamePage";
 import ProtectedRoute from "./pages/LoginSignup/ProtectedRoute";
 import { UserGamesProvider } from "./context/UserGamesContext";
 
@@ -20,6 +24,16 @@ const router = createBrowserRouter([
   {
     path: "/Login",
     element: <Login />,
+    errorElement: <NotFoundPage />,
+  },
+  {
+    path: "/Logout",
+    element: <Logout />,
+    errorElement: <NotFoundPage />,
+  },
+  {
+    path: "/Signup",
+    element: <Signup />,
     errorElement: <NotFoundPage />,
   },
   {
@@ -32,7 +46,24 @@ const router = createBrowserRouter([
     errorElement: <NotFoundPage />,
   },
 
+  {
+    path: "/user",
+    element: (
+      <ProtectedRoute>
+        <UserProfilePage />
+      </ProtectedRoute>
+    ),
+  },
 
+  {
+    path: "/asin/:asin",
+    element: (
+      <ProtectedRoute>
+        <GamePage />
+      </ProtectedRoute>
+    ),
+    errorElement: <NotFoundPage />,
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useContext, useEffect } from "react";
 
 interface UserContextType {
   username: string;
@@ -9,9 +9,20 @@ interface UserContextType {
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [username, setUsername] = useState("");
+  // Initialize username from localStorage if available
+  const [username, setUsernameState] = useState(() => localStorage.getItem("username") || "");
 
-  const isAuthenticated = !!username; // User is authenticated if username is set
+  // When username changes, update localStorage
+  const setUsername = (newUsername: string) => {
+    setUsernameState(newUsername);
+    if (newUsername) {
+      localStorage.setItem("username", newUsername);
+    } else {
+      localStorage.removeItem("username");
+    }
+  };
+
+  const isAuthenticated = !!username;
 
   return (
     <UserContext.Provider value={{ username, setUsername, isAuthenticated }}>
