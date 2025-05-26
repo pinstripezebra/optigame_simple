@@ -27,7 +27,6 @@ import logo from "../../assets/chess_logo.jpg";
 import { useUser } from "../../context/UserContext";
 import { useUserGames } from "../../context/UserGamesContext";
 
-
 export interface User {
   id: string;
   username: string;
@@ -42,42 +41,66 @@ export interface UserGame {
   asin: string;
 }
 
-const Login = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const handleShowClick = () => setShowPassword(!showPassword);
-  const [password, setPassword] = useState("");
-  const navigate = useNavigate();
-
-  // username context
-  const { setUsername } = useUser();
+function Login() {
+  // State for username, password, and error message
   const [localUsername, setLocalUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  // liked games context
-  const { setAsins} = useUserGames();
+  // State for loading spinner
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const { setUsername } = useUser();
+  const handleShowClick = () => setShowPassword(!showPassword);
 
-  const handleLogin = async (event: React.FormEvent) => {
+  // validation form to ensure username and password are not blank
+  const validateForm = () => {
+    if (!localUsername.trim() || !password.trim()) {
+      setError("Username and password cannot be blank.");
+      return false;
+    }
+    setError(null);
+    return true;
+  };
+
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    if (!validateForm()) return;
+    setLoading(true);
+
+    const formDetails = new URLSearchParams();
+    formDetails.append("username", localUsername);
+    formDetails.append("password", password);
+
     try {
-      const response = await api.get<User[]>("/v1/users", {
-        params: { username: localUsername, password },
+      const response = await fetch("http://127.0.0.1:8000/api/v1/token", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: formDetails,
       });
+      setLoading(false);
 
-      if (response.data.length > 0) {
-        setUsername(localUsername); // Set the global username
-
-        // Fetch user games
-        const gamesResponse = await api.get<UserGame[]>("/v1/user_game/", {
-          params: { username: localUsername },
-        });
-
-        // Extract asin values into a list
-        const asinList = gamesResponse.data.map((game) => game.asin);
-        setAsins(asinList);
-
-        navigate("/"); // Navigate to the base "/" route
+      if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem("token", data.access_token);
+        localStorage.setItem("username", localUsername); 
+        setUsername(localUsername);
+        navigate("/home");
+        console.log("Login successful:", data.access_token);
+      } else {
+        const errorData = await response.json();
+        setError(
+          errorData.detail || "Authentication Failed. Please try again."
+        );
       }
     } catch (error) {
-      console.error("Error fetching users or user games:", error);
+      setLoading(false);
+      setError(
+        "An error occurred while trying to log in. Please try again later."
+      );
     }
   };
 
@@ -120,7 +143,7 @@ const Login = () => {
         </Stack>
 
     
-        <form onSubmit={handleLogin}>
+        <form onSubmit={handleSubmit}>
           {/* Username */}
           <FormControl mb = {4}>
             <InputGroup>
