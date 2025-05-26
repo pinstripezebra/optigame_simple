@@ -42,7 +42,7 @@ export interface UserGame {
   asin: string;
 }
 
-const Login = async () => {
+function Login() {
 
     // State for username, password, and error message
     const [localUsername, setLocalUsername] = useState("");
@@ -88,6 +88,7 @@ const Login = async () => {
             if (response.ok) {
                 const data = await response.json();
                 localStorage.setItem("token", data.access_token);
+                console.log("Token received:", data.access_token);
                 setUsername(localUsername);
                 navigate("/home");
             } else {
@@ -181,4 +182,5 @@ const Login = async () => {
         </div>
     );
 }
-    
+
+export default Login;

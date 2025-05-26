@@ -10,7 +10,7 @@ function ProtectedPage() {
         const token = localStorage.getItem("token");
         console.log("Token in ProtectedPage:", token);
         try {
-            const response = await fetch("http://127.0.0.1:8000/api/v1/verify/${token}")
+            const response = await fetch(`http://127.0.0.1:8000/api/v1/verify/${token}`)
             if (!response.ok) {
                 throw new Error("Token verification failed");
             }
