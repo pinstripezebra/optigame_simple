@@ -1,7 +1,6 @@
 from fastapi import FastAPI, Depends, HTTPException, status
-from FastApi.models import User, Game, GameModel, UserModel, GameTags, GameTagsModel, UniqueGameTags, UniqueGameTagsModel, User_Game_Model, User_Game, GameSimilarity,GameSimilarityModel
 from uuid import uuid4, UUID
-from sqlalchemy import create_engine, Column, String, Integer
+from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 from dotenv import dotenv_values
@@ -12,6 +11,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from passlib.context import CryptContext
 from jose import jwt
+
+# custom imports
+from FastApi.models import User, Game, GameModel, UserModel, GameTags, GameTagsModel, UniqueGameTags, UniqueGameTagsModel, User_Game_Model, User_Game, GameSimilarity,GameSimilarityModel
 
 
 # Load the .env file from the parent directory
