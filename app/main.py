@@ -13,7 +13,7 @@ from passlib.context import CryptContext
 from jose import jwt
 
 # custom imports
-from FastApi.models import User, Game, GameModel, UserModel, GameTags, GameTagsModel, UniqueGameTags, UniqueGameTagsModel, User_Game_Model, User_Game, GameSimilarity,GameSimilarityModel
+from app.models import User, Game, GameModel, UserModel, GameTags, GameTagsModel, UniqueGameTags, UniqueGameTagsModel, User_Game_Model, User_Game, GameSimilarity,GameSimilarityModel
 
 
 # Load the .env file from the parent directory
