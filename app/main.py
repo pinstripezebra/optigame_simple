@@ -47,10 +47,13 @@ app = FastAPI(title="Game Store API", version="1.0.0")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 # Add CORS middleware to allow requests from the React app
-origins = ["http://localhost:3000", "http://localhost:8000", " http://localhost:5174/"]
+origins = ["http://localhost:8000", 
+           "http://localhost:5174", 
+           "http://localhost:5173",
+           "https://optigame-back-end.onrender.com"]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5174", "http://localhost:5173", "http://localhost:8000"],  
+    allow_origins=origins,  
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -59,7 +62,7 @@ app.add_middleware(
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # JWT configuration
-SECRET_KEY = config["SECRET_KEY"]
+SECRET_KEY = config["AUTH_SECRET_KEY"]
 ALGORITHM = config["ALGORITHM"]
 ACCESS_TOKEN_EXPIRE_MINUTES = int(config["ACCESS_TOKEN_EXPIRE_MINUTES"])
 

@@ -25,7 +25,6 @@ import logo from "../../assets/chess_logo.jpg";
 
 // setting user context when they login
 import { useUser } from "../../context/UserContext";
-import { useUserGames } from "../../context/UserGamesContext";
 
 export interface User {
   id: string;
