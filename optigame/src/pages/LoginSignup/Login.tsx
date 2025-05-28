@@ -74,33 +74,33 @@ function Login() {
     formDetails.append("password", password);
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/v1/token", {
-        method: "POST",
+      const response = await api.post("/v1/token", formDetails, {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
-        body: formDetails,
       });
       setLoading(false);
 
-      if (response.ok) {
-        const data = await response.json();
+      if (response.status === 200) {
+        const data = response.data;
         localStorage.setItem("token", data.access_token);
-        localStorage.setItem("username", localUsername); 
+        localStorage.setItem("username", localUsername);
         setUsername(localUsername);
         navigate("/");
         console.log("Login successful:", data.access_token);
-      } else {
-        const errorData = await response.json();
+      }
+    } catch (error: any) {
+      setLoading(false);
+      if (error.response && error.response.data) {
         setError(
-          errorData.detail || "Authentication Failed. Please try again."
+          error.response.data.detail ||
+            "Authentication Failed. Please try again."
+        );
+      } else {
+        setError(
+          "An error occurred while trying to log in. Please try again later."
         );
       }
-    } catch (error) {
-      setLoading(false);
-      setError(
-        "An error occurred while trying to log in. Please try again later."
-      );
     }
   };
 
@@ -142,10 +142,9 @@ function Login() {
           <Heading color="teal.600">Welcome</Heading>
         </Stack>
 
-    
         <form onSubmit={handleSubmit}>
           {/* Username */}
-          <FormControl mb = {4}>
+          <FormControl mb={4}>
             <InputGroup>
               <InputLeftElement
                 pointerEvents="none"
@@ -161,7 +160,7 @@ function Login() {
           </FormControl>
 
           {/* Password */}
-          <FormControl mb = {4}>
+          <FormControl mb={4}>
             <InputGroup>
               <InputLeftElement
                 pointerEvents="none"
@@ -188,7 +187,7 @@ function Login() {
           {/* Login Button */}
           <Button
             borderRadius={0}
-            type="submit" 
+            type="submit"
             variant="solid"
             colorScheme="teal"
             width="full"
@@ -208,6 +207,6 @@ function Login() {
       </Stack>
     </Flex>
   );
-};
+}
 
 export default Login;
