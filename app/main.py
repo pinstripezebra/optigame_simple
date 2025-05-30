@@ -50,7 +50,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 origins = ["http://localhost:8000", 
            "http://localhost:5174", 
            "http://localhost:5173",
-           "https://optigame-back-end.onrender.com"]
+           "https://optigame-front-end.onrender.com"]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,  
