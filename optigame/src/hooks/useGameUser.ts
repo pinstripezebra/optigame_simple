@@ -7,7 +7,7 @@ export interface UserGame {
     asin: string;
 }
 
-const useUserGame = () => useData<UserGame>("/v1/user_game");
+const useUserGame = () => useData<UserGame>("/v1/user_game/");
 
 
 export default useUserGame;

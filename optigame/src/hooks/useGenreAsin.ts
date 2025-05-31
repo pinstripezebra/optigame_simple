@@ -7,7 +7,7 @@ export interface Genre {
     game_tags: string;
 }
 
-const useGenres = () => useData<Genre>("/v1/genres_filtered");
+const useGenres = () => useData<Genre>("/v1/genres_filtered/");
 
 
 export default useGenres;

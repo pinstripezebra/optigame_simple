@@ -10,7 +10,7 @@ export interface SimilarGame {
 const useSimilarGame = (asin: string | undefined) => {
     // Only fetch if asin is provided
     const result = asin
-        ? useData<SimilarGame>(`/v1/similar_games?asin=${asin}`)
+        ? useData<SimilarGame>(`/v1/similar_games?asin=${asin}/`)
         : { data: [], isLoading: false, error: null };
 
     // Sort by similarity descending and take top 20
