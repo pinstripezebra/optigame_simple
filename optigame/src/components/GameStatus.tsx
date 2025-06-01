@@ -28,7 +28,7 @@ const GameStatus = ({ asin }: GameStatusProps) => {
   const [wantToPlay, setWantToPlay] = useState(false);
   const [havePlayed, setHavePlayed] = useState(false);
 
-  const isActive = wantToPlay || havePlayed;
+  const isActive = asins.includes(asin);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleShelfChange = async (
@@ -62,7 +62,7 @@ const GameStatus = ({ asin }: GameStatusProps) => {
         onClick={onOpen}
         size="sm"
       >
-        Shelf
+        {isActive ? "On Your Shelf" : "Add To Shelf"}
       </Button>
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />

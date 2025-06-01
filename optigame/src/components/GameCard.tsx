@@ -27,9 +27,7 @@ const GameCard = ({ game }: Props) => {
   const truncatedTitle =
     game.title.length > 100 ? `${game.title.slice(0, 100)}...` : game.title;
 
-  const { username } = useUser();
   const { asins, addAsin, removeAsin } = useUserGames();
-  console.log("asins in GameCard:", asins);
   const isChecked = asins.includes(game.asin);
 
   return (
