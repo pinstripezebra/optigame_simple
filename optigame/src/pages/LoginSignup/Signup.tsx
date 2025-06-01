@@ -5,6 +5,7 @@ import { TbLockPassword } from "react-icons/tb";
 import { CiUser } from "react-icons/ci";
 import { HStack, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "@chakra-ui/react";
 import {
   Box,
   Flex,
@@ -28,7 +29,32 @@ import logo from "../../assets/chess_logo.jpg";
 const Signup = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [password, setPassword] = useState("");
+  const toast = useToast();
+
   const handleShowClick = () => setShowPassword(!showPassword);
+
+  // Password validation function checks for one letter, one number, one special character, min 6 chars
+  const isValidPassword = (pw: string) => {
+    return /[A-Za-z]/.test(pw) && /\d/.test(pw) && /[^A-Za-z0-9]/.test(pw);
+  };
+
+  // Handle form submission
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isValidPassword(password)) {
+      toast({
+        title: "Password requirements not met",
+        description:
+          "Password must contain at least one letter, one number, and one special character.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+      return;
+    }
+  };
+
   return (
     <Flex
       flexDirection="column"
@@ -59,14 +85,14 @@ const Signup = () => {
         alignItems="center"
       >
         <Box minW={{ base: "90%", md: "468px" }}>
-          <form>
+          <form onSubmit={handleSubmit}>
             <Stack
               spacing={4}
               p="1rem"
               backgroundColor="whiteAlpha.900"
               boxShadow="md"
-              alignItems="center" // Ensure all components in the Stack are centered
-              borderRadius="md" // Add border radius for rounded corners
+              alignItems="center"
+              borderRadius="md"
             >
               <Avatar bg="teal.500" />
               <Heading color="teal.400">Create Account</Heading>
@@ -104,6 +130,8 @@ const Signup = () => {
                   <Input
                     type={showPassword ? "text" : "password"}
                     placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                   <InputRightElement width="4.5rem">
                     <Button h="1.75rem" size="sm" onClick={handleShowClick}>
