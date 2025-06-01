@@ -218,8 +218,23 @@ async def login_for_access_token(
     access_token = create_access_token(data={"sub": user.username}, expires_delta=access_token_expires)
     return {"access_token": access_token, "token_type": "bearer"}
 
+
 #-------------------------------------------------#
-# ----------PART 3: HELPER METHODS----------------#
+# ----------PART 3: DELETE METHODS----------------#
+#-------------------------------------------------#
+
+
+@app.delete("/api/v1/user_game/")
+async def delete_user_game(username: str, asin: str, db: Session = Depends(get_db)):
+    user_game = db.query(User_Game).filter_by(username=username, asin=asin).first()
+    if not user_game:
+        raise HTTPException(status_code=404, detail="User game not found.")
+    db.delete(user_game)
+    db.commit()
+    return {"detail": "User game deleted successfully."}
+
+#-------------------------------------------------#
+# ----------PART 4: HELPER METHODS----------------#
 #-------------------------------------------------#
 
 # helper function to authenticate user by hasing password

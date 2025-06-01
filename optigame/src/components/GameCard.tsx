@@ -27,10 +27,9 @@ const GameCard = ({ game }: Props) => {
     game.title.length > 100 ? `${game.title.slice(0, 100)}...` : game.title;
 
   const { username } = useUser();
-  const { asins } = useUserGames();
+  const { asins, addAsin, removeAsin } = useUserGames();
   console.log("asins in GameCard:", asins);
   const isChecked = asins.includes(game.asin);
-  
 
   return (
     <Card
@@ -49,13 +48,10 @@ const GameCard = ({ game }: Props) => {
         flexDirection="column"
         alignItems="center"
       >
-        <Image
-          src={imageUrl}
-          alt={game.title}
-          boxSize="300px"
-          fit="cover"
-        />
-        <Text fontSize="2xl" mt={2}>{truncatedTitle}</Text>
+        <Image src={imageUrl} alt={game.title} boxSize="300px" fit="cover" />
+        <Text fontSize="2xl" mt={2}>
+          {truncatedTitle}
+        </Text>
       </Box>
 
       {/* Info area: not clickable */}
@@ -75,15 +71,21 @@ const GameCard = ({ game }: Props) => {
           size="lg"
           colorScheme="teal"
           isChecked={isChecked}
-          onClick={e => e.stopPropagation()}
+          onClick={(e) => e.stopPropagation()}
           onChange={async (e) => {
             if (e.target.checked) {
-              console.log("Adding game to collection:", game.asin);
+              // Add game to collection
               await apiClient.post("/v1/user_game/", {
                 username: username,
                 asin: game.asin,
               });
-             
+              addAsin(game.asin); // Update context
+            } else {
+              // Remove game from collection
+              await apiClient.delete("/v1/user_game/", {
+                params: { username: username, asin: game.asin },
+              });
+              removeAsin(game.asin); // Update context
             }
           }}
         >
