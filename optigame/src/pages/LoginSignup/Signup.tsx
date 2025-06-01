@@ -23,12 +23,15 @@ import { FaUserAlt, FaLock } from "react-icons/fa";
 import backgroundImage from "../../assets/background4.jpg";
 import logo from "../../assets/chess_logo.jpg";
 import api from "../../services/api-client";
+import { createUser } from "./createUser";
 
 const Signup = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
   const toast = useToast();
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
 
   const handleShowClick = () => setShowPassword(!showPassword);
 
@@ -38,7 +41,7 @@ const Signup = () => {
   };
 
   // Handle form submission
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isValidPassword(password)) {
       toast({
@@ -51,6 +54,12 @@ const Signup = () => {
       });
       return;
     }
+    try {
+      await createUser(email, username, password);
+      // show success, redirect, etc.
+    } catch (err) {
+      // show error toast
+    }
   };
 
   return (
@@ -61,8 +70,8 @@ const Signup = () => {
       justifyContent="center"
       alignItems="center"
       backgroundImage={`url(${backgroundImage})`} // Set the background image
-      backgroundSize="cover" // Ensure the image covers the entire container
-      backgroundPosition="center" // Center the image
+      backgroundSize="cover" 
+      backgroundPosition="center" 
     >
       {/* Header Section */}
       <Box position="absolute" top="0" left="0" padding="10px">
@@ -102,7 +111,12 @@ const Signup = () => {
                     pointerEvents="none"
                     children={<MdOutlineEmail color="gray.300" />}
                   />
-                  <Input type="email" placeholder="email" />
+                  <Input
+                    type="email"
+                    placeholder="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
                 </InputGroup>
               </FormControl>
 
@@ -113,7 +127,12 @@ const Signup = () => {
                     pointerEvents="none"
                     children={<FaUserAlt color="gray.300" />}
                   />
-                  <Input type="username" placeholder="username" />
+                  <Input
+                    type="text"
+                    placeholder="username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                  />
                 </InputGroup>
               </FormControl>
 

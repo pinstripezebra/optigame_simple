@@ -1,6 +1,6 @@
 import api from "../../services/api-client";
 
-const createUser = async (email: string, username: string, password: string) => {
+export const createUser = async (email: string, username: string, password: string) => {
   try {
     const response = await api.post("/v1/user", {
       email,
