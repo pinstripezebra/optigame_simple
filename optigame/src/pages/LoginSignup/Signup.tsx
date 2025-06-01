@@ -1,8 +1,6 @@
 import { useState } from "react";
 import "./LoginSignup.css";
 import { MdOutlineEmail } from "react-icons/md";
-import { TbLockPassword } from "react-icons/tb";
-import { CiUser } from "react-icons/ci";
 import { HStack, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
@@ -18,13 +16,13 @@ import {
   Input,
   InputRightElement,
   Button,
-  FormHelperText,
   Link,
   Image,
 } from "@chakra-ui/react";
 import { FaUserAlt, FaLock } from "react-icons/fa";
 import backgroundImage from "../../assets/background4.jpg";
 import logo from "../../assets/chess_logo.jpg";
+import api from "../../services/api-client";
 
 const Signup = () => {
   const navigate = useNavigate();
