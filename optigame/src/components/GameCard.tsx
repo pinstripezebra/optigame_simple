@@ -6,6 +6,7 @@ import apiClient from "../services/api-client";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 import { useUserGames } from "../context/UserGamesContext";
+import GameStatus from "./GameStatus";
 
 interface Props {
   game: Game;
@@ -67,30 +68,7 @@ const GameCard = ({ game }: Props) => {
           </Text>
           <GameScore rating={game.rating} />
         </Flex>
-        <Checkbox
-          size="lg"
-          colorScheme="teal"
-          isChecked={isChecked}
-          onClick={(e) => e.stopPropagation()}
-          onChange={async (e) => {
-            if (e.target.checked) {
-              // Add game to collection
-              await apiClient.post("/v1/user_game/", {
-                username: username,
-                asin: game.asin,
-              });
-              addAsin(game.asin); // Update context
-            } else {
-              // Remove game from collection
-              await apiClient.delete("/v1/user_game/", {
-                params: { username: username, asin: game.asin },
-              });
-              removeAsin(game.asin); // Update context
-            }
-          }}
-        >
-          Your Collection
-        </Checkbox>
+        <GameStatus asin={game.asin} />
       </Flex>
     </Card>
   );
