@@ -28,7 +28,9 @@ const GameCard = ({ game }: Props) => {
 
   const { username } = useUser();
   const { asins } = useUserGames();
+  console.log("asins in GameCard:", asins);
   const isChecked = asins.includes(game.asin);
+  
 
   return (
     <Card
