@@ -39,7 +39,7 @@ const GameCard = ({ game }: Props) => {
       padding="10px"
       width="320px"
     >
-      {/* Clickable area */}
+      {/* Clickable area: image and title */}
       <Box
         onClick={() => navigate(`/asin/${game.asin}`, { state: { game } })}
         cursor="pointer"
@@ -47,13 +47,16 @@ const GameCard = ({ game }: Props) => {
         flexDirection="column"
         alignItems="center"
       >
-        <Image src={imageUrl} alt={game.title} boxSize="300px" fit="cover" />
-        <Text fontSize="2xl" mt={2}>
-          {truncatedTitle}
-        </Text>
+        <Image
+          src={imageUrl}
+          alt={game.title}
+          boxSize="300px"
+          fit="cover"
+        />
+        <Text fontSize="2xl" mt={2}>{truncatedTitle}</Text>
       </Box>
 
-      {/* Info area (not clickable) */}
+      {/* Info area: not clickable */}
       <Flex
         alignItems="center"
         justifyContent="space-between"
@@ -70,23 +73,16 @@ const GameCard = ({ game }: Props) => {
           size="lg"
           colorScheme="teal"
           isChecked={isChecked}
-          onClick={(e) => e.stopPropagation()} // Prevent bubbling to parent
+          onClick={e => e.stopPropagation()}
           onChange={async (e) => {
             if (e.target.checked) {
-              console.log(username);
-              console.log(game.asin);
+              console.log("Adding game to collection:", game.asin);
               await apiClient.post("/v1/user_game/", {
                 username: username,
                 asin: game.asin,
               });
-              console.log("Game added to collection");
-              console.log(username);
-              console.log(game.asin);
+             
             }
-            console.log("Game added to collection");
-            console.log(username);
-            console.log(game.asin);
-            // Optionally handle unchecking here
           }}
         >
           Your Collection
