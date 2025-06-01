@@ -76,7 +76,10 @@ const GameStatus = ({ asin }: GameStatusProps) => {
               <Button
                 colorScheme={wantToPlay ? "green" : "gray"}
                 variant={wantToPlay ? "solid" : "outline"}
-                onClick={() => handleShelfChange("Want_To_Play", !wantToPlay)}
+                onClick={async () => {
+                  await handleShelfChange("Want_To_Play", !wantToPlay);
+                  onClose();
+                }}
                 width="100%"
               >
                 Want to play
@@ -84,7 +87,10 @@ const GameStatus = ({ asin }: GameStatusProps) => {
               <Button
                 colorScheme={havePlayed ? "green" : "gray"}
                 variant={havePlayed ? "solid" : "outline"}
-                onClick={() => handleShelfChange("Have_Played", !havePlayed)}
+                onClick={async () => {
+                  await handleShelfChange("Have_Played", !havePlayed);
+                  onClose();
+                }}
                 width="100%"
               >
                 Have played
@@ -96,7 +102,6 @@ const GameStatus = ({ asin }: GameStatusProps) => {
                 width="100%"
                 mt={4}
                 onClick={async () => {
-                  // Remove both shelf statuses and from collection
                   await apiClient.delete("/v1/user_game/", {
                     params: { username, asin },
                   });

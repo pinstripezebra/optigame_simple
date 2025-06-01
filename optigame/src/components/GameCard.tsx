@@ -37,7 +37,7 @@ const GameCard = ({ game }: Props) => {
       display="flex"
       flexDirection="column"
       padding="10px"
-      width="320px"
+      width="420px"
     >
       {/* Clickable area: image and title */}
       <Box
