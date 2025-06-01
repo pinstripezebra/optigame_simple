@@ -155,13 +155,15 @@ async def create_user_game(user_game: User_Game_Model, db: Session = Depends(get
     if existing:
         raise HTTPException(status_code=400, detail="User already has this game.")
 
-    # Only include id if provided, otherwise let SQLAlchemy generate it
+    # Prepare data with defaults
     user_game_data = {
         "username": user_game.username,
-        "asin": user_game.asin
+        "asin": user_game.asin,
+        "shelf": user_game.shelf if user_game.shelf is not None else "Wish_List",
+        "rating": user_game.rating if user_game.rating is not None else 0.0,
+        "review": user_game.review if user_game.review is not None else ""
     }
     if user_game.id is not None:
-        # Ensure it's a UUID object
         user_game_data["id"] = UUID(str(user_game.id))
 
     db_user_game = User_Game(**user_game_data)

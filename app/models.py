@@ -129,13 +129,13 @@ class User_Game_Model(BaseModel):
     id: Optional[UUID]  = None
     username: str
     asin: str
-    shelf: str
-    rating: float
-    review: str
+    shelf: Optional[str] = None
+    rating: Optional[float] = None
+    review: Optional[str] = None
 
     class Config:
-        orm_mode = True  # Enable ORM mode to work with SQLAlchemy objects
-        from_attributes = True # Enable attribute access for SQLAlchemy objects
+        orm_mode = True
+        from_attributes = True
 
 
 # This is the Game Similarity model for the database
