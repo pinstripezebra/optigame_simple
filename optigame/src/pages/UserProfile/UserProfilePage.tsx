@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Box, Text, Button, Spinner } from "@chakra-ui/react";
-import { Link, useParams } from "react-router-dom";
+import { Box, Text, Button } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 import { useUser } from "../../context/UserContext";
-import UserNavBar from "./UserProfileNavBar"; // Import the NavBar component
+import UserNavBar from "./UserProfileNavBar";
 import api from "../../services/api-client";
 import UserGameShelf from "./UserGameShelf";
 
@@ -28,74 +28,95 @@ interface UserGame {
 }
 
 const UserProfilePage: React.FC = () => {
-  const { username } = useUser(); // Access the username from UserContext
+  const { username } = useUser();
   const [usergames, setUserGames] = useState<UserGame[]>([]);
-  const [filteredUserGames, setFilteredUserGames] = useState<Game[]>([]);
-  const [loading, setLoading] = useState<boolean>(true); // Add loading state
-  const [expandedRow, setExpandedRow] = useState<string | null>(null); // Track the expanded row
+  const [wantToPlayGames, setWantToPlayGames] = useState<UserGame[]>([]);
+  const [havePlayedGames, setHavePlayedGames] = useState<UserGame[]>([]);
+  const [wantToPlayFiltered, setWantToPlayFiltered] = useState<Game[]>([]);
+  const [havePlayedFiltered, setHavePlayedFiltered] = useState<Game[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [expandedRow, setExpandedRow] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchUserGames = async () => {
-      setLoading(true); // Set loading to true before starting the API calls
-
+      setLoading(true);
       try {
         const response = await api.get<UserGame[]>("/v1/user_game", {
           params: { username: username },
         });
-
         const userGamesData = response.data;
         setUserGames(userGamesData);
 
+        // Split userGamesData by shelf
+        const wantToPlay = userGamesData.filter(
+          (ug) => ug.shelf === "Want_To_Play"
+        );
+        const havePlayed = userGamesData.filter(
+          (ug) => ug.shelf === "Have_Played"
+        );
+        setWantToPlayGames(wantToPlay);
+        setHavePlayedGames(havePlayed);
+
+        // Fetch all games and filter for user's games
         const responseGames = await api.get<Game[]>("/v1/games");
         const gamesData = responseGames.data;
 
-        const gamesUserData = gamesData.filter((game) =>
-          userGamesData.some((userGame) => userGame.asin === game.asin)
+        // Filtered Game objects for each shelf
+        setWantToPlayFiltered(
+          gamesData.filter((game) =>
+            wantToPlay.some((ug) => ug.asin === game.asin)
+          )
         );
-
-        setFilteredUserGames(gamesUserData);
-        console.log("Fetched games data:", gamesUserData);
+        setHavePlayedFiltered(
+          gamesData.filter((game) =>
+            havePlayed.some((ug) => ug.asin === game.asin)
+          )
+        );
       } catch (error) {
         console.error("Error fetching user games or game details:", error);
       } finally {
-        setLoading(false); // Set loading to false after the API calls are complete
+        setLoading(false);
       }
     };
 
     fetchUserGames();
-  }, [username]); // Ensure the dependency array is correct
+  }, [username]);
 
   const handleRowClick = (id: string) => {
-    setExpandedRow((prev) => (prev === id ? null : id)); // Toggle expanded row
+    setExpandedRow((prev) => (prev === id ? null : id));
   };
 
   return (
     <Box padding="20px">
-      {/* User Profile NavBar */}
       <UserNavBar />
-    <Box py={6} />
-      {/* Games Grid */}
+      <Box py={6} />
       <Box px="50px">
-        <Text
-          fontSize="2xl"
-          fontWeight="bold"
-          marginBottom="10px"
-          textAlign="center"
-        >
+        <Text fontSize="2xl" fontWeight="bold" mb="10px" textAlign="center">
           Your Game Shelf
         </Text>
         <Box width="100%" overflowX="auto">
+          <Text fontSize="xl" fontWeight="semibold" mt={6} mb={2}>
+            Have Played
+          </Text>
           <UserGameShelf
-        filteredUserGames={filteredUserGames}
-        userGamesData={usergames}
-        loading={loading}
-        expandedRow={expandedRow}
-        handleRowClick={handleRowClick}
+            filteredUserGames={havePlayedFiltered}
+            userGamesData={havePlayedGames}
+            loading={loading}
+            expandedRow={expandedRow}
+            handleRowClick={handleRowClick}
           />
         </Box>
-
-        {/* Back to Home Button */}
-        <Button as={Link} to="/" colorScheme="teal" size="md" marginTop="20px">
+        <Text fontSize="xl" fontWeight="semibold" mb={2}>
+          Want To Play
+        </Text>
+        <UserGameShelf
+          filteredUserGames={wantToPlayFiltered}
+          userGamesData={wantToPlayGames}
+          loading={loading}
+          expandedRow={expandedRow}
+          handleRowClick={handleRowClick}
+        />
+        <Button as={Link} to="/" colorScheme="teal" size="md" mt="20px">
           Go back to Home
         </Button>
       </Box>
