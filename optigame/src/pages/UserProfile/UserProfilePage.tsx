@@ -6,6 +6,8 @@ import UserNavBar from "./UserProfileNavBar";
 import api from "../../services/api-client";
 import UserGameShelf from "./UserGameShelf";
 
+
+
 export interface Game {
   id: string;
   title: string;
@@ -87,8 +89,10 @@ const UserProfilePage: React.FC = () => {
   };
 
   return (
+    <Box>
+      <UserNavBar/>
     <Box padding="20px">
-      <UserNavBar />
+ 
       <Box py={6} />
       <Box px="50px">
         <Text fontSize="2xl" fontWeight="bold" mb="10px" textAlign="center">
@@ -116,10 +120,8 @@ const UserProfilePage: React.FC = () => {
           expandedRow={expandedRow}
           handleRowClick={handleRowClick}
         />
-        <Button as={Link} to="/" colorScheme="teal" size="md" mt="20px">
-          Go back to Home
-        </Button>
       </Box>
+    </Box>
     </Box>
   );
 };
