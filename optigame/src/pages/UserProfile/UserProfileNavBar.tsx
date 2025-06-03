@@ -4,6 +4,7 @@ import { ColorModeSwitch } from "../../components/NavBar/ColorModeButton";
 import { UserMenu } from "../../components/NavBar/UserMenu";
 import { HomeButton } from "../../components/NavBar/HomeButton";
 import { useUser } from "../../context/UserContext";
+import { RecommendedButton } from "../../components/NavBar/RecommendedButton";
 
 const UserNavBar = () => {
   const { username } = useUser(); //Loading username from context
@@ -44,6 +45,12 @@ const UserNavBar = () => {
         <Box>
           <HomeButton />
         </Box>
+    
+        <Box>
+          <RecommendedButton />
+        </Box>
+
+        
         {/* User Menu */}
         <Box>
           <UserMenu />
