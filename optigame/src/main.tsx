@@ -16,6 +16,7 @@ import UserProfilePage from "./pages/UserProfile/UserProfilePage";
 import Signup from "./pages/LoginSignup/Signup";
 import Logout from "./pages/LoginSignup/Logout";
 import GamePage from "./pages/GamePage/GamePage";
+import RecommendedPage from "./pages/RecommendedGames/Recommended";
 import ProtectedRoute from "./pages/LoginSignup/ProtectedRoute";
 import { UserGamesProvider } from "./context/UserGamesContext";
 
@@ -41,6 +42,15 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <HomePage />
+      </ProtectedRoute>
+    ),
+    errorElement: <NotFoundPage />,
+  },
+  {
+    path: "/Recommended",
+    element: (
+      <ProtectedRoute>
+        <RecommendedPage />
       </ProtectedRoute>
     ),
     errorElement: <NotFoundPage />,

@@ -4,6 +4,7 @@ import SearchGames from "./NavBar/Search";
 import { ColorModeSwitch } from "./NavBar/ColorModeButton";
 import { UserMenu } from "./NavBar/UserMenu";
 import { HomeButton } from "./NavBar/HomeButton";
+import { RecommendedButton } from "./NavBar/RecommendedButton";
 import { useUser } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
 interface NavBarProps {
@@ -58,6 +59,9 @@ const NavBar = ({ onSearch }: NavBarProps) => {
         <ColorModeSwitch />
         <Box>
           <HomeButton />
+        </Box>
+        <Box>
+          <RecommendedButton />
         </Box>
         {/* User Menu */}
         <Box>
