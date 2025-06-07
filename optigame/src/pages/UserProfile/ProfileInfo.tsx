@@ -26,7 +26,7 @@ interface UserGame {
 
 interface UserGameShelfProps {
   filteredUserGames: Game[];
-  userGamesData: UserGame[]; // <-- add this prop
+  userGamesData: UserGame[]; 
   loading: boolean;
   expandedRow: string | null;
   handleRowClick: (id: string) => void;
@@ -66,9 +66,11 @@ return (
         <div>
             <Text fontSize="xl" fontWeight="bold">ProfileInfo</Text>
             <Text fontSize="md">Username: {username}</Text>
-            <Text fontSize="md">Review Count: {review_count}</Text>
+            <Text fontSize="md">
+                Want to Play Shelf: {userGamesData.length - filteredUserGames.length}
+            </Text>
+            <Text fontSize="md">Have Played Shelf: {filteredUserGames.length}</Text>
             <Text fontSize="md">Average Rating: {average_rating.toFixed(2)}</Text>
-            <Text fontSize="md">Games in Shelf: {filteredUserGames.length}</Text>
         </div>
     </div>
 );
