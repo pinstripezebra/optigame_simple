@@ -5,8 +5,7 @@ import { useUser } from "../../context/UserContext";
 import UserNavBar from "./UserProfileNavBar";
 import api from "../../services/api-client";
 import UserGameShelf from "./UserGameShelf";
-
-
+import ProfileInfo from "./ProfileInfo";
 
 export interface Game {
   id: string;
@@ -29,6 +28,17 @@ interface UserGame {
   review: string;
 }
 
+/**
+ * UserProfilePage component displays the user's profile information and their game shelves.
+ *
+ * This page fetches and displays the user's games, splitting them into "Want To Play" and "Have Played" shelves.
+ * It also renders profile information and allows expanding/collapsing rows for detailed views.
+ *
+ * Data is fetched from the backend using the current user's username, and the component manages loading state and expanded row state.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered user profile page with game shelves and profile info.
+ */
 const UserProfilePage: React.FC = () => {
   const { username } = useUser();
   const [usergames, setUserGames] = useState<UserGame[]>([]);
@@ -90,38 +100,46 @@ const UserProfilePage: React.FC = () => {
 
   return (
     <Box>
-      <UserNavBar/>
-    <Box padding="20px">
- 
-      <Box py={6} />
-      <Box px="50px">
-        <Text fontSize="2xl" fontWeight="bold" mb="10px" textAlign="center">
-          Your Game Shelf
-        </Text>
-        <Box width="100%" overflowX="auto">
-          <Text fontSize="xl" fontWeight="semibold" mt={6} mb={2}>
-            Have Played
+      <UserNavBar />
+      <Box padding="20px">
+        <Box px="40px">
+          <ProfileInfo
+            filteredUserGames={havePlayedFiltered}
+            userGamesData={usergames}
+            loading={loading}
+            expandedRow={expandedRow}
+            handleRowClick={handleRowClick}
+          />
+
+          <Box py={6} />
+
+          <Text fontSize="2xl" fontWeight="bold" mb="10px" textAlign="center">
+            {username ? `${username}'s Game Shelf` : "Game Shelf"}
+          </Text>
+          <Box width="100%" overflowX="auto">
+            <Text fontSize="xl" fontWeight="semibold" mt={6} mb={2}>
+              Have Played
+            </Text>
+            <UserGameShelf
+              filteredUserGames={havePlayedFiltered}
+              userGamesData={havePlayedGames}
+              loading={loading}
+              expandedRow={expandedRow}
+              handleRowClick={handleRowClick}
+            />
+          </Box>
+          <Text fontSize="xl" fontWeight="semibold" mb={2}>
+            Want To Play
           </Text>
           <UserGameShelf
-            filteredUserGames={havePlayedFiltered}
-            userGamesData={havePlayedGames}
+            filteredUserGames={wantToPlayFiltered}
+            userGamesData={wantToPlayGames}
             loading={loading}
             expandedRow={expandedRow}
             handleRowClick={handleRowClick}
           />
         </Box>
-        <Text fontSize="xl" fontWeight="semibold" mb={2}>
-          Want To Play
-        </Text>
-        <UserGameShelf
-          filteredUserGames={wantToPlayFiltered}
-          userGamesData={wantToPlayGames}
-          loading={loading}
-          expandedRow={expandedRow}
-          handleRowClick={handleRowClick}
-        />
       </Box>
-    </Box>
     </Box>
   );
 };
