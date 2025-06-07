@@ -1,6 +1,15 @@
 import React from 'react'
 import { Spinner, Image } from "@chakra-ui/react";
 
+// Simple read-only star rating component
+const StarRating: React.FC<{ value: number }> = ({ value }) => (
+  <span>
+    {[1, 2, 3, 4, 5].map((star) => (
+      <span key={star} style={{ color: star <= value ? "#FFD700" : "#E0E0E0", fontSize: "1.2em" }}>★</span>
+    ))}
+  </span>
+);
+
 // Defining inputs
 interface Game {
   id: string;
@@ -79,7 +88,9 @@ const UserGameShelf: React.FC<UserGameShelfProps> = ({
                 />
               </td>
               <td style={{ border: "1px solid gray", padding: "8px", width: "20%" }}>{game.title}</td>
-              <td style={{ border: "1px solid gray", padding: "8px", width: "10%" }}>{userGame?.rating}</td>
+                <td style={{ border: "1px solid gray", padding: "8px", width: "10%" }}>
+                <StarRating value={userGame?.rating ?? 0}/>
+                </td>
               <td style={{ border: "1px solid gray", padding: "8px", width: "10%" }}>
                 {userGame?.review ?? "—"}
               </td>
