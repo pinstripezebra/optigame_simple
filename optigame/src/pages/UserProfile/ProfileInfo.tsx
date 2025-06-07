@@ -29,15 +29,13 @@ interface UserGameShelfProps {
   userGamesData: UserGame[]; 
   loading: boolean;
   expandedRow: string | null;
-  handleRowClick: (id: string) => void;
 }
 
 const ProfileInfo: React.FC<UserGameShelfProps> = ({
   filteredUserGames,
   userGamesData,
   loading,
-  expandedRow,
-  handleRowClick,
+  expandedRow
 }) => {
   const average_rating =
     filteredUserGames.length > 0

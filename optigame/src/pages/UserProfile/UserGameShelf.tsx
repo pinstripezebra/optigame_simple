@@ -32,13 +32,12 @@ interface UserGame {
   review: string;
 }
 
-
 interface UserGameShelfProps {
   filteredUserGames: Game[];
-  userGamesData: UserGame[]; // <-- add this prop
+  userGamesData: UserGame[];
   loading: boolean;
   expandedRow: string | null;
-  handleRowClick: (id: string) => void;
+  handleRowClick: (game: Game) => void; // <-- now expects a Game object
 }
 
 const UserGameShelf: React.FC<UserGameShelfProps> = ({
@@ -71,7 +70,7 @@ const UserGameShelf: React.FC<UserGameShelfProps> = ({
           return (
             <tr
               key={game.id}
-              onClick={() => handleRowClick(game.id)}
+              onClick={() => handleRowClick(game)} // <-- pass the Game object
               style={{
                 cursor: "pointer",
                 backgroundColor: expandedRow === game.id ? "#f9f9f9" : "transparent",
@@ -88,9 +87,9 @@ const UserGameShelf: React.FC<UserGameShelfProps> = ({
                 />
               </td>
               <td style={{ border: "1px solid gray", padding: "8px", width: "20%" }}>{game.title}</td>
-                <td style={{ border: "1px solid gray", padding: "8px", width: "10%" }}>
+              <td style={{ border: "1px solid gray", padding: "8px", width: "10%" }}>
                 <StarRating value={userGame?.rating ?? 0}/>
-                </td>
+              </td>
               <td style={{ border: "1px solid gray", padding: "8px", width: "10%" }}>
                 {userGame?.review ?? "—"}
               </td>

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Box, Text, Button } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate  } from "react-router-dom";
 import { useUser } from "../../context/UserContext";
 import UserNavBar from "./UserProfileNavBar";
 import api from "../../services/api-client";
 import UserGameShelf from "./UserGameShelf";
 import ProfileInfo from "./ProfileInfo";
+
 
 export interface Game {
   id: string;
@@ -48,6 +49,7 @@ const UserProfilePage: React.FC = () => {
   const [havePlayedFiltered, setHavePlayedFiltered] = useState<Game[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [expandedRow, setExpandedRow] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserGames = async () => {
@@ -94,10 +96,9 @@ const UserProfilePage: React.FC = () => {
     fetchUserGames();
   }, [username]);
 
-  const handleRowClick = (id: string) => {
-    setExpandedRow((prev) => (prev === id ? null : id));
-  };
-
+  const handleRowClick = (game: Game) => {
+  navigate(`/asin/${game.asin}`, { state: { game } });
+};
   return (
     <Box>
       <UserNavBar />
@@ -108,7 +109,7 @@ const UserProfilePage: React.FC = () => {
             userGamesData={usergames}
             loading={loading}
             expandedRow={expandedRow}
-            handleRowClick={handleRowClick}
+           
           />
 
           <Box py={6} />
