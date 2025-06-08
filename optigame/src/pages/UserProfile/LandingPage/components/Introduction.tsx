@@ -3,7 +3,15 @@ import { Box, Heading, Text, Button } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import backgroundImage from "../../data/landing_background.png";
 
-const Introduction = () => {
+interface IntroductionProps {
+  introData: {
+    header: string;
+    subtext: string;
+    buttonText: string;
+  };
+}
+
+const Introduction: React.FC<IntroductionProps> = ({ introData }) => {
   const navigate = useNavigate();
 
   return (
@@ -23,13 +31,13 @@ const Introduction = () => {
       py={16}
     >
       <Heading color="white" mb={4} fontSize={{ base: "2xl", md: "4xl" }}>
-        We are Optigame
+        {introData.header}
       </Heading>
       <Text color="whiteAlpha.900" fontSize={{ base: "md", md: "xl" }} mb={8}>
-        Helping you find your next great Boardgame
+        {introData.subtext}
       </Text>
       <Button colorScheme="teal" size="lg" onClick={() => navigate("/Login")}>
-        Signup/Login
+        {introData.buttonText}
       </Button>
     </Box>
   );
