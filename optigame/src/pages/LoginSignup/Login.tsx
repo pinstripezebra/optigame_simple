@@ -20,7 +20,7 @@ import {
 } from "@chakra-ui/react";
 import { FaUserAlt, FaLock } from "react-icons/fa";
 import api from "../../services/api-client";
-import backgroundImage from "../../assets/background4.jpg";
+import backgroundImage from "../../assets/background7.jpg";
 import logo from "../../assets/chess_logo.jpg";
 
 // setting user context when they login
@@ -200,6 +200,11 @@ function Login() {
             New to us?{" "}
             <Link color="teal.500" onClick={() => navigate("/Signup")}>
               Sign Up
+            </Link>
+          </Box>
+          <Box>
+            <Link color="teal.500" onClick={() => navigate("/LandingPage")}>
+              Back to Landing
             </Link>
           </Box>
         </Stack>
