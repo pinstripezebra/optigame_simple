@@ -25,5 +25,15 @@
       "title": "Share & Connect",
       "text": "Share your favorite games and connect with friends for a social gaming experience."
     }
-  ]
+  ],
+  "AboutUs": {
+    "blurb": "Optigame is your personalized board game companion, helping you discover, track, and share your favorite games. Whether you're a casual player or a dedicated enthusiast, Optigame makes finding your next great board game easy and fun.",
+    "whyChoose": [
+      "Personalized recommendations tailored to your tastes",
+      "Easy shelf management for games you want to play and have played",
+      "Community-driven ratings and reviews",
+      "Modern, user-friendly interface",
+      "Connect and share with friends"
+    ]
+  }
 }
