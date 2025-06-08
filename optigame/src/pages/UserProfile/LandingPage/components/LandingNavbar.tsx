@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { Box, HStack, Button, Text } from "@chakra-ui/react";
 
 const scrollToSection = (id: string) => {
@@ -37,6 +37,30 @@ const LandingNavbar = () => {
           onClick={() => scrollToSection("features")}
         >
           Features
+        </Button>
+        <Button
+          variant="ghost"
+          color="white"
+          _hover={{ bg: "teal.600" }}
+          onClick={() => scrollToSection("aboutus")}
+        >
+          About Us
+        </Button>
+        <Button
+          variant="ghost"
+          color="white"
+          _hover={{ bg: "teal.600" }}
+          onClick={() => scrollToSection("contactus")}
+        >
+          Contact Us
+        </Button>
+        <Button
+          variant="ghost"
+          color="white"
+          _hover={{ bg: "teal.600" }}
+          onClick={() => scrollToSection("gallery")}
+        >
+          Gallery
         </Button>
       </HStack>
     </Box>
