@@ -1,10 +1,22 @@
-import React, { useState } from 'react';
-import { Box, Heading, Text, Input, Textarea, Button, Flex, FormControl, FormLabel } from "@chakra-ui/react";
+import React, { useState } from "react";
+import {
+  Box,
+  Heading,
+  Text,
+  Input,
+  Textarea,
+  Button,
+  Flex,
+  FormControl,
+  FormLabel,
+} from "@chakra-ui/react";
 
 const ContactUs = () => {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
@@ -16,12 +28,32 @@ const ContactUs = () => {
   };
 
   return (
-    <Box py={10} px={4} maxW="600px" mx="auto">
-      <Heading as="h2" size="xl" textAlign="center" mb={4}>
-        Get in Touch
-      </Heading>
+    <Box py={10} px={4} textAlign="center" maxW="600px" mx="auto">
+    <Heading
+        as="h2"
+        size="xl"
+        mb={2}
+        position="relative"
+        display="inline-block"
+        textAlign="center"
+        width="100%"
+    >
+        Contact Us
+        <Box
+            height="4px"
+            width="60px"
+            bg="teal.400"
+            borderRadius="2px"
+            position="absolute"
+            left="50%"
+            bottom="-8px"
+            transform="translateX(-50%)"
+        />
+    </Heading>
+      <Box height="18px" />
       <Text textAlign="center" mb={8}>
-        Please fill out the form below to send us an email and we will get back to you as soon as possible.
+        Please fill out the form below to send us an email and we will get back
+        to you as soon as possible.
       </Text>
       <form onSubmit={handleSubmit}>
         <Flex gap={4} mb={4}>

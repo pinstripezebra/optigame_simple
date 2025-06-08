@@ -4,7 +4,7 @@ import image2 from "../data/usage2.png";
 import image3 from "../data/usage3.png";
 import image4 from "../data/usage4.png";
 import React, { useState } from 'react';
-import { Box, Heading, Text, SimpleGrid, Image, Modal, ModalOverlay, ModalContent, ModalBody, useDisclosure } from "@chakra-ui/react";
+import { Box, Heading, Text, SimpleGrid, Image, Modal, ModalOverlay, ModalContent, ModalBody, useDisclosure, Spacer } from "@chakra-ui/react";
 
 
 const images = [
@@ -25,10 +25,21 @@ const Gallery = () => {
 
     return (
         <Box py={10} px={4} textAlign="center" bg="gray.50">
-            <Heading as="h2" size="xl" mb={2}>
+            <Heading as="h2" size="xl" mb={2} position="relative" display="inline-block">
                 Gallery
+                <Box
+                    height="4px"
+                    width="60px"
+                    bg="teal.400"
+                    borderRadius="2px"
+                    position="absolute"
+                    left="50%"
+                    bottom="-8px"
+                    transform="translateX(-50%)"
+                />
             </Heading>
-            <Text fontSize="md" color="gray.600" mb={6}>
+            <Box height="18px" /> 
+            <Spacer />  <Text fontSize="md" color="gray.600" mb={6}>
                 Optigame makes it simple to manage your gaming wishlist and find new games. Here are some screenshots showcasing its features in action.
             </Text>
             <SimpleGrid columns={2} spacing={4} maxW="800px" mx="auto">

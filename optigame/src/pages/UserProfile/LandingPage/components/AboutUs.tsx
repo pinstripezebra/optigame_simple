@@ -1,5 +1,14 @@
-import React from 'react';
-import { Box, Heading, Text, SimpleGrid, Image, UnorderedList, ListItem, VStack } from "@chakra-ui/react";
+import React from "react";
+import {
+  Box,
+  Heading,
+  Text,
+  SimpleGrid,
+  Image,
+  UnorderedList,
+  ListItem,
+  VStack,
+} from "@chakra-ui/react";
 
 interface AboutUsProps {
   blurb: string;
@@ -8,10 +17,29 @@ interface AboutUsProps {
 
 const AboutUs: React.FC<AboutUsProps> = ({ blurb, whyChoose }) => {
   return (
-    <Box py={10} px={4}>
-      <Heading as="h2" size="xl" textAlign="center" mb={10}>
+    <Box py={10} px={4} maxW="1200px" mx="auto">
+    <Box textAlign="center"  >
+      <Heading
+        as="h2"
+        size="xl"
+        mb={2}
+        position="relative"
+        display="inline-block"
+      >
         About Us
+        <Box
+          height="4px"
+          width="60px"
+          bg="teal.400"
+          borderRadius="2px"
+          position="absolute"
+          left="50%"
+          bottom="-8px"
+          transform="translateX(-50%)"
+        />
       </Heading>
+      </Box>
+      <Box height="18px" />
       <SimpleGrid columns={{ base: 1, md: 2 }} spacing={10} alignItems="center">
         {/* Left: Image */}
         <Box display="flex" justifyContent="center">
@@ -25,9 +53,11 @@ const AboutUs: React.FC<AboutUsProps> = ({ blurb, whyChoose }) => {
           />
         </Box>
         {/* Right: Blurb and List */}
-        <VStack align="start" spacing={5}>
+        <VStack align="start" spacing={5} alignContent={"left"}>
           <Text fontSize="lg">{blurb}</Text>
-          <Text fontWeight="bold" mt={2}>Why choose Optigame?</Text>
+          <Text fontWeight="bold" mt={2}>
+            Why choose Optigame?
+          </Text>
           <UnorderedList pl={5} spacing={2}>
             {whyChoose.map((reason, idx) => (
               <ListItem key={idx}>{reason}</ListItem>
