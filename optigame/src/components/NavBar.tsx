@@ -7,6 +7,7 @@ import { HomeButton } from "./NavBar/HomeButton";
 import { RecommendedButton } from "./NavBar/RecommendedButton";
 import { useUser } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
+import OptigameLogo from "./OptigameLogo";
 interface NavBarProps {
   onSearch: (title: string) => void; // Callback to handle search input
 }
@@ -27,12 +28,7 @@ const NavBar = ({ onSearch }: NavBarProps) => {
       <HStack padding="10px" alignItems="center">
         {/* Logo and Titles */}
         <Box>
-          <HStack>
-            <Image src={logo} boxSize="60px" borderRadius={10} />
-            <Text fontSize="2xl" fontWeight="bold">
-              Optigame
-            </Text>
-          </HStack>
+          <OptigameLogo />
           <Text fontSize="sm">Finding your next great game starts here.</Text>
         </Box>
 

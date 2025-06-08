@@ -24,12 +24,12 @@ const Gallery = () => {
     };
 
     return (
-        <Box py={10} px={4} textAlign="center">
+        <Box py={10} px={4} textAlign="center" bg="gray.50">
             <Heading as="h2" size="xl" mb={2}>
                 Gallery
             </Heading>
             <Text fontSize="md" color="gray.600" mb={6}>
-                usage of optigame
+                Optigame makes it simple to manage your gaming wishlist and find new games. Here are some screenshots showcasing its features in action.
             </Text>
             <SimpleGrid columns={2} spacing={4} maxW="800px" mx="auto">
                 {images.map((img, idx) => (

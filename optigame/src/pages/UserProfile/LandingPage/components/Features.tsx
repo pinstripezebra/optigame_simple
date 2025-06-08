@@ -12,7 +12,7 @@ interface FeaturesProps {
 }
 
 const Features: React.FC<FeaturesProps> = ({ features }) => (
-  <Box py={10} px={4}>
+  <Box py={10} px={4} bg="gray.50">
     <Heading as="h2" size="xl" textAlign="center" mb={10}>
       Features
     </Heading>
