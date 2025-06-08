@@ -19,7 +19,7 @@ import GamePage from "./pages/GamePage/GamePage";
 import RecommendedPage from "./pages/RecommendedGames/Recommended";
 import ProtectedRoute from "./pages/LoginSignup/ProtectedRoute";
 import { UserGamesProvider } from "./context/UserGamesContext";
-import LandingPage from "./pages/UserProfile/LandingPage/LandingPage";
+import LandingPage from "./pages/LandingPage/LandingPage";
 
 
 const router = createBrowserRouter([

@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, HStack, Button, Text } from "@chakra-ui/react";
-import OptigameLogo from "../../../../components/OptigameLogo";
+import OptigameLogo from "../../../components/OptigameLogo";
 
 const scrollToSection = (id: string) => {
   const section = document.getElementById(id);

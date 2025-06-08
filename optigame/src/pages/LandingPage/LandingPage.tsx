@@ -6,7 +6,7 @@ import data from "./data/data.json";
 import LandingNavbar from "./components/LandingNavbar";
 import ContactUs from "./components/ContactUs";
 import Gallery from "./components/Gallery";
-import "../../../index.css";
+
 
 const sectionStyle: React.CSSProperties = {
     marginBottom: "2rem",
