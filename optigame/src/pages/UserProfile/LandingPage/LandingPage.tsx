@@ -4,7 +4,7 @@ import Introduction from "./components/Introduction";
 import AboutUs from "./components/AboutUs";
 import data from "./data/data.json";
 import LandingNavbar from "./components/LandingNavbar";
-
+import ContactUs from "./components/ContactUs";
 const LandingPage = () => {
   return (
     <div>
@@ -18,8 +18,12 @@ const LandingPage = () => {
       <div id="aboutus">
         <AboutUs blurb={data.AboutUs.blurb} whyChoose={data.AboutUs.whyChoose} />
       </div>
+      <div id="contactus">
+        <ContactUs/>
+
+      </div>
     </div>
   );
 };
 
-export default LandingPage;
+export default LandingPage
