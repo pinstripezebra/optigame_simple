@@ -13,7 +13,7 @@ export const UserMenu = () => {
   return (
     <Box bg="white" color="black">
       <Menu>
-      <MenuButton as={Button} variant="outline" size="sm">
+      <MenuButton as={Button} variant="outline" size="sm" borderRadius = 'md'>
         Account
       </MenuButton>
       <Portal>

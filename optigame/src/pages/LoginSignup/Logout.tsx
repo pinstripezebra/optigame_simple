@@ -9,8 +9,9 @@ import {
   Stack,
   Button,
   Text,
+  Link
 } from "@chakra-ui/react";
-import backgroundImage from "../../assets/background5.jpg";
+import backgroundImage from "../../assets/logout2.jpg";
 
 const Logout = () => {
   const navigate = useNavigate(); // Initialize useNavigate
@@ -24,7 +25,6 @@ const Logout = () => {
       backgroundImage={`url(${backgroundImage})`} // Set the background image
       backgroundSize="cover" // Ensure the image covers the entire container
       backgroundPosition="center" // Center the image
-      
     >
       <Stack
         flexDir="column"
@@ -33,9 +33,8 @@ const Logout = () => {
         justifyContent="center"
         alignItems="center"
         borderRadius="md"
-        
       >
-        <Box minW={{ base: "90%", md: "468px" }} >
+        <Box minW={{ base: "90%", md: "468px" }}>
           <form>
             <Stack
               spacing={4}
@@ -47,9 +46,8 @@ const Logout = () => {
             >
               <Avatar bg="teal.500" />
               <Heading color="teal.400">Goodbye</Heading>
-              <Text fontSize="lg" color="teal.400" textAlign="center">
-                You have successfully logged out. Thank you for using our
-                service!
+              <Text fontSize="lg" textAlign="center">
+                You have successfully logged out. Thank you for Optigame!
               </Text>
 
               {/* Return to Login Button */}
@@ -61,13 +59,18 @@ const Logout = () => {
                 width="full"
                 onClick={() => {
                   // Clear local storage items
-                  localStorage.removeItem("token");    
+                  localStorage.removeItem("token");
                   localStorage.removeItem("username");
                   navigate("/Login"); // Navigate to the login page
                 }}
               >
                 Back to Login
               </Button>
+              <Box>
+                <Link color="teal.500" onClick={() => navigate("/LandingPage")}>
+                  Back to Landing
+                </Link>
+              </Box>
             </Stack>
           </form>
         </Box>

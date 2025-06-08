@@ -17,7 +17,7 @@ const NavBar = ({ onSearch }: NavBarProps) => {
   const navigate = useNavigate(); // Initialize useNavigate
   return (
     <Box
-      bg="teal.50"
+      bg="teal.500"
       px={4}
       py={2}
       boxShadow="sm"
@@ -46,7 +46,7 @@ const NavBar = ({ onSearch }: NavBarProps) => {
         {/* Username */}
         <Text fontWeight="bold">
           Welcome,{" "}
-          <Text as="span" color="teal">
+          <Text as="span">
         {username}
           </Text>
         </Text>
