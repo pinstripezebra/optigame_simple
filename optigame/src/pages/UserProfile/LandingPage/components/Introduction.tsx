@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Heading, Text, Button } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import backgroundImage from "../../data/landing_background.png";
+import backgroundImage from "../data/landing_background.png";
 
 interface IntroductionProps {
   introData: {

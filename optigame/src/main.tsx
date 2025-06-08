@@ -19,9 +19,15 @@ import GamePage from "./pages/GamePage/GamePage";
 import RecommendedPage from "./pages/RecommendedGames/Recommended";
 import ProtectedRoute from "./pages/LoginSignup/ProtectedRoute";
 import { UserGamesProvider } from "./context/UserGamesContext";
+import LandingPage from "./pages/UserProfile/LandingPage/LandingPage";
 
 
 const router = createBrowserRouter([
+  {
+    path: "/LandingPage",
+    element: <LandingPage />,
+    errorElement: <NotFoundPage />,
+  },
   {
     path: "/Login",
     element: <Login />,
