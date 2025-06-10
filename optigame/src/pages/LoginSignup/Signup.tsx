@@ -20,7 +20,7 @@ import {
   Image,
 } from "@chakra-ui/react";
 import { FaUserAlt, FaLock } from "react-icons/fa";
-import backgroundImage from "../../assets/background4.jpg";
+import backgroundImage from "../../assets/register.jpg";
 import logo from "../../assets/chess_logo.jpg";
 import api from "../../services/api-client";
 import { createUser } from "./createUser";
