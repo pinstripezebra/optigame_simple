@@ -12,7 +12,30 @@ df = pd.read_excel(parent_dir + 'manual_game_tagging.xlsx', sheet_name = 'tagged
 labels_df = pd.read_excel(parent_dir + 'manual_game_tagging.xlsx', sheet_name = 'tags')
 print(labels_df)
 
-def vectorize_tags
+def vectorize_tags(labels_df, input_df, target_cols = ['tag1', 'tag2', 'tag3']):
+
+    total_tags = labels_df['Tag'].to_list()
+    total_output = []
+    for index, row in input_df.itterows():
+
+        # removing blank tags and sorting
+        tags = filter( None, [row['tag1'],  row['tag2'],  row['tag2']])
+        tags = sorted(tags)
+
+        row_output = []
+        for tag in total_tags:
+            if tag in tags:
+                row_output.append(1)
+            else:
+                row_output.append(0)
+        total_output.append(raw_output)
+    return total_output
+
+df['vectorized_output'] = vectorize_tags(labels_df, input_df)
+
+
+
+
 
 #print(df.head(10))
 # can use a multioutput classifier
