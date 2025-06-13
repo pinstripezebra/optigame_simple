@@ -1,46 +1,50 @@
+import os
+
+# third party imports
 from sklearn.multioutput import MultiOutputClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 import pandas as pd
 import os
+import spacy
+
+# custpom imports
+from tagging_utils import vectorize_output_tags, extract_common_noun_phrases_with_numbers, text_to_lowercase
 
 current_dir = os.path.dirname(__file__)
 parent_dir = os.path.dirname(current_dir) + '/raw_data/'
-
 df = pd.read_excel(parent_dir + 'manual_game_tagging.xlsx', sheet_name = 'tagged_games')[['title', 'description', 'tag1', 'tag2', 'tag3']]
 labels_df = pd.read_excel(parent_dir + 'manual_game_tagging.xlsx', sheet_name = 'tags')
-print(labels_df)
-
-def vectorize_tags(labels_df, input_df, target_cols = ['tag1', 'tag2', 'tag3']):
-
-    total_tags = labels_df['Tag'].to_list()
-    total_output = []
-    for index, row in input_df.itterows():
-
-        # removing blank tags and sorting
-        tags = filter( None, [row['tag1'],  row['tag2'],  row['tag2']])
-        tags = sorted(tags)
-
-        row_output = []
-        for tag in total_tags:
-            if tag in tags:
-                row_output.append(1)
-            else:
-                row_output.append(0)
-        total_output.append(raw_output)
-    return total_output
-
-df['vectorized_output'] = vectorize_tags(labels_df, input_df)
 
 
+# ------------------------- #
+# -------Vectorizing Y------#
+# ------------------------- #
+df['vectorized_output'] = vectorize_output_tags(labels_df, df)
 
 
+# ------------------------- #
+# -------Vectorizing X------#
+# ------------------------- #
+# Will use description as x
+nlp = spacy.load("en_core_web_sm")
+df_with_nouns = extract_common_noun_phrases_with_numbers(nlp, df, "description")
+df_with_nouns = extract_common_noun_phrases_with_numbers(nlp, df, "title")
 
-#print(df.head(10))
+# Combine the noun phrases from both columns into a single column and lemmatize them
+df_with_nouns['combined_phrases'] = [x + y for x, y in zip(df_with_nouns['common_noun_phrases: description'], df_with_nouns['common_noun_phrases: title'])]
+print(df_with_nouns['combined_phrases'])
+
+
+df_with_nouns = text_to_lowercase(df_with_nouns, "combined_phrases")
+df_with_nouns = df_with_nouns.drop(columns=['common_noun_phrases: description', 'common_noun_phrases: title'], axis=1)
+print(df_with_nouns.head(10))
+
+
 # can use a multioutput classifier
 
-
+'''
 # Sample Data
 texts = ["This is a good movie.", "The movie was terrible.", "I love this restaurant.", "The food was amazing."]
 labels = [["movie", "positive"], ["movie", "negative"], ["restaurant", "positive"], ["restaurant", "positive"]]
@@ -58,7 +62,7 @@ vectorizer = TfidfVectorizer()
 X_train_vectorized = vectorizer.fit_transform(X_train)
 X_test_vectorized = vectorizer.transform(X_test)
 
-'''
+
 # Train a Logistic Regression model with OneVsRest
 model = OneVsRestClassifier(LogisticRegression())
 model.fit(X_train_vectorized, y_train)
