@@ -132,3 +132,33 @@ def text_to_lowercase(input_df:pd.DataFrame, column_name:str) -> pd.DataFrame:
     input_df[column_name] = output
     return input_df
 
+def eliminate_shorter_subtags(df: pd.DataFrame, common_noun_phrases_column: str = "common_noun_phrases") -> pd.DataFrame:
+    """
+    Eliminates shorter subtags from the 'common_noun_phrases' column if a longer parent tag exists.
+
+    Args:
+        df (pd.DataFrame): The input DataFrame containing a 'common_noun_phrases' column.
+        common_noun_phrases_column (str): The name of the column containing lists of common noun phrases.
+
+    Returns:
+        pd.DataFrame: A DataFrame with the 'common_noun_phrases' column updated to remove shorter subtags.
+    """
+    # Ensure the common_noun_phrases column exists
+    if common_noun_phrases_column not in df.columns:
+        raise ValueError(f"Column '{common_noun_phrases_column}' not found in DataFrame.")
+
+    # Function to remove shorter subtags
+    def filter_subtags(phrases_list):
+        # Sort phrases by length in descending order
+        phrases_list = sorted(phrases_list, key=len, reverse=True)
+        filtered_phrases = []
+
+        for phrase in phrases_list:
+            # Add the phrase if it's not a substring of any already added phrase
+            if not any(phrase in longer_phrase for longer_phrase in filtered_phrases):
+                filtered_phrases.append(phrase)
+
+        return filtered_phrases
+    # Apply the filtering function to the common_noun_phrases column
+    df[common_noun_phrases_column] = df[common_noun_phrases_column].apply(filter_subtags)
+    return df
