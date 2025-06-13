@@ -55,7 +55,7 @@ def extract_common_noun_phrases_with_numbers(nlp, df: pd.DataFrame, title_column
         current_phrase = []
 
         for i, token in enumerate(doc):
-            if token.pos_ == "NOUN" or token.pos_ == "VERB" :  # Check if the token is a noun
+            if token.pos_ == "NOUN" :  # Check if the token is a noun
                 # If the previous token is a number, include it in the phrase
                 if i > 0 and doc[i - 1].pos_ == "NUM":
                     current_phrase.append(doc[i - 1].text)

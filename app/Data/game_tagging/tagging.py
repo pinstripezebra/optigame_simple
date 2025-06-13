@@ -1,13 +1,14 @@
 import os
 
 # third party imports
-from sklearn.multioutput import MultiOutputClassifier
-from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.linear_model import LogisticRegression
+from sklearn.multioutput import MultiOutputClassifier
 import pandas as pd
-import os
+import numpy as np
 import spacy
+from sklearn.metrics import hamming_loss
 
 # custpom imports
 from tagging_utils import vectorize_output_tags, extract_common_noun_phrases_with_numbers, text_to_lowercase
@@ -34,54 +35,45 @@ df_with_nouns = extract_common_noun_phrases_with_numbers(nlp, df, "title")
 
 # Combine the noun phrases from both columns into a single column and lemmatize them
 df_with_nouns['combined_phrases'] = [x + y for x, y in zip(df_with_nouns['common_noun_phrases: description'], df_with_nouns['common_noun_phrases: title'])]
-print(df_with_nouns['combined_phrases'])
-
-
 df_with_nouns = text_to_lowercase(df_with_nouns, "combined_phrases")
 df_with_nouns = df_with_nouns.drop(columns=['common_noun_phrases: description', 'common_noun_phrases: title'], axis=1)
-print(df_with_nouns.head(10))
 
 
-# can use a multioutput classifier
+# converting counts to text vector
+vectorizer = CountVectorizer()
+X = vectorizer.fit_transform(df_with_nouns['combined_phrases'].astype(str))
 
-'''
-# Sample Data
-texts = ["This is a good movie.", "The movie was terrible.", "I love this restaurant.", "The food was amazing."]
-labels = [["movie", "positive"], ["movie", "negative"], ["restaurant", "positive"], ["restaurant", "positive"]]
+def filter_empty_rows(X, df):
+    """
+    Filters out rows in the DataFrame where all of 'tag1', 'tag2', and 'tag3' columns are NaN.
+    Returns X and df filtered to only rows where at least one of these columns is not NaN.
+    """
+    # Boolean mask: True if all tag columns are NaN
+    all_tags_nan = df[['tag1', 'tag2', 'tag3']].isna().all(axis=1)
+    # We want rows where at least one tag is NOT NaN
+    not_all_tags_nan = ~all_tags_nan
+    return X[not_all_tags_nan.values], np.array(df[not_all_tags_nan]['vectorized_output'].to_list())
 
-# Convert labels to binary format
-from sklearn.preprocessing import MultiLabelBinarizer
-mlb = MultiLabelBinarizer()
-binary_labels = mlb.fit_transform(labels)
+X, y = filter_empty_rows(X, df_with_nouns)
 
 # Split data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(texts, binary_labels, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Vectorize text data using TF-IDF
-vectorizer = TfidfVectorizer()
-X_train_vectorized = vectorizer.fit_transform(X_train)
-X_test_vectorized = vectorizer.transform(X_test)
+# dropping zero columns from y_train and y_test - these are tags that are not present in the train or test data
+zero_cols = np.where(y_train.sum(axis=0) == 0)[0]
+nonzero_cols = np.where(y_train.sum(axis=0) > 0)[0]
+y_train = y_train[:, nonzero_cols]
+y_test = y_test[:, nonzero_cols]
 
+# training model
+model = MultiOutputClassifier(LogisticRegression()).fit(X_train, y_train)
 
-# Train a Logistic Regression model with OneVsRest
-model = OneVsRestClassifier(LogisticRegression())
-model.fit(X_train_vectorized, y_train)
+# making predictions
+train_predictions = model.predict(X_train)
+test_predictions = model.predict(X_test)
 
-# Make predictions
-predictions = model.predict(X_test_vectorized)
-
-# Evaluate the model (e.g., using Hamming Loss)
-from sklearn.metrics import hamming_loss
-hamming_loss_score = hamming_loss(y_test, predictions)
-print(f"Hamming Loss: {hamming_loss_score}")
-
-# Example: Get predicted labels for a single text
-new_text = "The food was delicious."
-new_text_vectorized = vectorizer.transform([new_text])
-predicted_labels = model.predict(new_text_vectorized)
-
-# Convert back to original label format (if needed)
-predicted_labels_original = mlb.inverse_transform(predicted_labels)
-
-print(f"Predicted labels: {predicted_labels_original}")
-'''
+# evaluation model performance
+hamming_loss_score_test = hamming_loss(y_test, test_predictions)
+hamming_loss_score_train = hamming_loss(y_train, train_predictions)
+print(f"Hamming Loss test: {hamming_loss_score_test}")
+print(f"Hamming Loss train: {hamming_loss_score_train}")
