@@ -52,7 +52,7 @@ df_with_nouns = eliminate_shorter_subtags(df_with_nouns, "combined_phrases")
 
 # converting counts to text vector
 # Only including phrases that appear at least 5 times in the dataset
-vectorizer = TfidfVectorizer(min_df=5)
+vectorizer = TfidfVectorizer(min_df=7)
 X = vectorizer.fit_transform(df_with_nouns['combined_phrases'].astype(str))
 
 
