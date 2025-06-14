@@ -1,6 +1,30 @@
 
 import pandas as pd
+import time
+import functools
+import numpy as np
 
+def timed(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        start_time = time.perf_counter()
+        result = func(*args, **kwargs)
+        end_time = time.perf_counter()
+        execution_time = end_time - start_time
+        print(f"Function {func.__name__} took {execution_time:.4f} seconds")
+        return result
+    return wrapper
+
+
+def drop_special_characters(df, column):
+    """
+    Removes special characters from the specified string column in the DataFrame.
+    Only keeps alphanumeric characters and spaces.
+    """
+    df[column] = df[column].astype(str).str.replace(r'[^A-Za-z0-9\s]', '', regex=True)
+    return df
+
+@timed
 def vectorize_output_tags(labels_df, input_df, target_cols = ['tag1', 'tag2', 'tag3']):
     """
     Vectorizes the tags in the input DataFrame based on the labels DataFrame
@@ -30,7 +54,7 @@ def vectorize_output_tags(labels_df, input_df, target_cols = ['tag1', 'tag2', 't
         total_output.append(row_output)
     return total_output
 
-
+@timed
 def extract_common_noun_phrases_with_numbers(nlp, df: pd.DataFrame, title_column: str = "title") -> pd.DataFrame:
     """
     Extracts common nouns and combined noun phrases (including number-noun phrases) from the title column of a DataFrame.
@@ -76,7 +100,7 @@ def extract_common_noun_phrases_with_numbers(nlp, df: pd.DataFrame, title_column
     df[output_title] = df[title_column].apply(lambda x: get_common_noun_phrases(str(x)))
     return df
 
-
+@timed
 def lemmatize_common_noun_phrases(nlp, df: pd.DataFrame, common_noun_phrases_column: str = "common_noun_phrases") -> pd.DataFrame:
     """
     Lemmatizes the words in the 'common_noun_phrases' column of a DataFrame.
@@ -162,3 +186,29 @@ def eliminate_shorter_subtags(df: pd.DataFrame, common_noun_phrases_column: str 
     # Apply the filtering function to the common_noun_phrases column
     df[common_noun_phrases_column] = df[common_noun_phrases_column].apply(filter_subtags)
     return df
+
+
+def filter_empty_rows(X, df):
+    """
+    Filters out rows in the DataFrame where all of 'tag1', 'tag2', and 'tag3' columns are NaN.
+    Returns X and df filtered to only rows where at least one of these columns is not NaN.
+    """
+    # Boolean mask: True if all tag columns are NaN
+    all_tags_nan = df[['tag1', 'tag2', 'tag3']].isna().all(axis=1)
+    # We want rows where at least one tag is NOT NaN
+    not_all_tags_nan = ~all_tags_nan
+    return X[not_all_tags_nan.values], np.array(df[not_all_tags_nan]['vectorized_output'].to_list())
+
+
+def force_min_tags(proba_matrix, min_tags=2, threshold=0.5):
+    preds = np.zeros_like(proba_matrix, dtype=int)
+    for i, row in enumerate(proba_matrix):
+        # Get indices where probability exceeds threshold
+        above_thresh = np.where(row >= threshold)[0]
+        if len(above_thresh) >= min_tags:
+            preds[i, above_thresh] = 1
+        else:
+            # Force top N predictions to 1
+            top_indices = np.argsort(row)[-min_tags:]
+            preds[i, top_indices] = 1
+    return preds
