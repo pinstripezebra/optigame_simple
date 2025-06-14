@@ -212,3 +212,18 @@ def force_min_tags(proba_matrix, min_tags=2, threshold=0.5):
             top_indices = np.argsort(row)[-min_tags:]
             preds[i, top_indices] = 1
     return preds
+
+
+def convert_predictions_to_text(predictions, labels_df, nonzero_cols):
+    """
+    Converts the binary predictions back to text labels using nonzero_cols to map indices.
+    """
+    text_predictions = []
+    print(labels_df.columns)
+    for pred in predictions:
+        # Find indices where prediction is 1, map back to original label indices
+        tag_indices = np.array(nonzero_cols)[pred == 1]
+
+        tags = labels_df.loc[tag_indices, 'Tag'].tolist()
+        text_predictions.append(tags)
+    return text_predictions
