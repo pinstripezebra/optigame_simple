@@ -71,7 +71,7 @@ zero_cols = np.where(y_train.sum(axis=0) == 0)[0]
 nonzero_cols = np.where(y_train.sum(axis=0) > 0)[0]
 y_train = y_train[:, nonzero_cols]
 y_test = y_test[:, nonzero_cols]
-
+print('Non-zero columns:', nonzero_cols)
 
 # training model
 model = MultiOutputClassifier(LogisticRegression()).fit(X_train, y_train)
@@ -85,3 +85,23 @@ hamming_loss_score_test = hamming_loss(y_test, test_predictions)
 hamming_loss_score_train = hamming_loss(y_train, train_predictions)
 print(f"Hamming Loss test: {hamming_loss_score_test}")
 print(f"Hamming Loss train: {hamming_loss_score_train}")
+
+
+# Converting predictions back to text
+def convert_predictions_to_text(predictions, labels_df, nonzero_cols):
+    """
+    Converts the binary predictions back to text labels using nonzero_cols to map indices.
+    """
+    text_predictions = []
+    for pred in predictions:
+        # Find indices where prediction is 1, map back to original label indices
+        tag_indices = np.array(nonzero_cols)[pred == 1]
+        tags = labels_df.loc[tag_indices, 'tag'].tolist()
+        text_predictions.append(tags)
+    return text_predictions
+
+train_predictions_text = convert_predictions_to_text(train_predictions, labels_df, nonzero_cols)
+test_predictions_text = convert_predictions_to_text(test_predictions, labels_df, nonzero_cols)
+
+print("Train Predictions (text):", train_predictions_text[:5])
+print("Test Predictions (text):", test_predictions_text[:5])
