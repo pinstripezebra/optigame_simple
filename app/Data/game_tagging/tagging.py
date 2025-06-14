@@ -61,14 +61,16 @@ def filter_empty_rows(X, df):
 X, y = filter_empty_rows(X, df_with_nouns)
 print(f"Shape of X: {X.shape}")
 print(f"Shape of y: {y.shape}")
-# dropping zero columns from y_train and y_test - these are tags that are not present in the train or test data
-zero_cols = np.where(y.sum(axis=0) == 0)[0]
-nonzero_cols = np.where(y.sum(axis=0) > 0)[0]
-y = y[:, nonzero_cols]
-
 
 # Split data into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+
+# Identify columns to drop (nonzero_cols)
+zero_cols = np.where(y_train.sum(axis=0) == 0)[0]
+nonzero_cols = np.where(y_train.sum(axis=0) > 0)[0]
+y_train = y_train[:, nonzero_cols]
+y_test = y_test[:, nonzero_cols]
 
 
 # training model
