@@ -3,7 +3,7 @@ import os
 # third party imports
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.multioutput import MultiOutputClassifier
 import pandas as pd
 import numpy as np
@@ -12,7 +12,7 @@ from sklearn.metrics import hamming_loss
 
 # custpom imports
 from tagging_utils import vectorize_output_tags, extract_common_noun_phrases_with_numbers, drop_special_characters, lemmatize_common_noun_phrases, eliminate_shorter_subtags, filter_empty_rows, force_min_tags
-import time
+
 
 current_dir = os.path.dirname(__file__)
 parent_dir = os.path.dirname(current_dir) + '/raw_data/'
@@ -74,7 +74,7 @@ print('Non-zero columns:', nonzero_cols)
 # -------------------------------------------#
 # -----------------Modeling------------------#
 # -------------------------------------------#
-base_classifier  = LogisticRegression(class_weight="balanced", max_iter=1000)
+base_classifier = RandomForestClassifier(class_weight="balanced", n_estimators=100, random_state=42, max_depth=6)
 model = MultiOutputClassifier(base_classifier).fit(X_train, y_train)
 
 # predicting probabilities on train and test sets
