@@ -9,14 +9,20 @@ import pandas as pd
 import numpy as np
 import spacy
 from sklearn.metrics import hamming_loss
+from utils.db_handler import DatabaseHandler
 
 # custpom imports
 from tagging_utils import vectorize_output_tags, extract_common_noun_phrases_with_numbers, drop_special_characters, lemmatize_common_noun_phrases, eliminate_shorter_subtags, filter_empty_rows, force_min_tags, convert_predictions_to_text
 
 
+# creating database handler instance
+my_db_handler = DatabaseHandler()
+table_name = "optigame_products"
+
+
 current_dir = os.path.dirname(__file__)
 parent_dir = os.path.dirname(current_dir) + '/raw_data/'
-df = pd.read_excel(parent_dir + 'manual_game_tagging.xlsx', sheet_name = 'tagged_games')[['title', 'description', 'tag1', 'tag2', 'tag3']]
+df = pd.read_excel(parent_dir + 'manual_game_tagging.xlsx', sheet_name = 'tagged_games')[['asin','title', 'description', 'tag1', 'tag2', 'tag3']]
 df = df.reset_index().rename(columns={'index': 'orig_index'})
 labels_df = pd.read_excel(parent_dir + 'manual_game_tagging.xlsx', sheet_name = 'tags')
 
@@ -94,6 +100,69 @@ print("Train Predictions (text):", train_predictions_text[:5])
 #-------------------------------------#
 X_train_df = pd.DataFrame(X_train.toarray(), columns=vectorizer.get_feature_names_out())
 
+
 # Add predictions as new columns
 df['predicted_tags'] = train_predictions_text
-df.to_csv(parent_dir + 'test.csv', index=False)
+output_df = df[['asin', 'predicted_tags']]
+output_df = output_df.dropna(subset=['asin','predicted_tags'])
+
+# pivoting dataframe
+output_df = output_df.explode('predicted_tags')
+output_df = output_df.rename(columns={'predicted_tags': 'game_tags'})
+output_df.to_csv(parent_dir + 'test.csv', index=False)
+
+
+#-------------------------------#
+#PART 2: Creating new table and populating it with tagged data
+#-------------------------------#
+
+tag_table_name = "optigame_game_tags"
+tag_table_creation_query = """CREATE TABLE IF NOT EXISTS optigame_game_tags (
+    id UUID PRIMARY KEY,
+    asin VARCHAR(255),
+    game_tags TEXT
+        )
+    """
+# deleting the table if it exists
+my_db_handler.delete_table(tag_table_name)
+
+# creating tag table if it doesn't exist
+my_db_handler.create_table(tag_table_creation_query)
+
+# Populate the table with data from the DataFrame
+my_db_handler.populate_game_tags_table(game_tagged_df_long)
+
+# returning data from the database
+out_df = my_db_handler.retrieve_all_from_table(tag_table_name)
+
+
+#-------------------------------#
+#PART 3: Creating unique tags table and populating it with unique game tags
+#-------------------------------#
+
+unique_tag_table_name = "optigame_unique_game_tags"
+unique_tag_table_creation_query = """CREATE TABLE IF NOT EXISTS optigame_unique_game_tags (
+    id UUID PRIMARY KEY,
+    game_tags TEXT UNIQUE
+        )
+    """
+
+# deleting the table if it exists
+my_db_handler.delete_table(unique_tag_table_name)
+
+# creating unique tag table if it doesn't exist
+my_db_handler.create_table(unique_tag_table_creation_query)
+
+# Extract unique game tags from the DataFrame
+unique_game_tags = game_tagged_df_long["game_tags"].drop_duplicates().reset_index(drop=True)
+unique_game_tags_df = unique_game_tags.to_frame(name="game_tags")
+unique_game_tags_df["id"] = [uuid.uuid4() for _ in range(len(unique_game_tags_df))]
+
+# ensuring columns are in correct order
+unique_game_tags_df = unique_game_tags_df[["id", "game_tags"]]
+
+# Populate the table with data from the unique game tags DataFrame
+my_db_handler.populate_unique_game_tags_table(unique_game_tags_df)
+
+# returning data from the database
+unique_out_df = my_db_handler.retrieve_all_from_table(unique_tag_table_name)
