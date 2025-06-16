@@ -2,6 +2,8 @@
 
 OptiGame is a full-stack web application for discovering, reviewing, and managing board games. It features a React + TypeScript frontend, a FastAPI backend, JWT-based authentication, and a PostgreSQL database.
 
+Users can see a full list of features and signup for an account here: https://optigame-front-end.onrender.com/
+
 ---
 
 ## Features

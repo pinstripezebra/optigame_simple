@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { Image, Spinner, Text, Button, VStack } from '@chakra-ui/react';
 import useGenres from '../hooks/useGenres';
-import genreImage from '../assets/placeholder_card.png'; // Adjust the path as necessary
+import genreImage from '../assets/placeholder_card.png';
 
 interface GenreListProps {
-  onGenreSelect: (gameTags: string | null) => void; // Now returns game_tags
+  onGenreSelect: (gameTags: string | null) => void; 
 }
 
 const GenreList = ({ onGenreSelect }: GenreListProps) => {
@@ -33,7 +33,7 @@ const GenreList = ({ onGenreSelect }: GenreListProps) => {
               <Image
                 boxSize="32px"
                 borderRadius={8}
-                src={`url(${genreImage})`}
+                src={genreImage}
                 alt={genre.game_tags}
               />
             }
