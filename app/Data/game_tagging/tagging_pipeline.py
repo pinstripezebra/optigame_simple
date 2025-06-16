@@ -9,8 +9,11 @@ import pandas as pd
 import numpy as np
 import spacy
 from sklearn.metrics import hamming_loss
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 from utils.db_handler import DatabaseHandler
-
+import uuid
 # custpom imports
 from tagging_utils import vectorize_output_tags, extract_common_noun_phrases_with_numbers, drop_special_characters, lemmatize_common_noun_phrases, eliminate_shorter_subtags, filter_empty_rows, force_min_tags, convert_predictions_to_text
 
@@ -22,7 +25,7 @@ table_name = "optigame_products"
 
 current_dir = os.path.dirname(__file__)
 parent_dir = os.path.dirname(current_dir) + '/raw_data/'
-df = pd.read_excel(parent_dir + 'manual_game_tagging.xlsx', sheet_name = 'tagged_games')[['asin','title', 'description', 'tag1', 'tag2', 'tag3']]
+df = pd.read_excel(parent_dir + 'manual_game_tagging.xlsx', sheet_name = 'tagged_games')[['id','asin','title', 'description', 'tag1', 'tag2', 'tag3']]
 df = df.reset_index().rename(columns={'index': 'orig_index'})
 labels_df = pd.read_excel(parent_dir + 'manual_game_tagging.xlsx', sheet_name = 'tags')
 
@@ -108,10 +111,10 @@ output_df = output_df.dropna(subset=['asin','predicted_tags'])
 
 # pivoting dataframe
 output_df = output_df.explode('predicted_tags')
+output_df['id'] = [uuid.uuid4() for _ in range(len(output_df))]
 output_df = output_df.rename(columns={'predicted_tags': 'game_tags'})
 output_df.to_csv(parent_dir + 'test.csv', index=False)
-
-
+print(output_df.head(5))
 #-------------------------------#
 #PART 2: Creating new table and populating it with tagged data
 #-------------------------------#
@@ -130,7 +133,7 @@ my_db_handler.delete_table(tag_table_name)
 my_db_handler.create_table(tag_table_creation_query)
 
 # Populate the table with data from the DataFrame
-my_db_handler.populate_game_tags_table(game_tagged_df_long)
+my_db_handler.populate_game_tags_table(output_df)
 
 # returning data from the database
 out_df = my_db_handler.retrieve_all_from_table(tag_table_name)
@@ -154,7 +157,7 @@ my_db_handler.delete_table(unique_tag_table_name)
 my_db_handler.create_table(unique_tag_table_creation_query)
 
 # Extract unique game tags from the DataFrame
-unique_game_tags = game_tagged_df_long["game_tags"].drop_duplicates().reset_index(drop=True)
+unique_game_tags = output_df["game_tags"].drop_duplicates().reset_index(drop=True)
 unique_game_tags_df = unique_game_tags.to_frame(name="game_tags")
 unique_game_tags_df["id"] = [uuid.uuid4() for _ in range(len(unique_game_tags_df))]
 
