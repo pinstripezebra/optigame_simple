@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Image, Spinner, Text, Button, VStack } from '@chakra-ui/react';
 import useGenres from '../hooks/useGenres';
+import genreImage from '../assets/placeholder_card.png'; // Adjust the path as necessary
 
 interface GenreListProps {
   onGenreSelect: (gameTags: string | null) => void; // Now returns game_tags
@@ -32,7 +33,7 @@ const GenreList = ({ onGenreSelect }: GenreListProps) => {
               <Image
                 boxSize="32px"
                 borderRadius={8}
-                src="/src/assets/placeholder_card.png"
+                src={`url(${genreImage})`}
                 alt={genre.game_tags}
               />
             }
