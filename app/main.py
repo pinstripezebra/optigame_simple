@@ -15,7 +15,6 @@ from jose import jwt
 # custom imports
 from app.models import User, Game, GameModel, UserModel, GameTags, GameTagsModel, UniqueGameTags, UniqueGameTagsModel, User_Game_Model, User_Game, GameSimilarity,GameSimilarityModel
 
-
 # Load the .env file from the parent directory
 config = dotenv_values("./.env2")
 
@@ -267,3 +266,4 @@ def verify_token(token: str = Depends(oauth2_scheme)):
         return payload
     except jwt.JWTError:
         raise HTTPException(status_code=401, detail="Invalid authentication credentials")
+    

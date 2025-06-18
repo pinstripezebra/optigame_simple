@@ -55,9 +55,7 @@ const UserProfilePage: React.FC = () => {
     const fetchUserGames = async () => {
       setLoading(true);
       try {
-        const response = await api.get<UserGame[]>("/v1/user_game", {
-          params: { username: username },
-        });
+        const response = await api.get<UserGame[]>(`/v1/user_game/`, { params: { username } });
         const userGamesData = response.data;
         setUserGames(userGamesData);
 

@@ -37,7 +37,7 @@ interface UserGameShelfProps {
   userGamesData: UserGame[];
   loading: boolean;
   expandedRow: string | null;
-  handleRowClick: (game: Game) => void; // <-- now expects a Game object
+  handleRowClick: (game: Game) => void; 
 }
 
 const UserGameShelf: React.FC<UserGameShelfProps> = ({
@@ -70,7 +70,7 @@ const UserGameShelf: React.FC<UserGameShelfProps> = ({
           return (
             <tr
               key={game.id}
-              onClick={() => handleRowClick(game)} // <-- pass the Game object
+              onClick={() => handleRowClick(game)}
               style={{
                 cursor: "pointer",
                 backgroundColor: expandedRow === game.id ? "#f9f9f9" : "transparent",
