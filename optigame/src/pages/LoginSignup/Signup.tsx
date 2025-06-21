@@ -1,9 +1,17 @@
 import { useState } from "react";
 import "./LoginSignup.css";
 import { MdOutlineEmail } from "react-icons/md";
-import { HStack, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
+import {
+  useDisclosure,
+  HStack,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalBody,
+  Text,
+} from "@chakra-ui/react";
 import {
   Box,
   Flex,
@@ -22,7 +30,6 @@ import {
 import { FaUserAlt, FaLock } from "react-icons/fa";
 import backgroundImage from "../../assets/register.jpg";
 import logo from "../../assets/chess_logo.jpg";
-import api from "../../services/api-client";
 import { createUser } from "./createUser";
 
 const Signup = () => {
@@ -32,6 +39,8 @@ const Signup = () => {
   const toast = useToast();
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleShowClick = () => setShowPassword(!showPassword);
 
@@ -61,7 +70,11 @@ const Signup = () => {
         password,
         role: "user",
       });
-      // show success, redirect, etc.
+      onOpen(); //If the registration is successful, open the modal
+      setTimeout(() => {
+        onClose();
+        navigate("/Login");
+      }, 1500);
     } catch (err) {
       // show error toast
     }
@@ -187,6 +200,32 @@ const Signup = () => {
           </form>
         </Box>
       </Stack>
+
+      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+        <ModalOverlay />
+        <ModalContent bg="green.50" border="2px solid" borderColor="green.400">
+          <ModalBody
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            py={8}
+          >
+            <Text fontSize="4xl" color="green.400" mb={2}>
+              ✔
+            </Text>
+            <Text
+              textAlign="center"
+              fontWeight="bold"
+              fontSize="lg"
+              color="green.700"
+            >
+              Account created successfully!
+
+              Navigating to login page...
+            </Text>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </Flex>
   );
 };

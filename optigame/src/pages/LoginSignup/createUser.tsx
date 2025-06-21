@@ -8,6 +8,13 @@ interface CreateUserPayload {
 }
 
 export const createUser = ({ username, password, email, role = "user" }: CreateUserPayload) => {
+  console.log({
+    username,
+    password,
+    email,
+    role: role || "user"
+  })
+  
   return api.post("/v1/user/", {
     username,
     password,
