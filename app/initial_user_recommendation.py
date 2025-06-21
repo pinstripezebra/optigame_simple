@@ -8,7 +8,7 @@ import pandas as pd
 import uuid
 from dotenv import load_dotenv
 
-source_table_name1 = "user_game" # contains user_id:asin mapping
+source_table_name1 = "optigame_user_games" # contains user_id:asin mapping
 source_table_name2 = "optigame_game_tags" # contains asin:game_tags mapping
 target_table_name = "user_recommendations"
 
@@ -17,12 +17,35 @@ URL_database = os.environ.get("DATABASE_URL")
 engine = DatabaseHandler(URL_database)
 
 
-# game tag data
+# game: tag data
 tag_df = engine.retrieve_all_from_table(source_table_name2)
-
 unique_tags = tag_df['game_tags'].drop_duplicates().sort_values().tolist()
 unique_games = tag_df['asin'].drop_duplicates().sort_values().tolist()
 
+# user: game data
+user_game_df = engine.retrieve_all_from_table(source_table_name1)
+unique_users = user_game_df['username'].drop_duplicates().sort_values().tolist()
+
+
+def calculate_aggregate_by_user(user_game_df, unique_users, game_vectors):
+    """
+    Calculate the aggregate game vector for each user based on their played games.
+    """
+    user_vectors = []
+    # iterate through each user
+    for user in unique_users:
+        user_games = user_game_df[user_game_df['username'] == user]['asin'].tolist()
+        # Only keep games that exist in game_vectors
+        user_games = [g for g in user_games if g in game_vectors.index]
+        played_game_vectors = game_vectors.loc[user_games]
+        # Calculate the mean vector for the user's played games
+        if not played_game_vectors.empty:
+            user_vector = played_game_vectors.mean(axis=0).tolist()
+        else:
+            user_vector = [0] * len(unique_tags)
+    user_vectors.append(user_vector)
+        
+    return pd.DataFrame(user_vectors, columns=unique_tags, index=unique_users)
 
 def add_game_vector(unique_tags, unique_games, df):
     """
@@ -38,3 +61,6 @@ def add_game_vector(unique_tags, unique_games, df):
 
 # vectorizing game tags
 game_vectors = add_game_vector(unique_tags, unique_games, tag_df)
+
+# calculating aggregate game vectors for each user
+user_vectors = calculate_aggregate_by_user(user_game_df, unique_users, game_vectors)

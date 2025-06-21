@@ -13,7 +13,7 @@ from utils.nlp_parsing import eliminate_shorter_subtags, filter_and_order_tags_b
 
 # creating database handler instance
 my_db_handler = DatabaseHandler()
-table_name = "optigame_products"
+table_name = "optigame_user_games"
 
 # returning data from the database
 df = my_db_handler.retrieve_all_from_table(table_name)
