@@ -4,15 +4,7 @@ import { MdOutlineEmail } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
 import {
-  useDisclosure,
   HStack,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalBody,
-  Text,
-} from "@chakra-ui/react";
-import {
   Box,
   Flex,
   Avatar,
@@ -26,6 +18,7 @@ import {
   Button,
   Link,
   Image,
+  Text,
 } from "@chakra-ui/react";
 import { FaUserAlt, FaLock } from "react-icons/fa";
 import backgroundImage from "../../assets/register.jpg";
@@ -35,14 +28,16 @@ import { createUser } from "./createUser";
 const Signup = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const toast = useToast();
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
   const handleShowClick = () => setShowPassword(!showPassword);
+  const handleShowConfirmClick = () =>
+    setShowConfirmPassword(!showConfirmPassword);
 
   // Password validation function checks for one letter, one number, one special character, min 6 chars
   const isValidPassword = (pw: string) => {
@@ -52,6 +47,15 @@ const Signup = () => {
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (password !== confirmPassword) {
+      toast({
+        title: "Passwords must match",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+      return;
+    }
     if (!isValidPassword(password)) {
       toast({
         title: "Password requirements not met",
@@ -70,13 +74,42 @@ const Signup = () => {
         password,
         role: "user",
       });
-      onOpen(); //If the registration is successful, open the modal
+      toast({
+        title: "Account created successfully!",
+        description: "Navigating to login page...",
+        status: "success",
+        duration: 1500,
+        isClosable: true,
+      });
       setTimeout(() => {
-        onClose();
         navigate("/Login");
-      }, 1500);
-    } catch (err) {
-      // show error toast
+      }, 1000);
+    } catch (err: any) {
+      // Check for username conflict
+      if (
+        err.response &&
+        (err.response.status === 409 || 
+          (err.response.data &&
+            typeof err.response.data.detail === "string" &&
+            err.response.data.detail.toLowerCase().includes("username")))
+      ) {
+        toast({
+          title: "Username already exists",
+          description: "Please choose a different username.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      // check for other errors
+      } else {
+        toast({
+          title: "Registration failed",
+          description: "An error occurred while creating your account.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      }
     }
   };
 
@@ -87,7 +120,7 @@ const Signup = () => {
       height="100vh"
       justifyContent="center"
       alignItems="center"
-      backgroundImage={`url(${backgroundImage})`} // Set the background image
+      backgroundImage={`url(${backgroundImage})`}
       backgroundSize="cover"
       backgroundPosition="center"
     >
@@ -96,7 +129,6 @@ const Signup = () => {
         <HStack alignItems="center">
           {/* Logo */}
           <Image src={logo} boxSize="60px" borderRadius={10} />
-
           {/* App Title */}
           <Text fontSize="2xl" fontWeight="bold" color="teal.700">
             Optigame
@@ -175,8 +207,34 @@ const Signup = () => {
                   </InputRightElement>
                 </InputGroup>
               </FormControl>
-              {/* Login Button */}
 
+              {/* confirm password */}
+              <FormControl>
+                <InputGroup>
+                  <InputLeftElement
+                    pointerEvents="none"
+                    color="gray.300"
+                    children={<FaLock color="gray.300" />}
+                  />
+                  <Input
+                    type={showConfirmPassword ? "text" : "password"}
+                    placeholder="Confirm Password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                  />
+                  <InputRightElement width="4.5rem">
+                    <Button
+                      h="1.75rem"
+                      size="sm"
+                      onClick={handleShowConfirmClick}
+                    >
+                      {showConfirmPassword ? "Hide" : "Show"}
+                    </Button>
+                  </InputRightElement>
+                </InputGroup>
+              </FormControl>
+
+              {/* Signup Button */}
               <Button
                 borderRadius={0}
                 type="submit"
@@ -200,32 +258,6 @@ const Signup = () => {
           </form>
         </Box>
       </Stack>
-
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
-        <ModalOverlay />
-        <ModalContent bg="green.50" border="2px solid" borderColor="green.400">
-          <ModalBody
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            py={8}
-          >
-            <Text fontSize="4xl" color="green.400" mb={2}>
-              ✔
-            </Text>
-            <Text
-              textAlign="center"
-              fontWeight="bold"
-              fontSize="lg"
-              color="green.700"
-            >
-              Account created successfully!
-
-              Navigating to login page...
-            </Text>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
     </Flex>
   );
 };
