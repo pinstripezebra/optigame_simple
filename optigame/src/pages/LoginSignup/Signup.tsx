@@ -55,7 +55,12 @@ const Signup = () => {
       return;
     }
     try {
-      await createUser(email, username, password);
+      await createUser({
+        email,
+        username,
+        password,
+        role: "user",
+      });
       // show success, redirect, etc.
     } catch (err) {
       // show error toast
@@ -70,8 +75,8 @@ const Signup = () => {
       justifyContent="center"
       alignItems="center"
       backgroundImage={`url(${backgroundImage})`} // Set the background image
-      backgroundSize="cover" 
-      backgroundPosition="center" 
+      backgroundSize="cover"
+      backgroundPosition="center"
     >
       {/* Header Section */}
       <Box position="absolute" top="0" left="0" padding="10px">
