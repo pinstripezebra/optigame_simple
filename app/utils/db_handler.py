@@ -249,7 +249,7 @@ class DatabaseHandler:
         # Use execute_values for faster insert with large dataset
         execute_values(
             cursor,
-            """INSERT INTO game_similarity (id, username, asin, similarity)
+            """INSERT INTO user_recommendations (id, username, asin, similarity)
             VALUES %s""",
             data
         )

@@ -100,7 +100,7 @@ print(user_recommendations)
 
 
 # uploading the similarity matrix to the database
-table_creation_query = """CREATE TABLE IF NOT EXISTS game_recommendation (
+table_creation_query = """CREATE TABLE IF NOT EXISTS user_recommendations (
     id UUID PRIMARY KEY,
     username VARCHAR(255),
     asin VARCHAR(255),
@@ -121,3 +121,4 @@ engine.populate_user_recommendation(user_recommendations)
 
 # checking to ensure data is in table
 df = engine.retrieve_all_from_table(target_table_name)
+print(df)
