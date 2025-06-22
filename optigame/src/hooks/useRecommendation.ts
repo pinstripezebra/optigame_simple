@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import useData from "./useData";
 
 export interface Reccommendation {
@@ -8,19 +9,24 @@ export interface Reccommendation {
 }
 
 const useRecommendation = (username: string | undefined) => {
-    // Only fetch if username is provided
     const result = username
-        ? useData<Reccommendation>(`/v1/similar_games?username=${username}`)
+        ? useData<Reccommendation>(`/v1/user_recommended_game?username=${username}`)
         : { data: [], isLoading: false, error: null };
 
-    const topRecommendedGames = result.data && Array.isArray(result.data)
-        ? [...result.data].sort((a, b) => b.similarity - a.similarity).slice(0, 20)
-        : [];
+    const topRecommendedGames = useMemo(
+        () =>
+            result.data && Array.isArray(result.data)
+                ? [...result.data].sort((a, b) => b.similarity - a.similarity).slice(0, 20)
+                : [],
+        [result.data]
+    );
 
-    // Extract just the asin values
-    const asins = topRecommendedGames.map(game => game.asin);
+    // Memoize asins so it only changes when topRecommendedGames changes
+    const asins = useMemo(
+        () => topRecommendedGames.map(game => game.asin),
+        [topRecommendedGames]
+    );
 
-    // Exclude 'data' from result to avoid duplicate keys
     const { data, ...rest } = result;
     return { data: topRecommendedGames, asins, ...rest };
 };

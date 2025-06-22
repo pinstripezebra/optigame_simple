@@ -10,7 +10,7 @@ const VISIBLE_COUNT = 5;
 
 const RecommendedShelf = () => {
   const { username } = useUser();
-  const { asins, isLoading: recLoading, error: recError } = useRecommendation(username);
+  const { asins, error: recError } = useRecommendation(username);
   const [games, setGames] = useState<any[]>([]);
   const [loadingGames, setLoadingGames] = useState(false);
   const [startIdx, setStartIdx] = useState(0);
@@ -18,9 +18,14 @@ const RecommendedShelf = () => {
   useEffect(() => {
     if (asins && asins.length > 0) {
       setLoadingGames(true);
-      apiClient
-        .post("/game/", { asins }) 
-        .then((res) => setGames(res.data))
+      Promise.all(
+        asins.map((asin) =>
+          apiClient
+            .get(`/v1/games/?asin=${encodeURIComponent(asin)}`)
+            .then((res) => res.data)
+        )
+      )
+        .then((gamesArr) => setGames(gamesArr))
         .catch(() => setGames([]))
         .finally(() => setLoadingGames(false));
     } else {
@@ -28,9 +33,9 @@ const RecommendedShelf = () => {
     }
   }, [asins]);
 
-  if (recLoading || loadingGames) return <Spinner />;
   if (recError) return <Text>Error loading recommendations.</Text>;
-  if (!games || games.length === 0) return <Text>No recommended games found.</Text>;
+  if (!games || games.length === 0)
+    return <Text>No recommended games found.</Text>;
 
   const handleLeft = () => setStartIdx((prev) => Math.max(prev - 1, 0));
   const handleRight = () =>

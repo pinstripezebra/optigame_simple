@@ -5,6 +5,7 @@ import { useUser } from "../../context/UserContext";
 import UserNavBar from "./UserProfileNavBar";
 import api from "../../services/api-client";
 import UserGameShelf from "./UserGameShelf";
+import RecommendedShelf from "./RecommendedShelf";
 import ProfileInfo from "./ProfileInfo";
 
 
@@ -137,6 +138,11 @@ const UserProfilePage: React.FC = () => {
             expandedRow={expandedRow}
             handleRowClick={handleRowClick}
           />
+
+          <Text fontSize="xl" fontWeight="semibold" mb={2}>
+            Recommended Games
+          </Text>
+          <RecommendedShelf />
         </Box>
       </Box>
     </Box>
