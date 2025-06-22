@@ -157,6 +157,25 @@ class GameSimilarityModel(BaseModel):
         orm_mode = True  # Enable ORM mode to work with SQLAlchemy objects
         from_attributes = True # Enable attribute access for SQLAlchemy objects
 
+# UserRecommendation model for the database
+class UserRecommendation(Base):
+    __tablename__ = "game_similarity"  # Table name in the PostgreSQL database
+
+    id = Column(SA_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    username = Column(String, nullable=False)
+    asin = Column(String, nullable=False)
+    similarity = Column(Float, nullable=False)
+    
+class UserRecommendationModel(BaseModel):
+    id: Optional[UUID] = None
+    username: str
+    asin: str
+    similarity: float
+
+    class Config:
+        orm_mode = True  # Enable ORM mode to work with SQLAlchemy objects
+        from_attributes = True # Enable attribute access for SQLAlchemy objects
+
 
 # authentication
 class Token(BaseModel):

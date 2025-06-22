@@ -229,3 +229,31 @@ class DatabaseHandler:
         self.conn.commit()
         cursor.close()
 
+    def populate_user_recommendation(self, df):
+        """ Connect to the PostgreSQL database and updates the user recommendation table with
+        data from the input dataframe."""
+
+        cursor = self.conn.cursor()
+
+        # Prepare the data as a list of tuples
+        data = [
+            (
+                str(row['id']),
+                row['username'],
+                row['asin'],
+                row['similarity']
+            )
+            for _, row in df.iterrows()
+        ]
+
+        # Use execute_values for faster insert with large dataset
+        execute_values(
+            cursor,
+            """INSERT INTO game_similarity (id, username, asin, similarity)
+            VALUES %s""",
+            data
+        )
+
+        self.conn.commit()
+        cursor.close()
+

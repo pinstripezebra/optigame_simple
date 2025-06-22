@@ -95,5 +95,29 @@ print(user_vectors)
 print(game_vectors)
 # calculating similarity between user vectors and game vectors
 
-user_similarities = calculate_similiar_game(user_vectors, game_vectors)
-print(user_similarities)
+user_recommendations = calculate_similiar_game(user_vectors, game_vectors)
+print(user_recommendations)
+
+
+# uploading the similarity matrix to the database
+table_creation_query = """CREATE TABLE IF NOT EXISTS game_recommendation (
+    id UUID PRIMARY KEY,
+    username VARCHAR(255),
+    asin VARCHAR(255),
+    similarity FLOAT
+    )
+    """
+
+# delete table if it exists
+engine.delete_table(target_table_name)
+# creating table
+engine.create_table(table_creation_query)
+
+# add 'id' column with unique UUIDs as strings
+user_recommendations['id'] = [str(uuid.uuid4()) for _ in range(len(user_recommendations))]
+
+# populating table with similarity data
+engine.populate_user_recommendation(user_recommendations)
+
+# checking to ensure data is in table
+df = engine.retrieve_all_from_table(target_table_name)

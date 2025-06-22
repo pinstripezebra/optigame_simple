@@ -13,7 +13,7 @@ from passlib.context import CryptContext
 from jose import jwt
 
 # custom imports
-from app.models import User, Game, GameModel, UserModel, GameTags, GameTagsModel, UniqueGameTags, UniqueGameTagsModel, User_Game_Model, User_Game, GameSimilarity,GameSimilarityModel
+from app.models import User, Game, GameModel, UserModel, GameTags, GameTagsModel, UniqueGameTags, UniqueGameTagsModel, User_Game_Model, User_Game, GameSimilarity,GameSimilarityModel, UserRecommendation, UserRecommendationModel
 
 # Load the .env file from the parent directory
 config = dotenv_values("./.env2")
@@ -119,11 +119,15 @@ async def fetch_unique_game_tags(db: Session = Depends(get_db)):
     return [UniqueGameTagsModel.from_orm(gametag) for gametag in gametags]
 
 @app.get("/api/v1/user_game/")
-async def fetch_user_game(username: str, db: Session = Depends(get_db)):
+async def fetch_user_recommendation(username: str, db: Session = Depends(get_db)):
+    user_recommendations = db.query(UserRecommendation.filter(UserRecommendation.username == username))
+    return [UserRecommendationModel.from_orm(recommendation) for recommendation in user_recommendations]
+
+@app.get("/api/v1/user_game/")
+async def fetch_user_recommendation(username: str, db: Session = Depends(get_db)):
     # Query the database using the SQLAlchemyfor user_games
     user_games = db.query(User_Game).filter(User_Game.username == username)
     return [User_Game_Model.from_orm(user_game) for user_game in user_games]
-
 
 @app.get("/api/v1/user_game_all/")
 async def fetch_user_game_all(db: Session = Depends(get_db)):
