@@ -159,7 +159,7 @@ class GameSimilarityModel(BaseModel):
 
 # UserRecommendation model for the database
 class UserRecommendation(Base):
-    __tablename__ = "game_similarity"  # Table name in the PostgreSQL database
+    __tablename__ = "user_recommendations"  # Table name in the PostgreSQL database
 
     id = Column(SA_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     username = Column(String, nullable=False)

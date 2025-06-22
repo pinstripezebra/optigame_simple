@@ -118,9 +118,9 @@ async def fetch_unique_game_tags(db: Session = Depends(get_db)):
     gametags = db.query(UniqueGameTags).all()
     return [UniqueGameTagsModel.from_orm(gametag) for gametag in gametags]
 
-@app.get("/api/v1/user_game/")
-async def fetch_user_recommendation(username: str, db: Session = Depends(get_db)):
-    user_recommendations = db.query(UserRecommendation.filter(UserRecommendation.username == username))
+@app.get("/api/v1/user_recommended_game/")
+async def fetch_recommended_game(username: str, db: Session = Depends(get_db)):
+    user_recommendations = db.query(UserRecommendation).filter(UserRecommendation.username == username)
     return [UserRecommendationModel.from_orm(recommendation) for recommendation in user_recommendations]
 
 @app.get("/api/v1/user_game/")
