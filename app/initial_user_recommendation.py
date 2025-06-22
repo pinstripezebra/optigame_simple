@@ -58,9 +58,42 @@ def add_game_vector(unique_tags, unique_games, df):
         game_vectors.append(vector)
     return pd.DataFrame(game_vectors, columns=unique_tags, index=unique_games)
 
+def calculate_similiar_game(user_vector, game_vectors, top_n=20):
+    """
+    Calculate the cosine similarity between a user's game vector and all game vectors.
+    """
+    unique_users = user_vector.index.tolist()
+    output = []
+    # generating (asin) x (user) similarity matrix
+    for user in unique_users:
+        user_vector_data = user_vector.loc[user].values.reshape(1, -1)
+        similarities = cosine_similarity(user_vector_data, game_vectors)
+        similarity_df = pd.DataFrame(similarities.T, index=game_vectors.index, columns=[user])
+        output.append(similarity_df)
+    
+    # converting to username, asin, similarity format
+    output_df = pd.concat(output, axis=1)
+    recommendations = []
+    for username in output_df.columns:
+        top_games = output_df[username].nlargest(top_n)
+        for asin, similarity in top_games.items():
+            recommendations.append({
+                "username": username,
+                "asin": asin,
+                "similarity": similarity
+            })
+    recommendations_df = pd.DataFrame(recommendations, columns=["username", "asin", "similarity"])
+    return recommendations_df
+
 
 # vectorizing game tags
 game_vectors = add_game_vector(unique_tags, unique_games, tag_df)
 
 # calculating aggregate game vectors for each user
 user_vectors = calculate_aggregate_by_user(user_game_df, unique_users, game_vectors)
+print(user_vectors)
+print(game_vectors)
+# calculating similarity between user vectors and game vectors
+
+user_similarities = calculate_similiar_game(user_vectors, game_vectors)
+print(user_similarities)
