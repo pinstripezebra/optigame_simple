@@ -40,8 +40,14 @@ const RecommendedShelf = () => {
   const handleLeft = () => setStartIdx((prev) => Math.max(prev - 1, 0));
   const handleRight = () =>
     setStartIdx((prev) => Math.min(prev + 1, games.length - VISIBLE_COUNT));
-
-  const visibleGames = games.slice(startIdx, startIdx + VISIBLE_COUNT);
+  console.log("Games:", games);
+  // Filter games to unique by id
+  const uniqueGames = games.filter(
+    (game, index, self) =>
+      game && game.id && self.findIndex((g) => g && g.id === game.id) === index
+  );
+  console.log("Unique Games:", uniqueGames);
+  const visibleGames = uniqueGames.slice(startIdx, startIdx + VISIBLE_COUNT);
 
   return (
     <Box display="flex" alignItems="center">
