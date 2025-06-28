@@ -53,9 +53,16 @@ combined_df.to_csv("Data/raw_data/results_with_description_image.csv", index=Fal
 #-------------------------------#
 #PART 2: Loading Data into PostgreSQL Database
 #-------------------------------#
+
 combined_df['id'] = [uuid.uuid4() for _ in range(len(combined_df))]
+
+# Remove rows with ASINs that already exist in the database
 my_db_handler = DatabaseHandler()
 table_name = "optigame_products"
+
+# Remove rows with ASINs that already exist in the database
+existing_asins = set(my_db_handler.get_column_values(table_name, "asin"))
+combined_df = combined_df[~combined_df['asin'].isin(existing_asins)]
 table_creation_query = """CREATE TABLE IF NOT EXISTS optigame_products (
     id UUID PRIMARY KEY,
     asin VARCHAR(255),
@@ -79,4 +86,4 @@ df = my_db_handler.retrieve_all_from_table(table_name)
 print("Data loaded successfully into the database.")
 
 # writing backup dataset
-df.to_csv("Data/raw_data/total_results_with_description_image.csv", index=False)
+df.to_csv("Data/raw_data/total_results_with_description_image2.csv", index=False)
