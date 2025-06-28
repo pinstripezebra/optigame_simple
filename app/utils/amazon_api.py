@@ -1,6 +1,7 @@
 import json
 import pandas as pd
 import requests
+import concurrent.futures
 
 def parse_item(item):
     # Extract the relevant fields from the item
@@ -53,77 +54,76 @@ def convert_to_dataframe(data:list):
     return df
 
 
+def fetch_description(key, username, password):
+
+    """helper function that fetches the description of a product from Oxylabs API"""
+
+    payload = {
+        'source': 'amazon_product',
+        'query': key,
+        'geo_location': '90210',
+        'parse': True
+    }
+    try:
+        response = requests.request(
+            'POST',
+            'https://realtime.oxylabs.io/v1/queries',
+            auth=(username, password),
+            json=payload,
+        )
+        output = response.json()['results'][0]['content']
+        return output.get('description', "")
+    except Exception as e:
+        print(f"Error retrieving description for ASIN {key}: {e}")
+        return ""
+
 def add_descriptions(df, username, password):
 
-    descriptions = []
+    """Fetches product description for each ASIN in dataframe using concurrent requests"""
+
     keys = df['asin'].tolist()
+    descriptions = []
 
-    for key in keys:
-        # Structure payload.
-        payload = {
-            'source': 'amazon_product',
-            'query': '{key}'.format(key=key),
-            'geo_location': '90210',
-            'parse': True
-        }
+    with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
+        futures = [executor.submit(fetch_description, key, username, password) for key in keys]
+        for future in concurrent.futures.as_completed(futures):
+            descriptions.append(future.result())
 
-        try:
-            # Get response.
-            response = requests.request(
-                'POST',
-                'https://realtime.oxylabs.io/v1/queries',
-                auth=(username, password),
-                json=payload,
-            )
 
-            # Print prettified response to stdout.
-            output = response.json()['results'][0]['content']
-            descriptions.append(output['description'])
-        except:
-            print(f"Error retrieving description for ASIN {key}.")
-            descriptions.append("")
     df['description'] = descriptions
     return df
 
 
+def fetch_image(key, username, password):
+
+    """Helper function to fetch the image link for a product from Oxylabs API"""
+
+    payload = {
+        'source': 'amazon_product',
+        'query': key,
+        'geo_location': '90210',
+        'parse': True
+    }
+    try:
+        response = requests.request(
+            'POST',
+            'https://realtime.oxylabs.io/v1/queries',
+            auth=(username, password),
+            json=payload,
+        )
+        output = response.json()
+        images = output['results'][0]['content'].get('images', [])
+        return images[0] if images else ""
+    except Exception as e:
+        print(f"Error retrieving image for ASIN {key}: {e}")
+        return ""
+
 def add_images(df, username, password):
 
-    image_links = []
+    """Fetches product image link for each ASIN in dataframe using concurrent requests."""
+    
     keys = df['asin'].tolist()
-
-    for key in keys:
-        print(f"Retrieving image for ASIN {key}...")
-        # Structure payload.
-        payload = {
-            'source': 'amazon_product',
-            'query': '{key}'.format(key=key),
-            'geo_location': '90210',
-            'parse': True
-        }
-
-
-        try:
-            # Get response.
-            response = requests.request(
-                'POST',
-                'https://realtime.oxylabs.io/v1/queries',
-                auth=(username, password),
-                json=payload,
-            )
-            payload = {
-                'source': 'amazon_product',
-                'query': 'B07FZ8S74R',
-                'geo_location': '90210',
-                'parse': True
-            }
-
-
-            # Print prettified response to stdout.
-            output = response.json()
-            output = output['results'][0]['content']['images']
-            image_links.append(output[0])
-        except:
-            print(f"Error retrieving description for ASIN {key}.")
-            image_links.append("")
+    with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
+        image_links = list(executor.map(lambda key: fetch_image(key, username, password), keys))
     df['image_link'] = image_links
     return df

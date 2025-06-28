@@ -2,10 +2,16 @@ from oxylabs import RealtimeClient
 from dotenv import load_dotenv
 import os
 import json
-from utils.amazon_api import convert_to_dataframe, add_descriptions, parse_results, add_images
-from utils.db_handler import DatabaseHandler
+import sys
+print(os.getcwd())
+sys.path.append(os.path.abspath(os.getcwd()))
+#sys.path.append(os.path.abspath(os.path.join(os.getcwd(),os.pardir, 'utils')))
+from app.utils.amazon_api import add_descriptions, parse_results, add_images
+from app.utils.db_handler import DatabaseHandler
 import uuid
 import pandas as pd
+import sys
+import time
 
 
 #-------------------------------#
@@ -23,10 +29,11 @@ password = os.environ.get("PASSWORD_OXY")
 client = RealtimeClient(username, password)
 
 # searching for board games
-result = client.amazon.scrape_search(query="rpg board games", 
+result = client.amazon.scrape_search(query="board games", 
                                      country="us", 
+                                     sort_by = "bestsellers",
                                      start_page=1,
-                                     max_results=2, 
+                                     max_results=100, 
                                      parse=True,
                                      context = [{'key': 'autoselect_variant', 'value': True}])
 
@@ -36,10 +43,16 @@ response_json = result.raw
 combined_df = parse_results(response_json)
 
 # adding descriptions
+start_time = time.time()
 combined_df = add_descriptions(combined_df, username, password)
+end_time = time.time()
+print(f"add_descriptions execution time: {end_time - start_time:.2f} seconds")
 
 # adding image link 
+start_time = time.time()
 combined_df = add_images(combined_df, username, password)
+end_time = time.time()
+print(f"add_images execution time: {end_time - start_time:.2f} seconds")
 
 # Ensuring no nan values in the dataframe
 combined_df['title'] = combined_df['title'].fillna("")
@@ -57,4 +70,6 @@ if os.path.exists(csv_path):
     combined_df = pd.concat([existing_df, combined_df], ignore_index=True)
     combined_df = combined_df.drop_duplicates(subset=['asin'], keep='first')
 
-combined_df.to_csv("Data/raw_data/games_for_load.csv", index=False)
+combined_df.to_csv("app/Data/raw_data/games_for_load.csv", index=False)
+print(combined_df.head())
+print(combined_df.size)

@@ -26,7 +26,7 @@ result = client.amazon.scrape_search(query="board games",
                                      country="us", 
                                      sort_by = "bestsellers",
                                      start_page=1,
-                                     max_results=2, 
+                                     max_results=100, 
                                      parse=True,
                                      context = [{'key': 'autoselect_variant', 'value': True}])
 
