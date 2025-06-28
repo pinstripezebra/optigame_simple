@@ -1,65 +1,60 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Session
-from sqlalchemy.ext.declarative import declarative_base
-import os
-import dotenv
-from utils.db_handler import DatabaseHandler
-from utils.amazon_api import add_images
-import pandas as pd
-import uuid
+from oxylabs import RealtimeClient
 from dotenv import load_dotenv
+import os
+import json
+from utils.amazon_api import convert_to_dataframe, add_descriptions, parse_results, add_images
+from utils.db_handler import DatabaseHandler
+import uuid
+import pandas as pd
 
-table_name = "optigame_products"
+
+#-------------------------------#
+#PART 1: Scraping Data from Oxylabs API
+#-------------------------------#
 
 # Load environment variables from .env2 file
 load_dotenv(dotenv_path=".env2")
-URL_database = os.environ.get("DATABASE_URL")
-engine = DatabaseHandler(URL_database)
-engine.delete_table(table_name)
 
 # Set your Oxylabs API Credentials.
-username = os.environ.get("USERNAME_OXY2")
-password = os.environ.get("PASSWORD_OXY2")
+username = os.environ.get("USERNAME_OXY")
+password = os.environ.get("PASSWORD_OXY")
 
-# loading dataframe
-df = pd.read_csv("FastApi/Data/raw_data/test.csv")
-print("Dataframe loaded from CSV file")
+# Initialize the Realtime client with your credentials.
+client = RealtimeClient(username, password)
 
-if 'image_link' not in df.columns:
-    df = add_images(df, username, password)
+# searching for board games
+result = client.amazon.scrape_search(query="rpg board games", 
+                                     country="us", 
+                                     start_page=1,
+                                     max_results=2, 
+                                     parse=True,
+                                     context = [{'key': 'autoselect_variant', 'value': True}])
+
+# Convert the response object to JSON
+response_json = result.raw
+# parsing results
+combined_df = parse_results(response_json)
+
+# adding descriptions
+combined_df = add_descriptions(combined_df, username, password)
+
+# adding image link 
+combined_df = add_images(combined_df, username, password)
 
 # Ensuring no nan values in the dataframe
-df['title'] = df['title'].fillna("")
-df['asin'] = df['asin'].fillna(0.0)
-df['price'] = df['price'].fillna(0.0)
-df['rating'] = df['rating'].fillna(0.0)
-df['sales_volume'] = df['sales_volume'].fillna("0")
-df['description'] = df['description'].fillna("")
-df['reviews_count'] = df['reviews_count'].fillna(0)
-df['image_link'] = df['image_link'].fillna("")
+combined_df['title'] = combined_df['title'].fillna("")
+combined_df['price'] = combined_df['price'].fillna(0.0)
+combined_df['rating'] = combined_df['rating'].fillna(0.0)
+combined_df['sales_volume'] = combined_df['sales_volume'].fillna("0")
+combined_df['description'] = combined_df['description'].fillna("")
+combined_df['reviews_count'] = combined_df['reviews_count'].fillna(0)
+combined_df['image_link'] = combined_df['image_link'].fillna(0)
 
-# ensuring asin is unique
-df = df.drop_duplicates(subset='asin', keep='first')
+# Appending new data to old data
+csv_path = "Data/raw_data/games_for_load.csv"
+if os.path.exists(csv_path):
+    existing_df = pd.read_csv(csv_path)
+    combined_df = pd.concat([existing_df, combined_df], ignore_index=True)
+    combined_df = combined_df.drop_duplicates(subset=['asin'], keep='first')
 
-print(df['price'].apply(pd.to_numeric, errors='coerce').isna())
-print(df['rating'].apply(pd.to_numeric, errors='coerce').isna())
-df.to_csv("FastApi/Data/raw_data/test.csv", index=False)
-
-table_creation_query = """CREATE TABLE IF NOT EXISTS optigame_products (
-    id UUID PRIMARY KEY,
-    asin VARCHAR(255),
-    title TEXT,
-    price FLOAT,
-    rating FLOAT,
-    sales_volume TEXT,
-    description TEXT,
-    reviews_count INTEGER,
-    image_link TEXT)
-    """
-# Create the table if it doesn't exist
-engine.create_table(table_creation_query)
-# Populate the table with data from the DataFrame
-engine.populate_games_table(df)
-# returning data from the database
-df = engine.retrieve_all_from_table(table_name)
-
+combined_df.to_csv("Data/raw_data/games_for_load.csv", index=False)
