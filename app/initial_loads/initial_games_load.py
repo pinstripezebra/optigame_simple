@@ -29,11 +29,11 @@ password = os.environ.get("PASSWORD_OXY")
 client = RealtimeClient(username, password)
 
 # searching for board games
-result = client.amazon.scrape_search(query="board games", 
+result = client.amazon.scrape_search(query="adventure + board game", 
                                      country="us", 
                                      sort_by = "bestsellers",
-                                     start_page=1,
-                                     max_results=100, 
+                                     start_page= 3,
+                                     max_results=400, 
                                      parse=True,
                                      context = [{'key': 'autoselect_variant', 'value': True}])
 
@@ -64,8 +64,9 @@ combined_df['reviews_count'] = combined_df['reviews_count'].fillna(0)
 combined_df['image_link'] = combined_df['image_link'].fillna(0)
 
 # Appending new data to old data
-csv_path = "Data/raw_data/games_for_load.csv"
+csv_path = "app/Data/raw_data/games_for_load.csv"
 if os.path.exists(csv_path):
+    print('File exists, appending new data to existing data.')
     existing_df = pd.read_csv(csv_path)
     combined_df = pd.concat([existing_df, combined_df], ignore_index=True)
     combined_df = combined_df.drop_duplicates(subset=['asin'], keep='first')
