@@ -33,8 +33,8 @@ unique_products = df['asin'].unique().tolist()
 #-------------------------------#
 
 # Set your Oxylabs API Credentials.
-username = os.environ.get("USERNAME_OXY2")
-password = os.environ.get("PASSWORD_OXY2")
+username = os.environ.get("USERNAME_OXY")
+password = os.environ.get("PASSWORD_OXY")
 print(username, password)
 
 # Initialize the Realtime client with your credentials.

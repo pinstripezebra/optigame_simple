@@ -1,20 +1,37 @@
-
+from oxylabs import RealtimeClient
 from dotenv import load_dotenv
-import spacy
-import uuid
+import os
+import json
+from utils.amazon_api import convert_to_dataframe, add_descriptions, parse_results, add_images
 from utils.db_handler import DatabaseHandler
-from utils.nlp_parsing import extract_common_noun_phrases_with_numbers, lemmatize_common_noun_phrases
-from utils.nlp_parsing import eliminate_shorter_subtags, filter_and_order_tags_by_frequency, add_game_tags_column
+import uuid
 
 
 #-------------------------------#
-#PART 1: Retrieving games data and tagging
+#PART 1: Scraping Data from Oxylabs API
 #-------------------------------#
 
-# creating database handler instance
-my_db_handler = DatabaseHandler()
-table_name = "optigame_user_games"
+# Load environment variables from .env2 file
+load_dotenv(dotenv_path=".env2")
 
-# returning data from the database
-df = my_db_handler.retrieve_all_from_table(table_name)
-print(df.head(5))
+# Set your Oxylabs API Credentials.
+username = os.environ.get("USERNAME_OXY")
+password = os.environ.get("PASSWORD_OXY")
+
+# Initialize the Realtime client with your credentials.
+client = RealtimeClient(username, password)
+
+# searching for board games
+result = client.amazon.scrape_search(query="board games", 
+                                     country="us", 
+                                     sort_by = "bestsellers",
+                                     start_page=1,
+                                     max_results=2, 
+                                     parse=True,
+                                     context = [{'key': 'autoselect_variant', 'value': True}])
+
+# Convert the response object to JSON
+response_json = result.raw
+# parsing results
+combined_df = parse_results(response_json)
+print(combined_df.head())
