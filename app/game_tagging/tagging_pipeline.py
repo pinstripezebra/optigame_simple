@@ -12,7 +12,7 @@ from sklearn.metrics import hamming_loss
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
-from utils.db_handler import DatabaseHandler
+from app.utils.db_handler import DatabaseHandler
 import uuid
 # custpom imports
 from tagging_utils import vectorize_output_tags, extract_common_noun_phrases_with_numbers, drop_special_characters, lemmatize_common_noun_phrases, eliminate_shorter_subtags, filter_empty_rows, force_min_tags, convert_predictions_to_text
@@ -24,7 +24,7 @@ table_name = "optigame_products"
 
 
 current_dir = os.path.dirname(__file__)
-parent_dir = os.path.dirname(current_dir) + '/raw_data/'
+parent_dir = os.path.dirname(current_dir) + '/Data/raw_data/'
 df = pd.read_excel(parent_dir + 'manual_game_tagging.xlsx', sheet_name = 'tagged_games')[['id','asin','title', 'description', 'tag1', 'tag2', 'tag3']]
 df = df.reset_index().rename(columns={'index': 'orig_index'})
 labels_df = pd.read_excel(parent_dir + 'manual_game_tagging.xlsx', sheet_name = 'tags')
@@ -69,10 +69,17 @@ X_train, y_train = filter_empty_rows(X, df_with_nouns)
 
 
 # Identify columns to drop (nonzero_cols)
-zero_cols = np.where(y_train.sum(axis=0) == 0)[0]
-nonzero_cols = np.where(y_train.sum(axis=0) > 0)[0]
-y_train = y_train[:, nonzero_cols]
-
+try:
+    col_sums = y_train.sum(axis=0)
+    col_sums = np.atleast_1d(col_sums)  # Ensure it's at least 1D
+    zero_cols = np.where(col_sums == 0)[0]
+    nonzero_cols = np.where(col_sums > 0)[0]
+    y_train = y_train[:, nonzero_cols]
+except Exception as e:
+    print(f"Error in zero/nonzero column calculation: {e}")
+    zero_cols = np.array([])
+    nonzero_cols = np.arange(y_train.shape[1]) if y_train.ndim > 1 else np.array([0])
+    y_train = y_train[:, nonzero_cols]
 
 # -------------------------------------------#
 # -----------------Modeling------------------#
