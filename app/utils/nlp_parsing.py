@@ -1,6 +1,9 @@
 
 from dotenv import load_dotenv
-from utils.db_handler import DatabaseHandler
+import os
+import sys
+sys.path.append(os.path.abspath(os.getcwd()))
+from app.utils.db_handler import DatabaseHandler
 import pandas as pd
 import spacy
 from collections import Counter

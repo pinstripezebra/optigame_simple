@@ -71,6 +71,43 @@ if os.path.exists(csv_path):
     combined_df = pd.concat([existing_df, combined_df], ignore_index=True)
     combined_df = combined_df.drop_duplicates(subset=['asin'], keep='first')
 
-combined_df.to_csv("app/Data/raw_data/games_for_load.csv", index=False)
-print(combined_df.head())
-print(combined_df.size)
+
+#-------------------------------#
+#PART 2: Loading Data into PostgreSQL Database
+#-------------------------------#
+
+combined_df['id'] = [uuid.uuid4() for _ in range(len(combined_df))]
+
+# Remove rows with ASINs that already exist in the database
+my_db_handler = DatabaseHandler()
+table_name = "optigame_products"
+
+# deleting the table if it exists
+my_db_handler.delete_table(table_name)
+
+# Remove rows with ASINs that already exist in the database
+table_creation_query = """CREATE TABLE IF NOT EXISTS optigame_products (
+    id UUID PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    price FLOAT NOT NULL,
+    rating FLOAT,
+    sales_volume TEXT,
+    reviews_count INTEGER,
+    asin VARCHAR(255) UNIQUE NOT NULL,
+    image_link TEXT
+)
+"""
+
+
+# Create the table if it doesn't exist
+my_db_handler.create_table(table_creation_query)
+# Populate the table with data from the DataFrame
+my_db_handler.populate_games_table(combined_df)
+# returning data from the database
+df = my_db_handler.retrieve_all_from_table(table_name)
+
+print("Data loaded successfully into the database.")
+
+df.to_csv("app/Data/raw_data/games_for_load2.csv", index=False)
+

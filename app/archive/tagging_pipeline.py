@@ -2,9 +2,12 @@
 from dotenv import load_dotenv
 import spacy
 import uuid
-from utils.db_handler import DatabaseHandler
-from utils.nlp_parsing import extract_common_noun_phrases_with_numbers, lemmatize_common_noun_phrases
-from utils.nlp_parsing import eliminate_shorter_subtags, filter_and_order_tags_by_frequency, add_game_tags_column
+import os
+import sys
+sys.path.append(os.path.abspath(os.getcwd()))
+from app.utils.db_handler import DatabaseHandler
+from app.utils.nlp_parsing import extract_common_noun_phrases_with_numbers, lemmatize_common_noun_phrases
+from app.utils.nlp_parsing import eliminate_shorter_subtags, filter_and_order_tags_by_frequency, add_game_tags_column
 
 
 #-------------------------------#
