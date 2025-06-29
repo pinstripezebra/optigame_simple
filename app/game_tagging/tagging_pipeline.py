@@ -67,19 +67,15 @@ X = vectorizer.fit_transform(df_with_nouns['combined_phrases'].astype(str))
 
 X_train, y_train = filter_empty_rows(X, df_with_nouns)
 
+print(f"Shape of X_train: {X_train.shape}")
+print(f"Shape of y_train: {y_train.shape}")
+print(X_train)
 
 # Identify columns to drop (nonzero_cols)
-try:
-    col_sums = y_train.sum(axis=0)
-    col_sums = np.atleast_1d(col_sums)  # Ensure it's at least 1D
-    zero_cols = np.where(col_sums == 0)[0]
-    nonzero_cols = np.where(col_sums > 0)[0]
-    y_train = y_train[:, nonzero_cols]
-except Exception as e:
-    print(f"Error in zero/nonzero column calculation: {e}")
-    zero_cols = np.array([])
-    nonzero_cols = np.arange(y_train.shape[1]) if y_train.ndim > 1 else np.array([0])
-    y_train = y_train[:, nonzero_cols]
+zero_cols = np.where(y_train.sum(axis=0) == 0)[0]
+nonzero_cols = np.where(y_train.sum(axis=0) > 0)[0]
+y_train = y_train[:, nonzero_cols]
+
 
 # -------------------------------------------#
 # -----------------Modeling------------------#
