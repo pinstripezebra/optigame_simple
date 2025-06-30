@@ -2,7 +2,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.ext.declarative import declarative_base
 import os
-from utils.db_handler import DatabaseHandler
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
+from app.utils.db_handler import DatabaseHandler
 from sklearn.metrics.pairwise import cosine_similarity
 import pandas as pd
 import uuid
