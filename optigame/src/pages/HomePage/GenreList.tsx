@@ -14,15 +14,26 @@ const GenreList = ({ onGenreSelect, onSortSelect }: GenreListProps) => {
   const [selectedGenreId, setSelectedGenreId] = useState<string | null>(null);
   const [showTags, setShowTags] = useState(false);
   const [showSort, setShowSort] = useState(false);
+  const [selectedSort, setSelectedSort] = useState<string | null>(null);
 
   if (error) return null;
   if (loading) return <Spinner />;
+
+  const handleSortClick = (sortType: string) => {
+    if (selectedSort === sortType) {
+      setSelectedSort(null);
+      onSortSelect(""); // Unselect
+    } else {
+      setSelectedSort(sortType);
+      onSortSelect(sortType);
+    }
+  };
 
   return (
     <VStack align="stretch" spacing={2}>
       {/* Sort By Button */}
       {/* Sort By Button */}
-      <Button
+        <Button
         colorScheme="teal"
         variant="ghost"
         fontWeight="bold"
@@ -35,13 +46,25 @@ const GenreList = ({ onGenreSelect, onSortSelect }: GenreListProps) => {
       </Button>
       <Collapse in={showSort} animateOpacity>
         <VStack align="stretch" spacing={2} mb={2}>
-          <Button colorScheme="teal" variant="outline" onClick={() => onSortSelect("most_popular")}>
+          <Button
+            colorScheme="teal"
+            variant={selectedSort === "most_popular" ? "solid" : "outline"}
+            onClick={() => handleSortClick("most_popular")}
+          >
             Most Popular
           </Button>
-          <Button colorScheme="teal" variant="outline" onClick={() => onSortSelect("trending")}>
+          <Button
+            colorScheme="teal"
+            variant={selectedSort === "trending" ? "solid" : "outline"}
+            onClick={() => handleSortClick("trending")}
+          >
             Trending
           </Button>
-          <Button colorScheme="teal" variant="outline" onClick={() => onSortSelect("recommended")}>
+          <Button
+            colorScheme="teal"
+            variant={selectedSort === "recommended" ? "solid" : "outline"}
+            onClick={() => handleSortClick("recommended")}
+          >
             Reccommended
           </Button>
         </VStack>
