@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Spinner, Text, Button, VStack, Collapse, Box } from "@chakra-ui/react";
+import { Spinner, Text, Button, VStack, Collapse } from "@chakra-ui/react";
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
 import useGenres from "../../hooks/useGenres";
 
@@ -11,12 +11,34 @@ const GenreList = ({ onGenreSelect }: GenreListProps) => {
   const { data, loading, error } = useGenres();
   const [selectedGenreId, setSelectedGenreId] = useState<string | null>(null);
   const [showTags, setShowTags] = useState(false);
+  const [showSort, setShowSort] = useState(false);
 
   if (error) return null;
   if (loading) return <Spinner />;
 
   return (
     <VStack align="stretch" spacing={2}>
+      {/* Sort By Button */}
+      <Button
+        colorScheme="teal"
+        variant="ghost"
+        fontWeight="bold"
+        fontSize="2xl"
+        onClick={() => setShowSort((prev) => !prev)}
+        mb={2}
+        rightIcon={showSort ? <ChevronUpIcon /> : <ChevronDownIcon />}
+      >
+        Sort By
+      </Button>
+      <Collapse in={showSort} animateOpacity>
+        <VStack align="stretch" spacing={2} mb={2}>
+          <Button colorScheme="teal" variant="outline">Most Popular</Button>
+          <Button colorScheme="teal" variant="outline">Trending</Button>
+          <Button colorScheme="teal" variant="outline">Reccommended</Button>
+        </VStack>
+      </Collapse>
+
+      {/* Tags Button */}
       <Button
         colorScheme="teal"
         variant="ghost"
