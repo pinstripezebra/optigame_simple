@@ -24,7 +24,11 @@ function HomePage() {
   const [filteredGames, setFilteredGames] = useState<Game[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedGameTags, setSelectedGameTags] = useState<string | null>(null);
+  const [sortType, setSortType] = useState<string>("");
 
+  const handleSortSelect = (type: string) => {
+    setSortType(type);
+  };
   useEffect(() => {
     const fetchGames = async () => {
       const response = await api.get<Game[]>("/v1/games/");
@@ -68,12 +72,26 @@ function HomePage() {
     };
     filterByGenre();
   }, [selectedGameTags, games]);
+  let sortedGames = [...filteredGames];
+if (sortType === "most_popular") {
+  sortedGames.sort((a, b) => {
+    // Convert sales_volume to number if needed, fallback to 0 if not a number
+    const salesA = Number(a.sales_volume) || 0;
+    const salesB = Number(b.sales_volume) || 0;
+    return salesB - salesA;
+  });
+}
+else if (sortType === "trending") {
+  sortedGames.sort((a, b) => b.rating - a.rating);
+} else if (sortType === "recommended") {
+  sortedGames.sort((a, b) => b.reviews_count - a.reviews_count);
+}
 
   // Pagination logic
-  const totalPages = Math.ceil(filteredGames.length / GAMES_PER_PAGE);
+  const totalPages = Math.ceil(sortedGames.length / GAMES_PER_PAGE);
   const startIdx = (currentPage - 1) * GAMES_PER_PAGE;
   const endIdx = startIdx + GAMES_PER_PAGE;
-  const gamesToShow = filteredGames.slice(startIdx, endIdx);
+  const gamesToShow = sortedGames.slice(startIdx, endIdx);
 
   return (
     <Grid
@@ -93,7 +111,7 @@ function HomePage() {
 
       {/* Genre List */}
       <GridItem area="aside" padding="10px" bg="gray.100">
-        <GenreList onGenreSelect={setSelectedGameTags} />
+        <GenreList onGenreSelect={setSelectedGameTags} onSortSelect={handleSortSelect} />
       </GridItem>
 
       {/* Main Content (GameGrid) */}

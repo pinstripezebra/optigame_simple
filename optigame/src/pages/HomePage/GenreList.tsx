@@ -5,9 +5,11 @@ import useGenres from "../../hooks/useGenres";
 
 interface GenreListProps {
   onGenreSelect: (gameTags: string | null) => void;
+  onSortSelect: (sortType: string) => void; // Add this line
 }
 
-const GenreList = ({ onGenreSelect }: GenreListProps) => {
+
+const GenreList = ({ onGenreSelect, onSortSelect }: GenreListProps) => {
   const { data, loading, error } = useGenres();
   const [selectedGenreId, setSelectedGenreId] = useState<string | null>(null);
   const [showTags, setShowTags] = useState(false);
@@ -18,6 +20,7 @@ const GenreList = ({ onGenreSelect }: GenreListProps) => {
 
   return (
     <VStack align="stretch" spacing={2}>
+      {/* Sort By Button */}
       {/* Sort By Button */}
       <Button
         colorScheme="teal"
@@ -32,9 +35,15 @@ const GenreList = ({ onGenreSelect }: GenreListProps) => {
       </Button>
       <Collapse in={showSort} animateOpacity>
         <VStack align="stretch" spacing={2} mb={2}>
-          <Button colorScheme="teal" variant="outline">Most Popular</Button>
-          <Button colorScheme="teal" variant="outline">Trending</Button>
-          <Button colorScheme="teal" variant="outline">Reccommended</Button>
+          <Button colorScheme="teal" variant="outline" onClick={() => onSortSelect("most_popular")}>
+            Most Popular
+          </Button>
+          <Button colorScheme="teal" variant="outline" onClick={() => onSortSelect("trending")}>
+            Trending
+          </Button>
+          <Button colorScheme="teal" variant="outline" onClick={() => onSortSelect("recommended")}>
+            Reccommended
+          </Button>
         </VStack>
       </Collapse>
 
