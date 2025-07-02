@@ -2,11 +2,11 @@ import { Game } from "./GameGrid";
 import { Card, Image, Text, Flex, Box } from "@chakra-ui/react";
 import { GameScore } from "./GameScore";
 import { Checkbox } from "@chakra-ui/react";
-import apiClient from "../services/api-client";
+import apiClient from "../../services/api-client";
 import { useNavigate } from "react-router-dom";
-import { useUser } from "../context/UserContext";
-import { useUserGames } from "../context/UserGamesContext";
-import GameStatus from "./GameStatus";
+import { useUser } from "../../context/UserContext";
+import { useUserGames } from "../../context/UserGamesContext";
+import GameStatus from "../../components/GameStatus";
 
 interface Props {
   game: Game;

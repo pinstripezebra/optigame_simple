@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Image, Spinner, Text, Button, VStack } from '@chakra-ui/react';
-import useGenres from '../hooks/useGenres';
+import useGenres from '../../hooks/useGenres';
 import genreImage from '../assets/placeholder_card.png';
 
 interface GenreListProps {

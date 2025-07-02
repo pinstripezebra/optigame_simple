@@ -8,7 +8,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
-import HomePage from "./pages/HomePage";
+import HomePage from "./pages/HomePage/HomePage";
 import NotFoundPage from "./pages/NotFoundPage";
 import Login from "./pages/LoginSignup/Login";
 

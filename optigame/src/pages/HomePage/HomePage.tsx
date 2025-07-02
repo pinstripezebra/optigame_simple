@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { Grid, GridItem, Button, HStack } from "@chakra-ui/react";
-import NavBar from "../components/NavBar";
-import GameGrid from "../components/GameGrid";
-import GenreList from "../components/GenreList";
-import api from "../services/api-client";
+import NavBar from "../../components/NavBar";
+import GameGrid from "./GameGrid";
+import GenreList from "./GenreList";
+import api from "../../services/api-client";
 
 export interface Game {
   id: string;
