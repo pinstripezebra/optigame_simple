@@ -34,7 +34,6 @@ const RecommendedShelf = () => {
   }, [asins]);
 
   if (recError) return <Text>Error loading recommendations.</Text>;
-  console.log('recError:', recError);
   if (!games || games.length === 0)
     return <Text>No recommended games found.</Text>;
 
@@ -43,10 +42,8 @@ const RecommendedShelf = () => {
     setStartIdx((prev) => Math.min(prev + 1, games.length - VISIBLE_COUNT));
   console.log("Games:", games);
 
-  // Flatten the games array so it's a flat array of game objects
-const flatGames = games.flat();
 
-// Then slice for visible games
+const flatGames = games.flat();
 const visibleGames = flatGames.slice(startIdx, startIdx + VISIBLE_COUNT);
 
 

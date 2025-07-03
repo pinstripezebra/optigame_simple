@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Box, Text, Button } from "@chakra-ui/react";
-import { Link, useNavigate  } from "react-router-dom";
+import { Box, Text, Button, Progress } from "@chakra-ui/react";
+import { Link, useNavigate } from "react-router-dom";
 import { useUser } from "../../context/UserContext";
 import UserNavBar from "./UserProfileNavBar";
 import api from "../../services/api-client";
 import UserGameShelf from "./UserGameShelf";
 import RecommendedShelf from "./RecommendedShelf";
 import ProfileInfo from "./ProfileInfo";
-
 
 export interface Game {
   id: string;
@@ -56,7 +55,9 @@ const UserProfilePage: React.FC = () => {
     const fetchUserGames = async () => {
       setLoading(true);
       try {
-        const response = await api.get<UserGame[]>(`/v1/user_game/`, { params: { username } });
+        const response = await api.get<UserGame[]>(`/v1/user_game/`, {
+          params: { username },
+        });
         const userGamesData = response.data;
         setUserGames(userGamesData);
 
@@ -96,8 +97,8 @@ const UserProfilePage: React.FC = () => {
   }, [username]);
 
   const handleRowClick = (game: Game) => {
-  navigate(`/asin/${game.asin}`, { state: { game } });
-};
+    navigate(`/asin/${game.asin}`, { state: { game } });
+  };
   return (
     <Box>
       <UserNavBar />
@@ -108,7 +109,6 @@ const UserProfilePage: React.FC = () => {
             userGamesData={usergames}
             loading={loading}
             expandedRow={expandedRow}
-           
           />
 
           <Box py={6} />
@@ -142,7 +142,23 @@ const UserProfilePage: React.FC = () => {
           <Text fontSize="xl" fontWeight="semibold" mb={2}>
             Recommended Games
           </Text>
-          <RecommendedShelf />
+          {havePlayedFiltered.length + wantToPlayFiltered.length < 5 ? (
+            <Box width="100%" mb={4}>
+              <Text mb={2}>
+                Add more Games to your Shelf to Unlock Recommendations! (
+                {havePlayedFiltered.length + wantToPlayFiltered.length}/5)
+              </Text>
+              <Progress
+                value={havePlayedFiltered.length + wantToPlayFiltered.length}
+                max={5}
+                colorScheme="teal"
+                size="lg"
+                borderRadius="md"
+              />
+            </Box>
+          ) : (
+            <RecommendedShelf />
+          )}
         </Box>
       </Box>
     </Box>
