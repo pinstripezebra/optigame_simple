@@ -138,7 +138,7 @@ const UserProfilePage: React.FC = () => {
             expandedRow={expandedRow}
             handleRowClick={handleRowClick}
           />
-
+          <Box py={8} />
           <Text fontSize="xl" fontWeight="semibold" mb={2}>
             Recommended Games
           </Text>
